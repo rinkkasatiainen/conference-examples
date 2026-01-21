@@ -1,0 +1,39 @@
+{
+  "name": "@rinkkasatiainen/conference-examples",
+  "version": "0.0.1",
+  "description": "Set of examples for conference katas",
+  "main": "src/main.ts",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsc",
+    "build:w": "tsc --watch",
+    "build:test": "tsc -p tsconfig.test.json",
+    "lint": "eslint src test",
+    "lint:fix": "eslint --fix src test",
+    "test": "mocha -r ts-node/register --import=./test/register.js 'test/**/*.ts'"
+  },
+  "type": "module",
+  "author": "Aki Salmi",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chai": "^5.0.1",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.13.1",
+    "@types/sinon": "^17.0.3",
+    "@typescript-eslint/parser": "^8.48.1",
+    "chai": "^5.1.2",
+    "cross-env": "^7.0.3",
+    "esm": "^3.2.25",
+    "mocha": "^11.1.0",
+    "nodemon": "^3.1.9",
+    "prettier": "^3.4.2",
+    "rimraf": "^6.0.1",
+    "sinon": "^19.0.2",
+    "sinon-chai": "^4.0.0",
+    "ts-mocha": "^10.0.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.23.0"
+  }
+}

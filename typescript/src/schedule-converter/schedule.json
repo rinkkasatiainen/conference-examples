@@ -1,0 +1,12 @@
+{
+  "sessions": [
+    {
+      "start": 2,
+      "title": "Example workshop"
+    },
+    {
+      "start": 1,
+      "title": "Example Keynote"
+    }
+  ]
+}
