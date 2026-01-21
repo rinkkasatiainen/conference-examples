@@ -1,4 +1,4 @@
-import { FeedbackSensor } from './feedback-sensor.js';
+import {FeedbackSensor} from './feedback-sensor.js';
 
 type SpeakerStatus = 'ALERT' | 'BOOK_AGAIN' | 'OK';
 
@@ -11,13 +11,11 @@ type EvaluationResult = {
 // and hard-codes thresholds and retry logic.
 export class SpeakerFeedbackService {
   private _sensor: FeedbackSensor;
-  private _maxRetries: number;
   private _alertThreshold: number;
   private _bookAgainThreshold: number;
 
   constructor() {
     this._sensor = new FeedbackSensor();
-    this._maxRetries = 3;
     this._alertThreshold = 2.5;
     this._bookAgainThreshold = 4.2;
   }
@@ -30,7 +28,7 @@ export class SpeakerFeedbackService {
    * { status: 'ALERT' | 'BOOK_AGAIN' | 'OK', averageScore: number | null }
    */
   evaluateSpeaker(): EvaluationResult {
-    const scores = this._collectScoresWithRetries();
+    const scores = this._sensor.readScores();
 
     if (!scores || scores.length === 0) {
       return {
@@ -71,21 +69,5 @@ export class SpeakerFeedbackService {
       status: 'OK',
       averageScore: average,
     };
-  }
-
-  private _collectScoresWithRetries(): number[] {
-    for (let attempt = 0; attempt < this._maxRetries; attempt += 1) {
-      try {
-        const scores = this._sensor.readScores();
-
-        if (scores && Array.isArray(scores)) {
-          return [...scores];
-        }
-      } catch (error) {
-        // swallow and retry
-      }
-    }
-
-    return [];
   }
 }

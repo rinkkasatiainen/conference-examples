@@ -66,3 +66,21 @@ Here's some tips for the questions above:
         - **Wrapper functions** around time, randomness, or global APIs that you can stub in tests.
     - After adding the seam, write at least one test that uses it (e.g. by stubbing/mocking the dependency) to prove the code is now testable.
 
+And tips for refactorings:
+
+1. speaker-feedback:
+   - identify what is easy to test block
+   - identify what is hard to test block
+   - "Extract something somewhere" and test the easy to test code.
+
+2. badge-printer:
+   - use 'slide statement' to move dependency call to the boundary
+   - do identify what code is 'easy-to-test' and what is 'hard-to-test', test the easy-to-test part.
+
+3. schedule-converter:
+   - reading a file in unit test makes it slow, and we want to get rid of this.
+   - "Extract something somewhere" and make the easy test
+
+..and so on and so forth.
+
+"Extract something somewhere and"
