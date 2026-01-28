@@ -1,5 +1,5 @@
 {
-  "name": "@rinkkasatiainen/conference-examples",
+  "name": "@rinkkasatiainen/conference-examples.finding-seams.ts",
   "version": "0.0.1",
   "description": "Set of examples for conference katas",
   "main": "src/main.ts",

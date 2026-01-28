@@ -1,0 +1,13 @@
+{
+  "base_price": [
+    {"type": "regular", "cost": 100},
+    {"type": "early-bird", "cost": 80},
+    {"type": "vip", "cost": 250},
+    {"type": "student", "cost": 50}
+  ],
+  "early_bird_dates": [
+    {"early_bird_date": "2024-01-15"},
+    {"early_bird_date": "2024-01-20"},
+    {"early_bird_date": "2024-02-01"}
+  ]
+}

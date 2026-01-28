@@ -1,0 +1,29 @@
+{
+  "name": "@rinkkasatiainen/conference-examples.finding-seams.js",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Set of examples for conference katas",
+  "main": "./dist/index.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rinkkasatiainen/conference-examples.git"
+  },
+  "scripts": {
+    "lint": "eslint -- src test",
+    "lint:fix": "eslint --fix -- src test",
+    "test": "mocha",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "chai": "^5.2.0",
+    "chai-as-promised": "^8.0.1",
+    "prettier": "^3.5.3",
+    "sinon": "^20.0.0",
+    "sinon-chai": "^4.0.0",
+    "supertest": "^6.3.3"
+  }
+}
