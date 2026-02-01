@@ -1,5 +1,10 @@
 # Finding Seams
 
+Imagine the background for each of the assignments is this:
+
+> You need to change behavior of the system, but the system has no tests. In order to be safe, and sure,
+  you want to add tests around the functions you are about to change. This is your starting point.
+
 Each exercise starts from code that is hard to test and refactor. The goal is to learn to experience the legacy code dilemma:
 
 > When we change code, we should have tests in place. To put tests in place, we often have to change code.
@@ -66,6 +71,10 @@ Here's some tips for the questions above:
     - After adding the seam, write at least one test that uses it (e.g. by stubbing/mocking the dependency) to prove the code is now testable.
 
 And tips for refactorings:
+
+## ready?
+
+[Let's start](./task-speaker-feedback.md)
 
 1. speaker-feedback:
    - identify what is easy to test block
