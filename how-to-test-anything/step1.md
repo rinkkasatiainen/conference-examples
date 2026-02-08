@@ -2,6 +2,8 @@
 
 [..go back](./README.md)
 
+**Learning goal**: What is an incoming message - how to test an Incoming Query?
+
 ## Step 1 **Implement a scheduler algorithm**
 
 **TASK**: Implement an algorithm to give you list of available session durations from a set of available session slots.   

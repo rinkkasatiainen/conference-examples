@@ -8,9 +8,10 @@ I will always improve and work on examples in the following language order: JS -
 The examples here contains (most likely in this order)
 
 **Pre training setup:**
-- [**Setup your test environment**](./setup-your-test-env/README.md): This is important to be done before the first session.
+- [**Setup your test environment**](00-setup-your-test-env/README.md): This is important to be done before the first session.
   - **Learning goal**: You have a working environment in the language of your choice (in this repo). Means you have a way to run
     unit tests, and making them green. Optionally, implement FizzBuzz kata for reminding your fingers of your favorite IDE shortcuts.
+  - **Learning goal**: If running training online, use of 'mob.sh' tool for a quick switch of person in keyboard.
 
 **The likely setup for a 2-day onsite course:**
 - [**How to test anything**](./how-to-test-anything/README.md): This is an empty repository with steps for evolving the code. 
@@ -33,6 +34,8 @@ The examples here contains (most likely in this order)
 
 **Other related challenges (that can be also used in online/onsite trainings):**
 
+All these trainings can be also worked together with AI, learning how clear testing & AI can work together.
+
 - [**Frontend Challenges**](./frontend/README.md): This is a place where we can learn WebComponents and using the learnings
   from backend development in frontend. (and never look back to React/Vue again, if we can choose to).
   - **Learning goal**: TBD
@@ -43,3 +46,7 @@ The examples here contains (most likely in this order)
   modern GOTO statements and control flow to make exceptions exceptional (out of memory being an exceptional situation).
   - **Learning goal**: Learn different ways to get rid of exceptional code to make truly exceptional code (one where 
   exceptions are truly exceptional).
+- [**All about Test Doubles**](./all-about-test-doubles/README.md): Learn to put difference between _dummy_, _fake_, _spy_, _mock_ and _stub_. This helps
+  with naming things and what works wonders with [How to test anything](./how-to-test-anything/README.md).
+- [**Double Loop TDD**](./double-loop-tdd/README.md): Learn a process that takes focus on a new level. Start with a big test
+  (that runs through the whole slice) and work down using TDD until the big test is green. 
