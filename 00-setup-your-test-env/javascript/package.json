@@ -22,6 +22,7 @@
     "eslint": "^9.39.2",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-mocha": "^11.2.0",
+    "mocha": "^11.7.5",
     "prettier": "^3.5.3",
     "sinon": "^20.0.0",
     "sinon-chai": "^4.0.0"

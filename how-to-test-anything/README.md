@@ -27,7 +27,7 @@ Let's build a 2-by-3 matrix like this:
 ```
           \  Type +-------------+-------------+
               \   |    Query    |   Command   |
-          Origin  \+=============+=============+
+          Origin \+=============+=============+
                   |             |             |
      incoming     |             |             |
                   |             |             |

@@ -6,7 +6,7 @@
 
 ## Step 1 **Implement a scheduler algorithm**
 
-**TASK**: Implement an algorithm to give you list of available session durations from a set of available session slots.   
+**TASK**: Test-Drive an algorithm to give you list of available session durations from a set of available session slots.   
 
 1. Implement a class 'AvailabilityScheduler' that has one method with signature:
    ``` typescript
@@ -18,12 +18,12 @@
 ... and where you have
 - Fixed **session durations** with **maximum allowed counts**
 
- | *Duration* | *Max Count* |
- |------------|-------------|
- | 90 min     | 2           |
- | 60 min     | 4           |
- | 30 min     | 6           | 
- | 15 min     | 6           |            
+ | *Duration (in min)* | *Max Count* |
+ |---------------------|-------------|
+ | 90                  | 2           |
+ | 60                  | 4           |
+ | 30                  | 6           | 
+ | 15                  | 6           |            
 
 2. With these details, implement and test the method `fill`
 3. If you choose to use _vanilla_ TDD, please go ahead - it's recommended
@@ -47,6 +47,7 @@
 
 - 90 -> [90]
 - 180 -> [90, 90]
+- 270 -> [90, 90, 60, 30]
 - 105 -> [90, 15]
 - 110 → [90, 15] (’losing 5 mins’)
 
