@@ -2,8 +2,6 @@
 
 [..go back](./step2.md)
 
-
-
 ## Step 5 **(Optional) I/O to the boundary**
 
 **Task**: Modify the existing code
@@ -32,14 +30,14 @@
 
         class SlotProviderAwareScheduler implements Scheduler {
             constructor(providesSlots) {
-                this.sessions = this.providesSlots.availableSlots();
+                this.providesSlots = providesSlots;
             }
         
             fill(totalTime) {
                 const result = [];
                 let remaining = totalTime;
         
-                for (const session of this.sessions) {
+                for (const session of this.providesSlots.availableSlots()) {
                     let used = 0;
                     while (remaining >= session.duration && used < session.max) {
                         result.push(session.duration);
@@ -53,7 +51,7 @@
         }
         
         // New class: SessionPlanner
-        class SessionPlanner {
+        export class SessionPlanner {
           constructor(scheduler, roomManager, totalTime) {
             this.scheduler = scheduler;
             this.roomManager = roomManager;
@@ -78,7 +76,7 @@
           }
             
           domainLogic(availableSlots, sessionInfo) {
-              return availableSlots.find(
+              return availableSlots.sort((a, b) => a - b).find(
                   (duration) => duration >= sessionInfo.duration
               );
           }
@@ -97,6 +95,7 @@ functions are pure functions. Figure out first where's the problematic part? Wha
 domain logic is not actually pure (if we expect that available slots are retrieved from DB). 
 
 1. Find out where the logic hides I/O that is not happening at the boundary (but in domain logic)
+2. What is the core domain logic? Where does it lie?
 2. Move the I/O to boundary, expand Domain logic to accept all input data from the outside.
     ```javascript
     async function ioAtBoundary() {
@@ -112,20 +111,34 @@ domain logic is not actually pure (if we expect that available slots are retriev
 
 **Notes**:
 
+Originally, the code does not have a clear separation of concerns, in what is responsible or I/O operations
+and what is domain logic. The core domain logic is in 2 classes (which is totally fine) - in `AvailabilityScheduler` and
+in `SessionPlanning`. I'd argue that the core domain logic is to 'find which session types are still available and fit 
+the given session into the available slots'. The unfortunate part is that the first part of the logic is implemented
+within pure functions, because I/O operation is hidden inside `AvailabilityScheduler` (as seen in the picture below). 
+The said I/O operation is to fetch the data from DB.
+
+![Image of situation before](./images/step5-part1.png)
+
 The problematic part is this:
 ```typescript
         class SlotProviderAwareScheduler implements Scheduler {
-            constructor(providesSlots) {
-                this.sessions = this.providesSlots.availableSlots();
+            fill(totalTime) {
+                // [...]
+                for (const session of this.providesSlots.availableSlots()) {
+                // [...]
+                }
             }
             // ... rest omitted
         }
 ```
 
-because it reads data inside the domain functionality. Do provide another version of `fill` that takes
-also the sessions as parameter. Write tests for that function,
+because it reads data inside the domain functionality. To fix the situation, Do provide another version of `fill` that 
+takes also the sessions as parameter (and then make this fill method to use that before removing all usages). 
+Write tests for the new function, and in the end remove the old version of 'fill' -> and then remove the dependency to 
+`ProvidesSlots` from the class.
 
-Then write tests for the SessionPlanner (you know how to handle outgoing queries / commands).
+Then (re)write tests for the SessionPlanner .
 
 **Acceptance Criteria**:
 
@@ -134,6 +147,28 @@ Code respects I/O to the boundary or 'functional core/imperative shell' approach
 ## Finished?
 
 🎉 Done! 🎉
+
+
+## What did we learn? 
+
+When a code like this is seen, one way to deal with this would be to move the logic of `ProvidesSlots` outside from the 
+`AvailabilityScheduler` and only pass the values to that. That way, the domain logic can be pure. 
+
+![image part 2](./images/step5-part2.png)
+
+Other benefit of this is to have clearer responsibilities of Hexagonal architecture, where the `SessionPlanning` turns
+out to be a sort of _command handler_, and as command handler, it does orchestrate the logic by first getting all the 
+data, then calling the domain logic, and in the end, performing necessary I/O operations at the other end of the logic.
+
+This can be seen in the next picture:
+
+![part 3](./images/step5-part3.png)
+
+Some benefits of having clear separation of I/O from domain logic is that this makes domain logic very easy to test, 
+and to be less likely to fail. Also the _Command Handler_ logic becomes unsurprising, if it always works the same: 
+- Get Data from Providers
+- Do Domain logic transformations
+- Update the result somehow somewhere.
 
 <style>
 .nav-trigger {

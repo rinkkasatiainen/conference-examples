@@ -42,7 +42,8 @@ The goal is to **decouple session definitions** from the scheduler logic.
 - The tests do not use a production class ProvidesAvailableSlots
     
 **Example code**:
-    ```typescript
+    
+```typescript
     interface ProvidesSlots {
       availableSlots(): Array<{ duration: number, max: number }>;
     }
@@ -53,14 +54,14 @@ The goal is to **decouple session definitions** from the scheduler logic.
     
     class AvailabilityScheduler implements Scheduler {
       constructor(providesSlots) {
-        this.sessions = this.providesSlots.availableSlots();
+        this.providesSlots = providesSlots;
       }
     
       fill(totalTime) {
         const result = [];
         let remaining = totalTime;
     
-        for (const session of this.sessions) {
+        for (const session of this.providesSlots.availableSlots()) {
           let used = 0;
           while (remaining >= session.duration && used < session.max) {
             result.push(session.duration);
@@ -72,11 +73,11 @@ The goal is to **decouple session definitions** from the scheduler logic.
         return result;
       }
     }
-    ```
+```
 
 **Questions**: 
-Q: Is new `AvailabilityProvider#fill` pure function? Why it would matter?
-A: By definition, a function is pure if it always returns the same output for the same input, and it has no side-effects.
+- Q: Is new `AvailabilityProvider#fill` pure function? Why it would matter?
+- A: By definition, a function is pure if it always returns the same output for the same input, and it has no side-effects.
 Hence, If `ProvidesSlots#availableSlots` always returns the same value, and does not have side-effect, then `AvailabilityScheduler#fill`
 is indeed a pure function
 
