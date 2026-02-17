@@ -42,10 +42,10 @@ Let's build a 2-by-3 matrix like this:
                   +-------------+-------------+
 ```
 
-The message has 2 types: 'Query' and 'Command', while message origin has 3 options: 
+The message has 2 types: 'Query' and 'Command', while the message origin has 3 options: 
 'incoming', 'sent to self' or 'outgoing'. We'll define these later.
 
-![How to Test Anything](./how-to-test-anything-visual.png)
+![How to Test Anything](./images/how-to-test-anything-visual.png)
 
 ## Ready to start?
 [Step 1](./step1.md)
