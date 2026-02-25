@@ -1,4 +1,4 @@
-import {eslintConfig} from '@rinkkasatiainen/eslint-config.js'
+import {eslintConfig} from '@rinkkasatiainen/eslint-config.ts'
 
 export default [
   {

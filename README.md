@@ -14,7 +14,10 @@ The examples here contains (most likely in this order)
   - **Learning goal**: If running training online, use of 'mob.sh' tool for a quick switch of person in keyboard.
 
 **The likely setup for a 2-day onsite course:**
-- [**How to test anything**](./how-to-test-anything/README.md): This is an empty repository with steps for evolving the code. 
+- [**Basics of TDD**](./basics-of-TDD/README.md): The basic flow of TDD and pair/ensemble programming
+  - **Learning goal**: Learn how to work together in pairs or small groups. Learn using tools that support rapid switching
+    of the one who's typing.
+- [**How to test anything**](how-to-test-anything/README.md): This is an empty repository with steps for evolving the code. 
   - **Learning goal**: Learn a model with which you know how to test anything. This is the base for all the consecutive sessions
 - [**Test like a unit test**](./test-like-unit-test/README.md): Learn to write higher-level tests (component tests) that read like unit tests
   - **Learning goal**: see how the pattern from earlier actually works in any level of testing. This is typically a homework
@@ -47,6 +50,13 @@ All these trainings can be also worked together with AI, learning how clear test
   - **Learning goal**: Learn different ways to get rid of exceptional code to make truly exceptional code (one where 
   exceptions are truly exceptional).
 - [**All about Test Doubles**](./all-about-test-doubles/README.md): Learn to put difference between _dummy_, _fake_, _spy_, _mock_ and _stub_. This helps
-  with naming things and what works wonders with [How to test anything](./how-to-test-anything/README.md).
+  with naming things and what works wonders with [How to test anything](how-to-test-anything/README.md).
 - [**Double Loop TDD**](./double-loop-tdd/README.md): Learn a process that takes focus on a new level. Start with a big test
   (that runs through the whole slice) and work down using TDD until the big test is green. 
+
+## ⚠️ Important ⚠️
+
+If you are using JetBrains products (IntelliJ IDEA, WebStorm, etc), and working with JavaScript, it's best to open 
+the specific folder [e.g. 00-setup-your-test-ent](./00-setup-your-test-env) for the session. This way your IDE does
+take the specific ESLint config for javascript, and is not confused for having TypeScript and JavaScript files in 
+the solution.

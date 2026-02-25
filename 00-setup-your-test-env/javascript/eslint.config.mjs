@@ -7,8 +7,9 @@ export default [
   {
     rules:
       {
-        'mocha/consistent-spacing-between-blocks': 'off'
+        'mocha/consistent-spacing-between-blocks': 'off',
         // 'mocha/no-pending-tests': 'off',
+        'max-classes-per-file': 'off'
       }
   }
 ]

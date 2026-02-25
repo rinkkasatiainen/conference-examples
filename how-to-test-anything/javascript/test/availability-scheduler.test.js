@@ -1,8 +1,16 @@
+import { expect } from 'chai'
 import { AvailabilityScheduler } from '../src/availability-scheduler.js'
 
-describe('AvailabilityScheduler', () => {
+const todo = msg => it.skip(msg)
 
-  it('Does Magic', () => {
-    // Implement your first test here.
+describe('How to test anything', () => {
+
+  describe('test Incoming Query by', () => {
+    todo('test here', () => {
+      // implement test here
+    })
+  })
+  describe('test Incoming Command by', () => {
+    todo('test here')
   })
 })

@@ -6,20 +6,24 @@
 
 **Task**: Make available slots modifiable 
 
-1. Extend your `Scheduler` class by adding a method:
-    ``` typescript
-    setSessions(sessions: Array<{ duration: number, max: number }>): void
-    ```
+1. Extend your `AvailabilityScheduler` class by adding a method:
+``` typescript
+setSessions(slots: Array<{duration: number, max: number}>):void {
+   this.slots = slots
+}
+```
+
 ... where 
- - **sessions** is an array of new session slots.
+ - **slots** is an array of new session slots.
 
 2. This method should **replace the current session durations and max counts** with the ones provided.
 3. Plan how you will test the `setSessions` method, and **test it**.
 
 **Notes**
 
-- You do **not** need to implement `fill()` again — just make sure it uses the new sessions.
-- Focus on correctly storing the session array and maintaining the **duration/max count** information.
+- Now we're introducing a command that has a clear side-effect (changes the internal data)
+![Incoming command](./images/step2-info.png)
+- You do **not** need to change `fill` method — just make sure it uses the new sessions.
 - Think the way(s) this can be tested! What of (any) would you choose and why?
 
 **Acceptance Criteria:**
@@ -30,8 +34,7 @@
 
 One possible way of using the new Scheduler in tests.
 
-   ``` javascript
-   // Initialize Scheduler
+``` javascript
    const scheduler = new Scheduler();
    
    // Set custom sessions
@@ -41,9 +44,14 @@ One possible way of using the new Scheduler in tests.
      { duration: 10, max: 10 }
    ]);
    
-   // Test the method.
-   ```
+   // Verify something.
+```
 
+## How to test private methods?
+
+![Test private methods](./images/step2-privates.png)
+
+well, **we don't**
 
 ## Finished?
 

@@ -4,88 +4,27 @@
 
 **Learning goal**: What is an incoming message - how to test an Incoming Query?
 
-## Step 1 **Implement a scheduler algorithm**
+## Step 1 **Add tests for the scheduler algorithm**
 
-**TASK**: Test-Drive an algorithm to give you list of available session durations from a set of available session slots.   
+**TASK**: Test the `AvailabilityScheduler#fill` method
 
-1. Implement a class 'AvailabilityScheduler' that has one method with signature:
-   ``` typescript
-    fill(availableTime: number): number[]
-   ```
-... where
-  - **available time** (in minutes) is how many minutes still needs to be filled with sessions.
-
-... and where you have
-- Fixed **session durations** with **maximum allowed counts**
-
- | *Duration (in min)* | *Max Count* |
- |---------------------|-------------|
- | 90                  | 2           |
- | 60                  | 4           |
- | 30                  | 6           | 
- | 15                  | 6           |            
-
-2. With these details, implement and test the method `fill`
-3. If you choose to use _vanilla_ TDD, please go ahead - it's recommended
+Add unit tests for the `fill` method.
 
 **Notes**
 
-- Session durations may be reused only up to their maximum count
-- The algorithm does not need to find an optimal solution
-- Focus on correctness, readability, and clear logic
+- the `fill` method is an incoming query.
+![Incoming Query](./images/step1-info.png)
+- You do **not** need to touch the implementation.
+- Think about the coverage for tests. 
 
-**Acceptance Criteria**
+**Acceptance Criteria:**
 
-- Fill the total time using the available session durations as much as possible
-- Prefer **longer sessions first** (greedy approach)
-- Never exceed the maximum count for any session type
-- Return an array of session durations whose sum is **≤ totalTime**
-- Exact fill is preferred but **not guaranteed**.
-- The function is tested.
+- The code is tested.
 
-**Examples**: 
+**Example Code**:
 
-- 90 -> [90]
-- 180 -> [90, 90]
-- 270 -> [90, 90, 60, 30]
-- 105 -> [90, 15]
-- 110 → [90, 15] (’losing 5 mins’)
-
-**Solution** 1:
-
-   ``` javascript
-   class Scheduler {
-     constructor() {
-       this.sessions = [
-         { duration: 90, max: 2 },
-         { duration: 60, max: 4 },
-         { duration: 30, max: 6 },
-         { duration: 15, max: 6 }
-       ];
-     }
-   
-     fill(totalTime) {
-       const result = [];
-       let remaining = totalTime;
-   
-       for (const session of this.sessions) {
-         let used = 0;
-   
-         while (
-           remaining >= session.duration &&
-           used < session.max
-         ) {
-           result.push(session.duration);
-           remaining -= session.duration;
-           used++;
-         }
-       }
-   
-       return result;
-     }
-   }
-   ```
-
+example code you'll find in each language folder.
+- [for Javascript](./javascript/step1.md)
 
 ## Finished?
 
