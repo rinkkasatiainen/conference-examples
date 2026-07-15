@@ -2,8 +2,8 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { EventEmitter } from 'node:events'
 import {
-  handleDeleteSession,
-  handleGetSessions,
+  deleteSession,
+  getSessions,
   updateSessionDetails,
   addNewSession
 } from '../src/sessions/route-handlers.js'
@@ -38,7 +38,7 @@ test('handleGetSessions returns list for known event', async () => {
   const req = {}
   const res = createFakeRes()
 
-  await handleGetSessions(req, res, { params: { eventId: 'codefreeze-2025' } })
+  await getSessions(req, res, { params: { eventId: 'codefreeze-2025' } })
 
   assert.equal(res.statusCode, 200)
   assert.deepEqual(res.body, sessions['codefreeze-2025'])
@@ -117,7 +117,7 @@ test('handleDeleteSession removes existing session', async () => {
   const res = createFakeRes()
 
   try {
-    await handleDeleteSession(req, res, { params: { eventId, sessionId } })
+    await deleteSession(req, res, { params: { eventId, sessionId } })
 
     assert.equal(res.statusCode, 204)
     assert.equal(res.rawBody, null)
@@ -133,7 +133,7 @@ test('handleDeleteSession returns 404 for unknown session', async () => {
   const req = {}
   const res = createFakeRes()
 
-  await handleDeleteSession(req, res, {
+  await deleteSession(req, res, {
     params: { eventId: 'codefreeze-2025', sessionId: 'missing-id' }
   })
 

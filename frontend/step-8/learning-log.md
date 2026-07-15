@@ -1,7 +1,16 @@
 # Learning log - Step 8
 
-Use this file while you work through [Step 8 README](./README.md). When you finish the step, add your **key takeaway**
-in the [journey hub `learning-log.md`](../learning-log.md#step-8-key-takeaway).
+Use this file while you work through [Step 8 README](./README.md). When you finish the step, add your **key takeaway** in the
+[journey hub `learning-log.md`](../learning-log.md#step-8-key-takeaway).
+
+This step uses **Training from the Back of the Room** ideas adapted for **solo / async**: **different** prompt types,
+**writing** and a small **sketch**, and **short** timeboxes. Follow the **order** in the README.
+
+**Prerequisite:** [`step-8-be`](../step-8-be/README.md) running on port **3001** (see [getting-started.md](./getting-started.md)).
+
+---
+
+[← Back to README - 1) Connections](./README.md#1-connections)
 
 ---
 
@@ -11,11 +20,10 @@ in the [journey hub `learning-log.md`](../learning-log.md#step-8-key-takeaway).
 
 _Solo, ~2 minutes. Answer **before** you read Concepts._
 
-You have index.html open in 2 different browser windows. In one of the browser windows, you click
-**“Add random session (via backend)”**.
+A colleague clicks **“Add random session (via backend)”** while you watch the board.
 
-**In one or two sentences:** What happens in the background? And why does the new session appear on the other
-browser window web page immediately?
+**In one or two sentences:** What happens in the background? And why does the new session
+appear on 'your' schedule page?
 
 >
 
@@ -29,13 +37,12 @@ _(You will [loop back](#step-8-loop-back-push-vs-pull) in Conclusions.)_
 
 _Solo, ~4 minutes._
 
-Step 7’s **`<cfb-session-loader>`** both **fetched** and **wrote** IndexedDB. And
-the `cfb-updates-sessions` triggered an event to initiate a new **pull** for data.
+Step 7’s **`<cfb-session-loader>`** both **fetched** and **wrote** IndexedDB.
 
 **Two bullets:**
 
 1. **Why** are we changing this now? What might be the benefits?
-2. How would `cfb-updates-sessions` change within step-8
+2. **What stays the same** for **`cfb-updates-sessions`** and the add/edit form?
 
 >
 
@@ -43,12 +50,14 @@ the `cfb-updates-sessions` triggered an event to initiate a new **pull** for dat
 
 <a id="step-8-connections-surprise"></a>
 
-### Step 8 - Connections: Surprise (solo or pair)
+### Step 8 - Connections: Surprise (solo) or compare (pair)
 
 _~3 minutes._
 
-Think of one real-time product you use (chat, Figma, sports scoreboard, …) - one line: is it mostly **push**, **poll**,
-or **both**?
+**Solo:** One real-time product you use (chat, Figma, sports scoreboard, …) - one line: is it 
+mostly **push**, **poll**, or **both**?
+
+**If you compare later:** what broke first when you tested - **HTTP**, **WebSocket**, or **IndexedDB**?
 
 >
 
@@ -60,14 +69,13 @@ or **both**?
 
 _Solo, ~2 minutes. Answer **A** or **B** - not both._
 
-**A)** Why does the WebSocket URL include **`eventId`** (`/ws/sessions/codefreeze-2025`) instead of one global
+**A)** Why does the WebSocket URL include **`eventId`** (`/ws/sessions/codefreeze-2025`) instead of one global 
 feed for all conferences?
 
 >
 
-**B)** In one sentence: what goes wrong if **`cfb-live-session-updates`** imports **`saveSessions`** directly instead
-of dispatching an event to the store wrapper? The responsibility of the said component is to listen to the WebSocket
-for updates.
+**B)** In one sentence: what goes wrong if **`cfb-live-session-updates`** imports **`saveSessions`** directly instead 
+of dispatching an event to the store wrapper?
 
 >
 
@@ -85,8 +93,9 @@ _After reading the README Concepts sections - ~1 minute._
 
 **Two bullets:**
 
-1. What are the benefits of introducing WebSockets into CfbBoard?
-2. Think what are the added complexity of the WebSockets - and how would you test that?
+1. Who should **own** closing the WebSocket - the live component, the orchestrator, or **`cfb-schedule`**?
+2. After a **`sessionUpdated`** message, which **one** event type does the store emit so the orchestrator can 
+   refresh the schedule (same as Step 7’s loader completion)?
 
 >
 
@@ -98,17 +107,21 @@ _After reading the README Concepts sections - ~1 minute._
 
 _Answer **from memory first** (~4 minutes). Then peek at the README or source if needed._
 
-1. What are the 4 important lifecycle hooks for a web socket connection? 
+1. Name the **three** inbound event types **`cfb-session-store-updates`** listens for (exact strings).
 
-   > ___
+   >
 
-2. Why did we split responsibilities between fetching data and storing that into IndexedDB?
+2. What does **`cfb-session-loader`** dispatch **instead of** writing IndexedDB in Step 8?
 
-   > ___
+   >
 
-3. When is the websocket connected? When is it disconnected?
+3. **`cfb-updates-sessions`** handles **`cfb-session-created`**, **`cfb-session-updated`**, and **`cfb-session-removed`**. Which of those use the **WebSocket** path?
 
-   > ___
+   >
+
+4. Why does **`cfb-initiate-a-random-session-creation`** only **`POST`** to the API and **not** call **`saveSessions`** locally?
+
+   >
 
 ---
 
@@ -116,18 +129,17 @@ _Answer **from memory first** (~4 minutes). Then peek at the README or source if
 
 ### Step 8 - Concept check: Two-path sketch (visual)
 
-_Solo, ~5 minutes. 
+_Solo, ~5 minutes. Training from the Back of the Room - “images / different activity.”_
 
 Draw **two** parallel swimlanes labelled **PULL** and **PUSH**.
 
 Each lane needs **at least four boxes** ending at **`cfb-schedule` re-render**.
 
-Label **one arrow** per lane with the key event or attribute (e.g. **`sessionsFetched`**, **`sessionsLoaded`**, *
-*`data-latest-updated-at`**).
+Label **one arrow** per lane with the key event or attribute (e.g. **`sessionsFetched`**, **`sessionsLoaded`**, **`data-latest-updated-at`**).
 
 > _(paste a photo link, ASCII sketch, or short description of your drawing)_
 
-> ___
+>
 
 ---
 
@@ -141,16 +153,15 @@ Label **one arrow** per lane with the key event or attribute (e.g. **`sessionsFe
 
 _Solo, ~5 minutes._
 
-Ask **one** question about **WebSockets**, **the store wrapper pattern**, **orchestrator incremental refresh**, or *
-*testing push without a real server**. Paste their reply (or your notes) below.
+Ask **one** question about **WebSockets**, **the store wrapper pattern**, **orchestrator incremental refresh**, or **testing push without a real server**. Paste their reply (or your notes) below.
 
 **My question**
 
-> ___
+>
 
 **Facilitator reply / notes**
 
-> ___
+>
 
 ---
 
@@ -166,16 +177,15 @@ _~4 minutes._
 
 1. What is the full WebSocket URL for **CodeFreeze 2025** with default **`step-8-be`**?
 
-   > ___
+   >
 
-2. Open **two tabs** on the same event. Click **add random session** in tab A. What do you observe in tab B - and which
-   message **`type`** did the socket deliver?
+2. Open **two tabs** on the same event. Click **random session** in tab A. What do you observe in tab B - and which message **`type`** did the socket deliver?
 
-   > ___
+   >
 
 3. Point to the file where **`cfb-updates-sessions`** handles **Remove** → backend **DELETE**.
 
-   > ___
+   >
 
 ---
 
@@ -185,34 +195,43 @@ _~4 minutes._
 
 _Look at your answer under [Push vs pull](#step-8-connections-push-vs-pull). Correct it in one line: what was wrong?_
 
-> ___
+>
 
 ---
 
+<a id="step-8-conclusions-pull-vs-push"></a>
 
-### Step 8 - Conclusions: Susprises 
+### Step 8 - Conclusions: Pull vs push in this app
 
-Thinking of working with WebSockets, what things surprised you?
+_From [`../PLAN.md`](../PLAN.md) - two sentences._
 
-> ___
+Describe the **pull** path (loader or form → … → schedule) and the **push** path (WebSocket → … → schedule) in **your own words**.
 
-Thinking of the whole 8-step process, what things surprised you?
-
-> ___
+>
 
 ---
 
-### Step 8 - Conclusions: Ticket out
+<a id="step-8-conclusions-tf-close-socket"></a>
 
-_Short reflection._
+### Step 8 - Conclusions: True / False - close socket
 
-1. **Best thing in this journey** (one sentence):
+**Statement:** “A live component should close its WebSocket in **`disconnectedCallback`** when it is removed from the DOM.”
 
-   >
+**True or false?** One sentence why.
 
-2. **What could be improved** how can the whole journey be better
+>
 
-   >
+---
+
+<a id="step-8-conclusions-tf-render-path"></a>
+
+### Step 8 - Conclusions: True / False - separate render path
+
+**Statement:** “Real-time updates in this step require a **separate** rendering path from the Step 7 schedule.”
+
+**True or false?** One sentence why.
+
+>
 
 ---
 

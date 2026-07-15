@@ -4,10 +4,11 @@ In Steps 1–3 you built UI and **in-memory** flows. Refreshing the page dropped
 the browser** using **IndexedDB** - while keeping **storage code separate** from components.
 
 The **full wiring** (database name, event type strings, loader vs store) lives in **Concepts** and in
-**`session-store.js`/ `events.js`**
+**`session-store.js`/ `events.js`** - after **Connections** - so your first guesses in the learning log stay honest.
 
-> **Before you start:** Do the normal tricks with git branch, HTTP server, etc -
-> see [getting-started.md](./getting-started.md).
+> **Before you start:** branch, HTTP server, **same origin** for IDB - see [getting-started.md](./getting-started.md).
+
+**Testing companion (optional):** [Test step T-4 · IndexedDB](../test-4/README.md)
 
 ### Async / solo
 
@@ -72,7 +73,21 @@ new components - and that will be a pattern we'll see more and more in the futur
 
 ### The Data flow with IndexedDB
 
-Looking at the flow of data in this step of the app, see [`index.html`](./index.html):
+### Events (`events.js`)
+
+[`events.js`](./lib/events.js) is the **single place** for Step 4 event constants:
+
+| Constant                | String                           | Typical use                                                               |
+|-------------------------|----------------------------------|---------------------------------------------------------------------------|
+| `SESSION_CREATED`       | **`cfb-session-created`**        | Re-exported from Step 3 - generator → store                               |
+| `SESSION_REMOVED`       | **`cfb-session-removed`**        | Remove menu → store                                                       |
+| `SESSION_LOADED_TO_IDB` | **`cfb-sessions-loaded-to-idb`** | Loader finished seeding **or** store finished mutating IDB → orchestrator |
+
+Factories: **`cfbSessionsLoadedToIDB()`**, **`cfbSessionRemoved(...)`**, plus **`cfbSessionCreated`** from Step 3.
+
+### DOM layout (this repo)
+
+See [`index.html`](./index.html):
 
 ```html
 
@@ -144,12 +159,11 @@ In this step, we implement few session store methods: `getAllSessions()`, `saveS
 
 ### End-to-end flow (reference)
 
-To see the full flow for this step, look at the diagram below.
-
 Legend:
-- [ ]: ✅ This is already provided
-- [ ]: 🚧 Partly done, part of this exercise
-- [ ]: ✨ New features, core of the exercise
+
+- ✅ This is already provided
+- 🚧 Partly done, part of this exercise
+- ✨ New features, core of the exercise
 
 **Initial load**
 
@@ -195,6 +209,13 @@ For the flow of editing the sessions (adding or removing), see below.
 🚧 cfb-board-orchestrator (same as initial load) ◄┘
 ```
 
+Why **`data-latest-updated-at`** instead of pushing **`data-sessions`** JSON from the orchestrator? The orchestrator *
+*does not ship the array** - it only signals **“re-read from IDB”**; **`cfb-schedule`** pulls **`getAllSessions()`**
+after the timestamp changes.
+
+Session rows still render as **`<cfb-session-card data-session-details='…'>`** using **`sessionDetails`** shape from [
+`../step-2/lib/builds-session-details.js`](../step-3/lib/builds-session-details.js).
+
 ---
 
 ### One-minute review (~1 min)
@@ -223,23 +244,20 @@ Work **in reading order** (matches [`index.html`](./index.html) comment block):
 | ✨ [`session-store.js`](./session-store.js)                    | implement IndexedDb functionality to save & retrieve sessions            |
 | ✅ [`events.js`](./lib/events.js)                              | See how events are created & types made reusable                         |
 | ✨ [`cfb-session-loader.js`](./cfb-session-loader.js)          | when attached to DOM, initializes store                                  |
-| 🚧 [`cfb-board-orchestrator.js`](./cfb-board-orchestrator.js) | Trigger the rerender for the schedule                                    |
-| 🚧 [`cfb-schedule.js`](./cfb-schedule.js)                     | Rerender when triggered by orchestrator                                  |
+| 🚧 [`cfb-board-orchestrator.js`](./cfb-board-orchestrator.js) | orchestrating the flow between events.                                   |
+| 🚧 [`cfb-schedule.js`](./cfb-schedule.js)                     | **`data-latest-updated-at`** → **`getAllSessions()`** → render           |
 | ✨ [`cfb-session-store.js`](./cfb-session-store.js)            | listens to 'session generated'/'session removed' and stores to indexedDB |
 
 **Below is step-by-step guidance for each file.**
-
-Also, see [tips.md](./tips.md) for examples of IndexDB usage.
 
 ### ✨ `session-store.js` - Promise-based IDB wrapper
 
 This is the main part of this exercise. The goal is to learn how to write an IndexedDB connection
 
-- [ ] `openDb()` - open (or create) a database named `DB_NAME` at version 1
+- [ ] `openDb()` - open (or create) a database named `cfb-db` at version 1
 - [ ] On `onupgradeneeded`: create a `sessions` object store keyed on `id`
 - [ ] `saveSessions(sessions[])` - write (or overwrite) a batch of sessions
 - [ ] `getAllSessions()` - return all sessions as an array
-- [ ] See [tips.md](./tips.md) for tips on how to do these.
 
 ### 🚧 `cfb-session-loader.js` - Organism
 
@@ -251,7 +269,7 @@ This is the main part of this exercise. The goal is to learn how to write an Ind
 - [ ] when attached to dom, register event listeners
 - [ ] listen to 'there is data in IndexedDB'
 - [ ] informs the relevant children that 'btw, new data in IndexedDB'
-    - Use a `data-latest-updated-at` attribure with timestamp
+    - Might use a `data-latest-updated-at` attribure with timestamp
 
 ### 🚧 `cfb-schedule.js` - Organism
 
@@ -280,13 +298,8 @@ This is the main part of this exercise. The goal is to learn how to write an Ind
 - You can point to **`session-store.js`** as the **only** module that calls **`indexedDB.open`** for sessions.
 - You can explain **`cfb-sessions-loaded-to-idb`** vs **`cfb-session-created`** in one sentence each.
 
----
-
-### One Minute Review
-
-In [your learning log](./learning-log.md#step-3---one-minute-review), come up with 3 questions related to the topic.
-You can ask the questions from your colleagues / facilitator. This is to reinforce the concept both for you, and for
-your colleagues
+In [Question for your facilitator](./learning-log.md#step-4-facilitator-question), ask one question and capture the
+answer.
 
 ---
 
@@ -320,6 +333,52 @@ Add **one or two sentences** in the [journey hub `learning-log.md`](../learning-
 
 ---
 
+## Tips
+
+### Opening and versioning the database
+
+```js
+const req = indexedDB.open('cfb-db', 1)
+
+req.onupgradeneeded = (e) => {
+  const db = e.target.result
+  if (!db.objectStoreNames.contains('sessions')) {
+    db.createObjectStore('sessions', { keyPath: 'id' })
+  }
+}
+
+req.onsuccess = (e) => {
+  const db = e.target.result
+  // use db here
+}
+```
+
+`onupgradeneeded` only fires when the database does not exist yet (or the
+version number increases). Your seed data goes here so it only runs once.
+
+### Wrapping IDB in Promises
+
+The raw IDB API is callback-based. Wrap each operation in a `Promise` to keep
+your code readable:
+
+```js
+function getAllSessions() {
+  return new Promise((resolve, reject) => {
+    const req = db.transaction('sessions', 'readonly')
+      .objectStore('sessions')
+      .getAll()
+    req.onsuccess = (e) => resolve(e.target.result)
+    req.onerror = (e) => reject(e.target.error)
+  })
+}
+```
+
+### Session shape
+
+[`sessionDetails`](../step-3/lib/builds-session-details.js) / Step 2 **`data-session-details`** JSON stay the **contract
+** for cards.
+
+---
 
 ## Extras
 
@@ -333,7 +392,7 @@ If you finish early:
 ### remove session
 
 - Each session card has a `⋯` menu with a **Remove** button.
-- Clicking it fires a `cfb-session-removed` event (defined in [events.js](./lib/events.js)) that bubbles up to
+- Clicking it fires a `cfb-session-removed` event (defined in [events.js](./events.js)) that bubbles up to
   `<cfb-session-store>`.
 - The store deletes the entry from IDB via `deleteSession(id)` (which you need to implement),
 - and fires `sessionsLoaded` the same path used for initial load and adding sessions.
@@ -347,17 +406,17 @@ If you finish early:
 ▼
 ✅ cfb-session-card (press 'remove' button')
 create new event
-│ │
-│ ▼
-│ ✅ events.js
-│ create the new event
+│    │
+│    ▼
+│    ✅ events.js
+│        create the new event
 ▼
 🚧 cfb-session-store
 deletes session from session store
-│ │
-│ ▼
-│ ✅ session-store
-│ remove session from IndexedDB
+│    │
+│    ▼
+│    ✅ session-store
+│        remove session from IndexedDB
 And dispatches an event up the chain
 ▼
 ✅ cfb-board-orchestrator

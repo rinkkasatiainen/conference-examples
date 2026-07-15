@@ -2,10 +2,10 @@ import { createServer } from 'node:http'
 import { Router } from './router.js'
 import { json, sendNoContent } from './http-utils.js'
 import {
-  handleDeleteSession,
-  handleGetSessions,
-  handlePatchSession,
-  handlePutSession
+  deleteSession,
+  getSessions,
+  updateSessionDetails,
+  addNewSession
 } from './sessions/route-handlers.js'
 import { handleGetSchedule } from './schedules/route-handlers.js'
 
@@ -14,10 +14,10 @@ const PORT = Number(process.env.PORT ?? 3001)
 const router = new Router()
 
 router.get('/api/schedule/:eventId', handleGetSchedule)
-router.get('/api/sessions/:eventId', handleGetSessions)
-router.put('/api/sessions/:eventId/:sessionId', handlePutSession)
-router.patch('/api/sessions/:eventId/:sessionId', handlePatchSession)
-router.delete('/api/sessions/:eventId/:sessionId', handleDeleteSession)
+router.get('/api/sessions/:eventId', getSessions)
+router.put('/api/sessions/:eventId/:sessionId', addNewSession)
+router.patch('/api/sessions/:eventId/:sessionId', updateSessionDetails)
+router.delete('/api/sessions/:eventId/:sessionId', deleteSession)
 
 const server = createServer((req, res) => {
   if (!req.url) {

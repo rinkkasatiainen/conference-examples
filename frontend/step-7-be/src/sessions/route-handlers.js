@@ -31,7 +31,7 @@ export async function updateSessionDetails(req, res, { params }) {
   json(res, 200, updated)
 }
 
-export async function handleGetSessions(req, res, { params }) {
+export async function getSessions(req, res, { params }) {
   const eventSessions = sessions[params.eventId]
   if (!eventSessions) {
     json(res, 404, { error: `Unknown eventId "${params.eventId}"` })
@@ -73,7 +73,7 @@ export async function addNewSession(req, res, { params }) {
   json(res, 200, session)
 }
 
-export async function handleDeleteSession(req, res, { params }) {
+export async function deleteSession(req, res, { params }) {
   const eventId = params.eventId
   const sessionId = params.sessionId
   if (!sessions[eventId] || !schedules[eventId]) {
