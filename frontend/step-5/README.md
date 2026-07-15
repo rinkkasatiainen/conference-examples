@@ -334,8 +334,8 @@ To finish this exercise, you need to (detailed help below the table)
 
 ### ✨ `cfb-add-session-form.js` - new custom element
 
-- [x] Renders a button to open the form
-- [x] when pressing button, opens a `dialog` component (and supports closing it)
+- [ ] Renders a button to open the form
+- [ ] when pressing button, opens a `dialog` component (and supports closing it)
 - [ ] Render a `<form>` with these fields inside `connectedCallback`
     - **Title** - `<input type="text">`, `required`, `minlength="5"`
     - **Day** - `<select>` (Wednesday / Thursday / Friday), `required`
@@ -379,7 +379,6 @@ To finish this exercise, you need to (detailed help below the table)
 **Definition of done**
 
 - you can add a new session to the board.
-- you can edit a new session to the board.
 
 In [Question for your facilitator](./learning-log.md#step-5-facilitator-question), ask one question and capture the
 answer. Complete [Myth & fact → facilitator](./learning-log.md#step-5-myth-fact-facilitator) as well.

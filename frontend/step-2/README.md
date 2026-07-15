@@ -110,7 +110,7 @@ Use **`data-session-details`** with JSON that matches the shape below. **Rich at
 
 Build `<cfb-session-card>` so you can **show** all of the following:
 
-- [x] Create `cfb-session-card.js` and register **`cfb-session-card`** from `index.js` (alongside `<cfb-tag>` from
+- [ ] Create `cfb-session-card.js` and register **`cfb-session-card`** from `index.js` (alongside `<cfb-tag>` from
   Step 1 - see `index.js` import pattern).
 - [ ] Render a card that visually matches the **static** session cards in
   [`../step-0/index.html`](../step-0/index.html): header with **title** and **`⋯` menu** control, **tags row** using

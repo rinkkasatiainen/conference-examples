@@ -27,9 +27,6 @@ The shared stylesheet (`styles.css` and its `css/` imports) is yours from day on
 styling from scratch. Use [`index.html`](./index.html) at the repo root of `frontend/` as the visual reference for the
 finished board. Each challenge is about **HTML structure and JavaScript behaviour**.
 
-**Optional extras** (SVG timeline, Canvas charts, design tokens, import maps, workers, view transitions) are documented
-separately in [`PLAN-advanced.md`](./PLAN-advanced.md).
-
 ---
 
 ## Atomic Design - the mental model we use
@@ -104,48 +101,32 @@ and modifiers never accidentally bleed into unrelated components.
 
 Here's how each core step maps to a layer:
 
-| Step | What you build                                                          | Layer                   |
-|------|-------------------------------------------------------------------------|-------------------------|
-| 0    | Static HTML board                                                       | Template                |
-| 1    | `<cfb-tag>`                                                             | Atom                    |
-| 2    | `<cfb-session-card>`                                                    | Molecule                |
-| 3    | `<cfb-board-orchestrator>`, `<cfb-schedule>`, `<cfb-session-generator>` | Organism                |
-| 4    | IndexedDB store + schedule rendering from persistence                   | Storage + Organism      |
-| 5    | `<cfb-add-session-form>`                                                | Molecule                |
-| 6    | `<cfb-session-type>` (form-associated)                                  | Atom                    |
-| 7    | API loaders, orchestrator, MSW                                          | Organism / side-effects |
-| 8    | `<cfb-live-updates>` (WebSocket + MSW)                                  | Organism                |
-
----
-
-## The steps at a glance
-
-| Step | Title                                      | Status   |
-|------|--------------------------------------------|----------|
-| 0    | The Static Board                           | ✅ done   |
-| 1    | `<cfb-tag>` - Basic Web Component          | 🚧 ready |
-| 2    | `<cfb-session-card>` - Composite Component | ⬜ todo   |
-| 3    | `<cfb-board-orchestrator>` - Pub/Sub       | ⬜ todo   |
-| 4    | Load from IndexedDB                        | ⬜ todo   |
-| 5    | Add a Session - HTML Form Elements         | 🚧 ready |
-| 6    | `<cfb-session-type>` - Custom Form Element | 🚧 ready |
-| 7    | Load from Backend - `fetch` + MSW          | ⬜ todo   |
-| 8    | Live Updates - WebSocket + MSW             | ⬜ todo   |
+| Step | What you build                                                              | Layer                   |
+|------|-----------------------------------------------------------------------------|-------------------------|
+| 0    | Static HTML board                                                           | Template                |
+| 1    | `<cfb-tag>`                                                                 | Atom                    |
+| 2    | `<cfb-session-card>`                                                        | Molecule                |
+| 3    | `<cfb-board-orchestrator>`, `<cfb-schedule>`, `<cfb-session-generator>`     | Organism                |
+| 4    | `<cfb-session-store>` IndexedDB store + schedule rendering from persistence | Storage + Organism      |
+| 5    | `<cfb-add-session-form>`                                                    | Molecule                |
+| 6    | `<cfb-session-type>` (form-associated element)                              | Atom                    |
+| 7    | `<cfb-updates-sessions>` API loaders, orchestrator, MSW                     | Organism / side-effects |
+| 8    | `<cfb-live-session-updates>` (WebSocket + MSW)                              | Organism                |
 
 Each step has its own folder (`step-0/`, `step-1/`, … `step-8/`) with a **`README.md`** (goal, deliverables,
 constraints, optional extras) and often a **`getting-started.md`** (branch, local server, first browser check).
 
-| Step | One-line focus                                                              |
-|------|-----------------------------------------------------------------------------|
-| 0    | Replace custom tags with semantic HTML; no JavaScript.                      |
-| 1    | First custom element: reactive `data-label` / `data-color`.                 |
-| 2    | Compose `<cfb-tag>` inside a session card from JSON data.                   |
-| 3    | Custom events bubble up; orchestrator pushes state down via attributes.     |
-| 4    | Seed and read sessions from IndexedDB; render the board from storage.       |
+| Step | One-line focus                                                            |
+|------|---------------------------------------------------------------------------|
+| 0    | Replace custom tags with semantic HTML; no JavaScript.                    |
+| 1    | First custom element: reactive `data-label` / `data-color`.               |
+| 2    | Compose `<cfb-tag>` inside a session card from JSON data.                 |
+| 3    | Custom events bubble up; orchestrator pushes state down via attributes.   |
+| 4    | Seed and read sessions from IndexedDB; render the board from storage.     |
 | 5    | Native form validation and `FormData`; dispatch into the existing pipeline. |
-| 6    | Form-associated custom control with `ElementInternals`.                     |
-| 7    | Loaders `fetch` schedule + sessions; MSW stands in for the API.             |
-| 8    | WebSocket pushes updates; same orchestrator refresh path as Step 7.         |
+| 6    | Form-associated custom control with `ElementInternals`.                   |
+| 7    | Loaders `fetch` schedule + sessions             |
+| 8    | WebSocket pushes updates; same orchestrator refresh path as Step 7.       |
 
 ### Learning logs
 
@@ -158,15 +139,11 @@ constraints, optional extras) and often a **`getting-started.md`** (branch, loca
 
 ### Learning goals summary
 
-[`learning-goals.md`](./learning-goals.md) lists the measurable outcomes per step in one place - useful when you are
-choosing which steps to run in which week.
-
 ---
 
 ## Advanced topics (optional)
 
-After the core arc (Steps 0–8), colleagues can pick up standalone sessions from [
-`PLAN-advanced.md`](./PLAN-advanced.md):
+After the core arc (Steps 0–8), colleagues can pick up standalone sessions from
 
 | Topic | Title                            | Browser API                         |
 |-------|----------------------------------|-------------------------------------|
@@ -190,8 +167,8 @@ These do not block the main weekly path; tackle them in any order.
 Running alongside the component steps is a **companion testing track** - challenges focused on testing the same
 components you build, using a real browser test runner instead of JSDOM.
 
-See [`PLAN-TEST.md`](./PLAN-TEST.md) for the full plan. The testing steps live in their own folders (`test-0/`,
-`test-1/`, …) and can be tackled in parallel with the matching component step or as a separate session.
+The testing steps live in their own folders (`test-0/`, `test-1/`, …) and can be tackled in parallel with the matching
+component step or as a separate session.
 
 | Test step | Title                                      | Mirrors | Extras           |
 |-----------|--------------------------------------------|---------|------------------|

@@ -94,7 +94,6 @@ frontend/
 ├── README.md              ← series overview (not the weekly guide)
 ├── learning-log.md        ← journey hub - one takeaway per step
 ├── how-to.md              ← this file
-├── PLAN.md                ← facilitator specs + activity catalogue
 └── step-N/
     ├── README.md          ← weekly guide (4C sections)
     ├── learning-log.md    ← your answers + back-to-README links

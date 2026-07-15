@@ -98,15 +98,15 @@ structure together with `cfb-layout.css`.
 Later steps introduce **custom elements** (`<cfb-tag>`, `<cfb-session-card>`, …). Each maps to a layer so you can decide
 boundaries and responsibilities.
 
-| Step | Element                    | Layer    |
-|------|----------------------------|----------|
-| 1    | `<cfb-tag>`                | Atom     |
-| 2    | `<cfb-session-card>`       | Molecule |
-| 3    | `<cfb-board-orchestrator>` | Organism |
-| 4    | `<cfb-session-store>`      | Organism |
-| 5–6  | data + form elements       | Molecule |
-| 7    | `<cfb-updates-sessions>`   | Organism |
-| 8    | `<cfb-session-listener>`   | Organism |
+| Step | Element                     | Layer    |
+|------|-----------------------------|----------|
+| 1    | `<cfb-tag>`                 | Atom     |
+| 2    | `<cfb-session-card>`        | Molecule |
+| 3    | `<cfb-board-orchestrator>`  | Organism |
+| 4    | `<cfb-session-store>`       | Organism |
+| 5–6  | data + form elements        | Molecule |
+| 7    | `<cfb-updates-sessions>`    | Organism |
+| 8    | `cfb-live-session-updates>` | Organism |
 
 **Step 0 scope:** your HTML uses **semantic elements and `cfb-` classes only** - no `<cfb-*>` tags and no JavaScript.
 The table above is a **roadmap**; you are not building those custom tags until the matching step.

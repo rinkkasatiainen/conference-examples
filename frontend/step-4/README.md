@@ -333,7 +333,7 @@ If you finish early:
 ### remove session
 
 - Each session card has a `⋯` menu with a **Remove** button.
-- Clicking it fires a `cfb-session-removed` event (defined in [events.js](./events.js)) that bubbles up to
+- Clicking it fires a `cfb-session-removed` event (defined in [events.js](./lib/events.js)) that bubbles up to
   `<cfb-session-store>`.
 - The store deletes the entry from IDB via `deleteSession(id)` (which you need to implement),
 - and fires `sessionsLoaded` the same path used for initial load and adding sessions.
