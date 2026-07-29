@@ -17,13 +17,13 @@ import { CfbSessionStore }      from './cfb-session-store.js'
 import { CfbAddSessionForm }    from './cfb-add-session-form.js'
 import { CfbEditSessionForm }   from './cfb-edit-session-form.js'
 
-customElements.define('cfb-tag',                     CfbTag)
-customElements.define(CfbMenu.elementName,            CfbMenu)
-customElements.define(CfbFlipCard.elementName,        CfbFlipCard)
-customElements.define(CfbSessionCard.elementName,     CfbSessionCard)
-customElements.define(CfbEditSessionForm.elementName, CfbEditSessionForm)
-customElements.define(CfbSchedule.elementName,                 CfbSchedule)
-customElements.define(CfbBoardOrchestrator.elementName,       CfbBoardOrchestrator)
-customElements.define(CfbSessionLoader.elementName,           CfbSessionLoader)
-customElements.define(CfbSessionStore.elementName,            CfbSessionStore)
-customElements.define(CfbAddSessionForm.elementName,  CfbAddSessionForm)
+customElements.define('cfb-tag',                    CfbTag)
+customElements.define(CfbMenu.elementName,                CfbMenu)
+customElements.define(CfbFlipCard.elementName,            CfbFlipCard)
+customElements.define(CfbSessionCard.elementName,         CfbSessionCard)
+customElements.define(CfbEditSessionForm.elementName,     CfbEditSessionForm)
+customElements.define(CfbSchedule.elementName,            CfbSchedule)
+customElements.define(CfbBoardOrchestrator.elementName,   CfbBoardOrchestrator)
+customElements.define(CfbSessionLoader.elementName,       CfbSessionLoader)
+customElements.define(CfbSessionStore.elementName,        CfbSessionStore)
+customElements.define(CfbAddSessionForm.elementName,      CfbAddSessionForm)

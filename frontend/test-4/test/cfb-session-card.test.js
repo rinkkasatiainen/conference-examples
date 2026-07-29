@@ -167,7 +167,7 @@ describe('<cfb-session-card> (step-4)', () => {
 
       el.querySelector('[data-action="remove"]').click()
 
-      expect(eventSpy).to.have.been.calledOnce
+      expect(eventSpy.callCount).to.eql(1)
     })
   })
 })

@@ -1,4 +1,4 @@
-import { cfbSessionStored, EventTypes } from './lib/events.js'
+import { EventTypes } from './lib/events.js'
 
 export class CfbUpdatesSessions extends HTMLElement {
   connectedCallback() {

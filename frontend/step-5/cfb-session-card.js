@@ -1,5 +1,5 @@
 import { cfbSessionRemoved } from './lib/events.js'
-import getSessionTypeClass from '../step-4/lib/session-types.js'
+import getSessionFormatClass from '../step-4/lib/session-formats.js'
 
 // Single responsibility: know about sessions.
 // The flip animation lives in <cfb-flip-card>.
@@ -23,7 +23,7 @@ export class CfbSessionCard extends HTMLElement {
   }
 
   connectedCallback() {
-    // ✨ add event listeners here for Editing etc.
+    // ✨ TODO: add event listeners here for Editing etc.
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -39,7 +39,7 @@ export class CfbSessionCard extends HTMLElement {
   }
 
   disconnectedCallback() {
-    // ✨ remove event listeners here for Editing etc.
+    // ✨ TODO: remove event listeners here for Editing etc.
   }
 
   // ── Render ────────────────────────────────────────────────────
@@ -55,19 +55,19 @@ export class CfbSessionCard extends HTMLElement {
     const avatars = sessionDetails.attendees
       .map(attendee => `<div class="cfb-avatar" aria-label="${attendee.name}">${attendee.initials}</div>`)
 
-    const sessionType = sessionDetails.sessionType?.trim() ?? ''
-    const hasSessionType = Boolean(sessionType)
+    const sessionFormat = sessionDetails.sessionFormat?.trim() ?? ''
+    const hasSessionFormat = Boolean(sessionFormat)
     const articleClasses = [
       'cfb-card',
-      hasSessionType && 'cfb-card--session-type',
-      getSessionTypeClass(sessionType)
+      hasSessionFormat && 'cfb-card--session-format',
+      getSessionFormatClass(sessionFormat)
     ].filter(Boolean).join(' ')
 
-    const articleAria = hasSessionType
-      ? ` aria-label="${escapeAttr(`${sessionDetails.title}. Session type: ${sessionType}.`)}"`
+    const articleAria = hasSessionFormat
+      ? ` aria-label="${escapeAttr(`${sessionDetails.title}. Session format: ${sessionFormat}.`)}"`
       : ''
 
-    const titleAriaHidden = hasSessionType ? ' aria-hidden="true"' : ''
+    const titleAriaHidden = hasSessionFormat ? ' aria-hidden="true"' : ''
 
     this.innerHTML = `
     <cfb-flip-card>

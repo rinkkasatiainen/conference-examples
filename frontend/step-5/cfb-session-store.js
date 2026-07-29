@@ -37,7 +37,6 @@ export class CfbSessionStore extends HTMLElement {
     }
 
     async #broadcastSessions() {
-        const sessions = await getAllSessions()
         this.dispatchEvent(cfbSessionsLoadedToIDB())
     }
 }

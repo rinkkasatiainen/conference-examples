@@ -3,7 +3,7 @@
 ## Make the element form-associated
 
 ```js
-class CfbSessionType extends HTMLElement {
+class CfbSessionFormat extends HTMLElement {
   static formAssociated = true
 
   constructor() {
@@ -30,7 +30,7 @@ Use **`null`** when no value is selected so the field is omitted or empty in the
 if (this.dataset.required && !this.#value) {
   this.#internals.setValidity(
     { valueMissing: true },
-    'Please select a session type.'
+    'Please select a session format.'
   )
 } else {
   this.#internals.setValidity({})

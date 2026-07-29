@@ -34,7 +34,7 @@ export class CfbSessionStoreUpdates extends HTMLElement {
 
   #emitSessionsLoaded(eventId) {
     this.dispatchEvent(
-      new CustomEvent('sessionsLoaded', {
+      new CustomEvent('cfb-sessions-loaded', {
         bubbles: true,
         composed: true,
         detail: { eventId, updatedAt: Date.now() },

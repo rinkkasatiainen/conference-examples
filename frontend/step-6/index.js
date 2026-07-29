@@ -1,4 +1,4 @@
-// Step 6 - Step 5 + <cfb-session-type> (form-associated custom element)
+// Step 6 - Step 5 + <cfb-session-format> (form-associated custom element)
 
 import { CfbTag }               from '../step-1/cfb-tag.js'
 import { CfbSchedule }          from '../step-4/cfb-schedule.js'
@@ -8,11 +8,12 @@ import { CfbSessionLoader }     from '../step-4/cfb-session-loader.js'
 import { CfbSessionStore }      from '../step-5/cfb-session-store.js'
 import { CfbFlipCard }          from '../step-5/cfb-flip-card.js'
 import { CfbSessionCard }       from '../step-5/cfb-session-card.js'
-import { CfbSessionType }       from './cfb-session-type.js'
+import { CfbSessionFormat }       from './cfb-session-format.js'
 import { CfbAddSessionForm }    from './cfb-add-session-form.js'
 import { CfbEditSessionForm }   from './cfb-edit-session-form.js'
 
-customElements.define(CfbSessionType.elementName,      CfbSessionType)
+
+customElements.define(CfbSessionFormat.elementName,      CfbSessionFormat)
 customElements.define('cfb-tag',                       CfbTag)
 customElements.define(CfbMenu.elementName,             CfbMenu)
 customElements.define(CfbFlipCard.elementName,         CfbFlipCard)

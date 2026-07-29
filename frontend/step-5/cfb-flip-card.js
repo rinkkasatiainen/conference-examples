@@ -63,8 +63,9 @@ const SHADOW_CSS = `
 export class CfbFlipCard extends HTMLElement {
     static elementName = 'cfb-flip-card'
 
-    #backdrop  = null
-    #savedRect = null
+    #backdrop     = null
+    #placeholder  = null
+    #savedRect    = null
 
     constructor() {
         super()
@@ -86,6 +87,7 @@ export class CfbFlipCard extends HTMLElement {
 
     disconnectedCallback() {
         this.#backdrop?.remove()
+        this.#placeholder?.remove()
     }
 
     // ── Public API ────────────────────────────────────────────────
@@ -93,6 +95,8 @@ export class CfbFlipCard extends HTMLElement {
     flip() {
         this.#savedRect = this.getBoundingClientRect()
         const { top, left, width, height } = this.#savedRect
+
+        this.#insertPlaceholder()
 
         // Backdrop - lives in the light DOM so external CSS can style it.
         this.#backdrop = document.createElement('div')
@@ -149,6 +153,8 @@ export class CfbFlipCard extends HTMLElement {
         const onDone = () => {
             inner.removeEventListener('transitionend', onDone)
 
+            this.#placeholder?.remove()
+            this.#placeholder = null
             this.style.cssText = ''
             this.classList.remove('is-flipping')
             this.#backdrop?.remove()
@@ -158,5 +164,20 @@ export class CfbFlipCard extends HTMLElement {
             callback?.()
         }
         inner.addEventListener('transitionend', onDone)
+    }
+
+    // ── Placeholder ───────────────────────────────────────────────
+
+    #insertPlaceholder() {
+        const front = this.querySelector('[slot="front"]')
+        if (!front) return
+
+        this.#placeholder = document.createElement('div')
+        this.#placeholder.className = 'cfb-card-flip__placeholder'
+        this.#placeholder.style.width  = `${this.offsetWidth}px`
+        this.#placeholder.style.height = `${this.offsetHeight}px`
+        this.#placeholder.appendChild(front.cloneNode(true))
+
+        this.parentNode?.insertBefore(this.#placeholder, this)
     }
 }

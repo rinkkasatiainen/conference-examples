@@ -33,12 +33,3 @@ export async function fixtureAndWaitFor(html, eventType) {
   const event = await eventPromise
   return { el: container.firstElementChild, event }
 }
-
-/**
- * Returns a Promise that resolves the next time `target` emits `eventType`.
- */
-export function waitForEvent(target, eventType) {
-  return new Promise(resolve => {
-    target.addEventListener(eventType, (e) => resolve(e), { once: true })
-  })
-}

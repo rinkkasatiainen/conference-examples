@@ -1,22 +1,22 @@
-/* ── <cfb-session-type> - form-associated tile picker ─────────── */
-cfb-session-type {
+/* ── <cfb-session-format> - form-associated tile picker ─────────── */
+cfb-session-format {
     display: block;
     margin-top: var(--space-half);
 }
 
-.cfb-session-type__group {
+.cfb-session-format__group {
     display:               grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap:                   var(--space-1);
 }
 
 @media (min-width: 24rem) {
-    .cfb-session-type__group {
+    .cfb-session-format__group {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 }
 
-.cfb-session-type__tile {
+.cfb-session-format__tile {
     display:         flex;
     flex-direction:  column;
     align-items:     center;
@@ -34,44 +34,44 @@ cfb-session-type {
     transition:      border-color 0.12s, background 0.12s, box-shadow 0.12s;
 }
 
-.cfb-session-type__tile:hover:not(:disabled) {
+.cfb-session-format__tile:hover:not(:disabled) {
     border-color: var(--cfb-bg-brand);
     background:   var(--cfb-bg-column);
 }
 
-.cfb-session-type__tile:focus-visible {
+.cfb-session-format__tile:focus-visible {
     outline:        2px solid var(--cfb-bg-brand);
     outline-offset: 2px;
 }
 
-.cfb-session-type__tile--selected {
+.cfb-session-format__tile--selected {
     border-color: var(--cfb-bg-brand);
     background:   color-mix(in srgb, var(--cfb-bg-brand) 12%, var(--cfb-bg-card));
     box-shadow:   0 0 0 1px var(--cfb-bg-brand);
     font-weight:  600;
 }
 
-.cfb-session-type__tile:disabled {
+.cfb-session-format__tile:disabled {
     opacity: 0.45;
     cursor:  not-allowed;
 }
 
-.cfb-session-type__emoji {
+.cfb-session-format__emoji {
     font-size: 1.35rem;
     line-height: 1;
 }
 
-.cfb-session-type__label {
+.cfb-session-format__label {
     text-align: center;
     line-height: 1.2;
 }
 
 /* Edit form wrapper (replaces old fieldset spacing) */
-.cfb-edit-form__session-type {
+.cfb-edit-form__session-format {
     margin-top: var(--space-1);
 }
 
-.cfb-edit-form__session-type-label {
+.cfb-edit-form__session-format-label {
     display:     block;
     font-size:   var(--text-sm);
     font-weight: 600;

@@ -21,6 +21,7 @@ const FAKE_SEED = [
     attendees: [{ name: 'Alice Kent', initials: 'AK' }],
   },
 ]
+export const SEED_SESSIONS = FAKE_SEED
 
 let _store = []
 

@@ -1,17 +1,9 @@
 import { expect } from 'chai'
 
 import { CfbTag } from '../../step-1/cfb-tag.js'
-import { fixture, cleanup } from './helpers/fixture.js'
 
 customElements.define('cfb-tag', CfbTag)
-afterEach(cleanup)
 
 describe('<cfb-tag>', () => {
-  describe('rendering', () => {
-    // Add some tests for rendering
-  })
-
-  describe('attribute reactivity', () => {
-    // Add some tests for re-rendering after attribute change
-  })
+  // TODO: Add your tests here
 })

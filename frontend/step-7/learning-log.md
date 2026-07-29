@@ -129,7 +129,7 @@ or [`cfb-board-orchestrator.js`](./cfb-board-orchestrator.js) if needed._
 
 _Solo, ~4 minutes. Training from the Back of the Room - “images / different activity.”_
 
-Draw the flow chart from 'removing a session' to showing the change in the UI. Add all components involved and the
+Draw the flow chart from 'removing a session' to showing the change in the UI. Add all components involved and the 
 
 **event / `data-event-id`** → **both loaders** (parallel **`fetch`**) → **IndexedDB writes** → **orchestrator** → *
 *`cfb-schedule` + re-render**.
@@ -173,7 +173,7 @@ a backend**. Paste their reply (or your notes) below.
 
 _~4 minutes._
 
-1. Why is it useful to have a single point for backend API calls?
+1. Why is it useful to have a single point for backend API calls? 
 
    >
 

@@ -3,11 +3,20 @@
 In Step 2 you rendered one **molecule** (`<cfb-session-card>`) from session data. Now the board becomes **live**: a
 control can announce “new session” and **other** components update - **without** importing each other’s classes.
 
+> **This is the hinge of the whole track.** Up to here, components were wired to each other directly. From here on they
+> only ever talk **through the DOM** — events bubble **up**, attributes push state **down** — and *nothing* imports
+> anything else. Every later step (IndexedDB in 4, forms in 5–6, `fetch` in 7, WebSocket in 8) is just a **new source**
+> plugged into this same decoupled pipeline. Get this step, and Steps 4–8 are variations on one theme. Its testing
+> mirror, [T-3](../test-3/README.md), is the same hinge from the other side: it's where you start testing the
+> **contract between** components instead of one component alone.
+
 This step is about **events bubbling up** and **state pushed down** through attributes. The exact event name, payload
 shape, and wiring live in **Concepts** and **`events.js`** - after you’ve done **Connections** - so your first guesses
 in the learning log stay honest.
 
 > **Before you start:** branch, HTTP server, clean console - see [getting-started.md](./getting-started.md).
+
+**Testing companion (optional):** [Test step T-3 · pub/sub events](../test-3/README.md)
 
 ### Async / solo
 
@@ -60,25 +69,30 @@ previous steps).
 To publish an event, a component calls **`dispatchEvent`** on itself. To listen for an event, an ancestor element calls
 **`addEventListener`** on itself with reference to the event type.
 
-In short in this exercise:
+In short in this exercise (see [index.html](./index.html) for the HTML stcuture:
 
-- **Up:** [`CfbSessionGenerator`](cfb-session-generator.js) calls **`dispatchEvent`** on itself with a
+- **Event bubbles up:** [`CfbSessionGenerator`](cfb-session-generator.js) calls **`dispatchEvent`** on itself with a
   `cfbSessionCreated` event. The event walks toward `document`;
   The [`CfbBoardOrchestrator`](cfb-board-orchestrator.js) listens for `cfb-session-created` events and acts on the
   event.'
 - **Handling the event:** The orchestrator listens to the event, and whenever it sees a new session added to the
   schedule, it needs to do few things:
     - it calls `preventDefault()` to prevent the default browser behavior, and `stopPropagation()` to prevent the event
-      from bubbling up to the document.
+      from bubbling up to the document. (these are not necessary calls, but serves here as example)
     - it adds the session to the internal **`#sessions`** array. ...and
     - it updates the **`data-sessions`** attribute on `<cfb-schedule>` with the new array, which is the next step in the
       flow.
-- **Down:** the orchestrator keeps track of *sessions* locally and whenever an event is dispatched, it pushes the state
-  down to [`CfbSchedule`](cfb-schedule.js) by changing the **`data-sessions`** attribute. The schedule declares
-  **`observedAttributes`** and **re-renders** when that attribute changes.
-  Note how the CfbSchedule has no direct reference to [CfbSessionCard](../step-2/cfb-session-card.js) from Step-2, but
-  it just works by adding `<cfb-session-card data-session-details='${sessionJson}'></cfb-session-card>` into the HTML.
-  (this is the magic of the custom web components and registering them.)
+- **State pushed down:** the orchestrator keeps track of *sessions* locally and whenever an incoming event triggers the
+  event listener, it pushes the state down to [`CfbSchedule`](cfb-schedule.js) by changing the **`data-sessions`**
+  attribute. The schedule declares **`observedAttributes`** and **re-renders** when that attribute changes.
+
+---
+**Note!**
+
+> Note how the CfbSchedule has no direct reference to [CfbSessionCard](../step-2/cfb-session-card.js) from Step-2, but
+> it just works by adding `<cfb-session-card data-session-details='${sessionJson}'></cfb-session-card>` into the HTML.
+> (this is the magic of the custom web components and registering them.)
+---
 
 Neither the generator nor the schedule needs to **`import`** the orchestrator’s class. The **DOM tree** is the wiring
 that is part of the **pub/sub** system.
@@ -96,18 +110,20 @@ between frontend and backend in these exercises):
     room: string
     tags: Array<string>
     attendees: Array<{ initials: string, name: string }>
-    sessionType: string
+    sessionFormat: string
 }
 ```
 
-In [lib](./lib) folder, there are two related files, [`events.js`](./lib/events.js) which creates a custom event to be
-dispatched (that ensures the event details are of correct shape by calling a factory function defined in
-[`builds-session-details.js`](./lib/builds-session-details.js).
+In [lib](./lib) folder, there are two related files, [`events.js`](./lib/events.js) and
+[`builds-session-details.js`](./lib/builds-session-details.js). What you see here is two different responsibilities. A
+helper function to create the agreed custom event which is uses the other helper function to create valid payload shape
+for the event.
 
 The pattern of building sessionDetails and event through factories is a good pattern to make sure the shape of the data
 is consistent and easy to maintain. In [test-3](../test-3/README.md), this pattern is used to make contract tests. In
-that test-step, we'll learn to test the shape of the return value of [
-`generateRandomSession`](./lib/generate-random-session.js).
+that test-step, we'll learn to test the shape of the return value of
+[`generateRandomSession`](./lib/generate-random-session.js). In theory, already in this step we are defining a
+contract (shape of the session-details), but let's learn one step at a time.
 
 #### Building event details
 
@@ -138,9 +154,15 @@ This repo uses [`events.js`](./lib/events.js) to build the event:
 - it exports a function `cfbSessionCreated` that takes _data_ as parameter, and returns a `CustomEvent` with type of
   `EventTypes.SESSION_CREATED` and follows a shape of the CustomEvents described above. It also makes sure that the
   detail is build with the event details factory method.
-- the `_type` field of the `detail` is set to same as the type of the custom event. This most likely is unnecessary.
+- the `_type` field of the `detail` is set to same as the type of the custom event. Even though this might seem like
+  unnecessary payload, there might be situations where 'event type' and 'event name' are not 1:1.
 
 ### End-to-end flow (reference)
+
+From this step onwards, web components are talking with each other more dynamically. For that reason, let's draw a '
+end-2-end' flow for this situation.
+
+In this flow, it starts when you click the 'Add random session' button.
 
 Legend:
 
@@ -159,7 +181,7 @@ Legend:
         ▼
 🚧 cfb-board-orchestrator
   ✨ listens for cfb-session-created
-  ✨ pushes session into #sessions
+  ✨ pushes session into local #sessions variable
   ✨ sets data-sessions='[…]' on <cfb-schedule class="cfb-updates-schedule">
         │  attribute goes DOWN
         ▼
@@ -172,13 +194,22 @@ Legend:
 
 - The orchestrator has **one job:** to coordinate data flow - it merges incoming sessions and **fan out** changes to
   state to `CfbSchedule` element(s) via **attributes**.
-- The orchestrator **does not** know about the schedule - it must not have any reference to it.
+- The orchestrator **does not** know about the schedule - it must not have any reference to it. In best case,
+  orchestrator does not even know of the name of the element.
+
+Think this as like orchestrator is totally different capability than that of schedule. Schedule could be in a capability
+called _Session Discovery_ while orchestrator might live in _Session Tracking_. If these lives in different business
+capabilities, they should not know of the existenc of each other. Then, they must **agree on a class name** or such for
+`Schedule` to (sort of) register the updates from `Orchestrator`.
+
+More on busines capabilities in one of the extra challenges (to be done later).
 
 ### Listener hygiene
 
 Use a **stable** function reference for **`addEventListener`** / **`removeEventListener`** (e.g. a **bound** method or
-a **class field arrow**). Remove listeners in **`disconnectedCallback`** to avoid memory leaks. This is one of the
-drawbacks of Javascript and custom elements - how `this` is bound in functions.
+a **class field with fat arrow**). Remove listeners in **`disconnectedCallback`** to avoid memory leaks. This is one of
+the drawbacks of Javascript and custom elements - how `this` is bound in functions. More about this in
+the [Tips](./tips.md)
 
 ---
 
@@ -195,9 +226,6 @@ Do **two** short activities in your [learning log](./learning-log.md).
 
 1. **Mini quiz** - Open [Mini quiz](./learning-log.md#step-3-concept-quiz) and answer the three questions there *before*
    you rely on copy-paste from the source files.
-2. **Flow sketch** - Then open [Flow sketch](./learning-log.md#step-3-concept-flow-sketch) and draw the four-step
-   pipeline
-   (boxes + arrow labels). Paper is fine; paste a photo or ASCII into the log if you like.
 
 When both are done, move on to **Concrete practice**.
 

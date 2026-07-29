@@ -5,16 +5,20 @@ JavaScript. In this step you build `<cfb-tag>` - an example of the smallest buil
 Board: the colored badge on every session card.
 
 ```html
+
 <cfb-tag data-label="Keynote" data-color="blue"></cfb-tag>
 ```
 
 > **Before you start:** make sure the page loads over HTTP - see [getting-started.md](./getting-started.md).
 
+**Testing companion (optional):** [Test step T-1 · `<cfb-tag>`](../test-1/README.md)
+
 ### Async / solo
 
-These steps are written for **async, often solo** work. Where the README says *“in pairs”* or *“compare with someone”*,
-use one of these instead: write in [your Step 1 learning log](./learning-log.md) as your stand-in partner, post one line
-in your team channel, or book 10 minutes with a colleague. **Short timeboxes** matter more than the social format.
+These steps are written for **async, often solo** work. To support your work, there is
+a [Learning log](./learning-log.md) where you can write your thoughts and learnings for the future you. You can also
+think the learning log as your sparring partner, or rubber duck - it's the core of the learning journey and made so that
+you can copy it to your own 2nd brain, if you choose so.
 
 ---
 
@@ -50,7 +54,7 @@ Do these in order; capture answers in [your Step 1 learning log](./learning-log.
       If you skipped Step 0, use the shared static board in [`../step-0/index.html`](../step-0/index.html) (or [
       `../index.html`](../index.html)) and pick any `<span class="cfb-tag …">` atom there instead.
 
-5. **Solo, ~2 min - Topic link (you, not the abstract “learner”)**  
+4. **Solo, ~2 min - Topic link**  
    In [your learning log - Topic link](./learning-log.md#step-1-topic-link), answer **one** of these (whichever is
    easier):
     - **A)** Name a small presentational piece of UI you have built before (badge, atom, tag, pill, status dot, etc.)
@@ -62,6 +66,45 @@ Do these in order; capture answers in [your Step 1 learning log](./learning-log.
 ---
 
 ## 2) Concepts
+
+### Write your first custom element.
+
+To write your first custom element, you need two things to happen.
+
+- firstly, you need code that is executed by the browser when rendering the component.
+- secondly, you need to tell the browser that "when rendering `<cfb-tag>`, here's the code"
+
+To implement the code, you need to implement a class that extends `HTMLElement`. For example a hard-coded `<cfb-tag>`
+element could look like this
+
+```javascript
+export class CfbTag extends HTMLElement {
+
+  connectedCallback() {
+    this.innerHTML = '<span class="cfb-tag cfb-tag--orange">Example</span>'
+  }
+}
+```
+
+Then, you also need to tell the browser to know what to do when seeing a `<cfb-tag>` element. You do that by defining a
+custom element
+
+```javascript
+customElements.define('cfb-tag', CfbTag)
+```
+
+When both are loaded into the browser using a `<script>` tag, the hard-coded element will be rendered in the browser.
+
+### Inside of a custom web element
+
+What you saw in the example above, was one crucial concept of web components - a **lifecycle callback**. A lifecycle
+callback is one of four functions a web component can have, and with them, you can define different behavior for your
+component. The four lifecycle callback methods are: `connectedCallback`, `disconnectedCallback', `
+attributeChangedCallback` and `adoptedCallback`. Each of there are functions you write to your class, if needed.
+
+To understand what they do, and how/when they are initialized, let's dig a bit deeper into lifecycle events.
+
+### Lifecycle events
 
 Custom elements expose lifecycle callbacks you hook into at key moments:
 
@@ -99,6 +142,8 @@ executed.
 ```
 
 **When:** The element is connected first; later an observed attribute is updated (e.g. `setAttribute('data-label', …)`).
+This happens for example when the static HTML has the element, and later one of the observed attributes is changed by
+some javascript.
 
 ### Scenario 3: `attributeChanged` → `connected` → `disconnected`
 
@@ -109,14 +154,15 @@ executed.
 ```
 
 **When:** You set attributes on a **disconnected** node, then append it. `attributeChangedCallback` can run **before**
-`connectedCallback`.
+`connectedCallback`. This is a normal flow when building a web component programmatically e.g. in another web component.
+When you first build the component, it's not connected to DOM, and you can set the attributes. Later, on e.g. '
+appendChild', the component is connected to the DOM.
 
 ### Key takeaways
 
 - Order depends on **when** the element is connected **relative to** when observed attributes change.
-- **Scenario 1:** connect only - typical for static markup with no post-connect attribute updates;
-  `attributeChangedCallback` may never run.
-- **Scenario 2:** connect, then attribute updates while in the document.
+- **Scenario 1:** connect only - typical for static markup with no post-connect attribute updates.
+- **Scenario 2:** connect static html, then attribute updates while in the document.
 - **Scenario 3:** attribute updates on a disconnected node, then connect. Typical scenario when building dynamically
   the board.
 

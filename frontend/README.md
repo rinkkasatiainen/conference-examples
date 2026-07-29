@@ -21,7 +21,7 @@ We get there gradually:
 
 - **Steps 0–2** lay the visual and structural foundation using plain HTML, CSS, and your first Web Components.
 - **Steps 3–6** add behaviour: pub/sub events, IndexedDB, HTML forms, and form-associated custom elements.
-- **Steps 7–8** integrate with the outside world: `fetch` + MSW mocks, then WebSocket live updates.
+- **Steps 7–8** integrate with the outside world: `fetch` from a real backend, then WebSocket live updates.
 
 The shared stylesheet (`styles.css` and its `css/` imports) is yours from day one - you never have to worry about
 styling from scratch. Use [`index.html`](./index.html) at the repo root of `frontend/` as the visual reference for the
@@ -29,17 +29,54 @@ finished board. Each challenge is about **HTML structure and JavaScript behaviou
 
 ---
 
-## Atomic Design - the mental model we use
+## The story of this track — why these steps, in this order
 
-Every component we build fits into a layered design system called **Atomic Design**, introduced by Brad Frost. Think of
-it as a hierarchy from the tiniest UI pieces up to full page layouts:
+This isn't eight unrelated widgets. It's **one app growing one capability at a time**, and every step plugs its new
+capability into the **same skeleton** without rewriting what came before.
+
+That skeleton is a single rule you first meet in Step 3 and reuse to the end:
+
+> **Events travel up. State travels down. Every data source refreshes the board through the _same_ pipeline — never a
+> second render path.**
+
+Read the arc as **capabilities**, not components:
+
+| Step | Capability it adds          | The move                                                          |
+|------|-----------------------------|-------------------------------------------------------------------|
+| 0    | Structure                   | Semantic HTML — the shape everything else must produce            |
+| 1    | Encapsulation               | Wrap markup + behaviour into your first custom element            |
+| 2    | Composition                 | Render a component from data                                      |
+| 3    | **Decoupling** _(the hinge)_ | Components talk through DOM events, not imports                    |
+| 4    | Persistence                 | State moves out of components into IndexedDB; the board _pulls_ on a signal |
+| 5    | Input                       | A real form feeds the **same** create pipeline                    |
+| 6    | Extending the platform      | A form-associated custom element in the **same** submit path      |
+| 7    | Network (pull)              | `fetch` + loaders + an orchestrator that waits for both           |
+| 8    | Network (push)              | A WebSocket pushes into the **same** store-and-refresh path       |
+
+**Step 3 is the hinge of the whole track.** Before it, components reach for each other directly; after it, they only
+ever communicate through the DOM — events bubbling up, attributes pushed down. Every later step (persistence, forms,
+`fetch`, WebSocket) is just a new _source_ feeding that same decoupled pipeline. Get Step 3, and Steps 4–8 are variations
+on a theme. The testing track's [T-3](./test-3/README.md) is the mirror hinge: it's where you start testing the
+**contract between** components instead of one component in isolation.
+
+The payoff: by Step 8 you can add live server push to a running app and touch **almost none** of the existing render
+code — because what you've really been building is the architecture, not the feature count.
+
+---
+
+## Atomic Design - a lens for placing components
+
+Alongside the capability arc above, every component also fits into a layered design system called **Atomic Design**,
+introduced by Brad Frost. Atomic Design doesn't drive the _order_ of the steps (the capability arc does) — it's a lens
+for deciding **where a component sits** and what it should know about. Think of it as a hierarchy from the tiniest UI
+pieces up to full page layouts:
 
 ```
 Atoms  ──►  Molecules  ──►  Organisms  ──►  Templates
 ```
 
 **Atoms** are the smallest indivisible building blocks - a coloured tag badge, a person's avatar chip, a form-associated
-session-type picker.
+session-format picker.
 
 **Molecules** are groups of atoms working together as one reusable unit - a session card (title + tags + avatars), the
 add-session form.
@@ -81,12 +118,12 @@ A real example from the board:
 ```html
 
 <article class="cfb-card cfb-card--travel">
-    <header class="cfb-card__header">
-        <h3 class="cfb-card__title">Opening Keynote</h3>
-    </header>
-    <div class="cfb-card__tags">
-        <span class="cfb-tag cfb-tag--blue">Keynote</span>
-    </div>
+  <header class="cfb-card__header">
+    <h3 class="cfb-card__title">Opening Keynote</h3>
+  </header>
+  <div class="cfb-card__tags">
+    <span class="cfb-tag cfb-tag--blue">Keynote</span>
+  </div>
 </article>
 ```
 
@@ -109,9 +146,12 @@ Here's how each core step maps to a layer:
 | 3    | `<cfb-board-orchestrator>`, `<cfb-schedule>`, `<cfb-session-generator>`     | Organism                |
 | 4    | `<cfb-session-store>` IndexedDB store + schedule rendering from persistence | Storage + Organism      |
 | 5    | `<cfb-add-session-form>`                                                    | Molecule                |
-| 6    | `<cfb-session-type>` (form-associated element)                              | Atom                    |
-| 7    | `<cfb-updates-sessions>` API loaders, orchestrator, MSW                     | Organism / side-effects |
-| 8    | `<cfb-live-session-updates>` (WebSocket + MSW)                              | Organism                |
+| 6    | `<cfb-session-format>` (form-associated element)                              | Atom                    |
+| 7    | `<cfb-session-loader>` + `<cfb-schedule-loader>` loaders, orchestrator      | Organism / side-effects |
+| 8    | `<cfb-live-session-updates>` (WebSocket)                                    | Organism                |
+
+> The layers deliberately **revisit** — a molecule in Step 5, then an atom in Step 6 — because the arc is driven by
+> _capability_, not by climbing the hierarchy in order. Step 6's atom refines a control _inside_ Step 5's form molecule.
 
 Each step has its own folder (`step-0/`, `step-1/`, … `step-8/`) with a **`README.md`** (goal, deliverables,
 constraints, optional extras) and often a **`getting-started.md`** (branch, local server, first browser check).
@@ -139,26 +179,55 @@ constraints, optional extras) and often a **`getting-started.md`** (branch, loca
 
 ### Learning goals summary
 
+A one-page summary of the measurable learning outcome for every step lives in
+[`learning-goals.md`](./learning-goals.md).
+
 ---
 
 ## Advanced topics (optional)
 
-After the core arc (Steps 0–8), colleagues can pick up standalone sessions from
+After the core arc (Steps 0–8), It comes in **two tiers**, and they work differently.
+
+### Journeys - architecture, multi-session
+
+Steps 0–8 leave you with a working board and a **flat folder**: one `EventTypes` enum, one session store, one
+backend module, all imported by everything. The journeys are the refactor that turns that into a set of
+**independently packaged business capabilities** - the shape you can see in
+[`example-app/`](../example-app/). They introduce no new browser API at all.
+
+| Journey | Title                          | Sessions | The question it answers            |
+|---------|--------------------------------|----------|------------------------------------|
+| A       | Find the Business Capabilities | A1–A3    | Where do the boundaries go?        |
+| B       | Package a Capability to npm    | B1–B3    | How does a boundary become a package? |
+
+**A** is mostly writing, not coding - you card-sort your own components into capabilities, classify them as
+core / supporting / generic, then grep your own imports to find the shared kernel you built without noticing.
+**B** turns one of those capabilities into a real npm package: a single public entry point, resolved in the
+browser by bare specifier via an import map, receiving its infrastructure by injection, shipping its contract
+alongside. No bundler, no build step.
+
+Unlike the topics below, **the journeys are sequential**: A produces the map that B packages, and the sessions
+inside a journey build on each other.
+
+### Topics - one browser API, 30 minutes
 
 | Topic | Title                            | Browser API                         |
 |-------|----------------------------------|-------------------------------------|
-| A     | `<cfb-timeline>` - SVG           | Inline SVG, SMIL                    |
-| B     | `<cfb-occupancy-chart>` - Canvas | Canvas 2D, `requestAnimationFrame`  |
-| C     | Design Tokens & Theming          | CSS custom properties, `@layer`     |
-| C½    | Packaging & ES Modules           | Native modules, import maps         |
-| D     | Import Maps                      | Module resolution without a bundler |
-| E     | Web Workers                      | Off-main-thread work                |
-| F     | View Transitions                 | `document.startViewTransition`      |
-| G     | Shadow dom                       | Working with shadow dom             |
-| H     | Slots                            | Working with slots                  |
-| I     | Typescript                       | Using TypeScript instead of JS      |
+| C     | `<cfb-timeline>` - SVG           | Inline SVG, SMIL                    |
+| D     | `<cfb-occupancy-chart>` - Canvas | Canvas 2D, `requestAnimationFrame`  |
+| E     | Design Tokens & Theming          | CSS custom properties, `@layer`     |
+| F     | Import Maps                      | Module resolution without a bundler |
+| G     | Web Workers                      | Off-main-thread work                |
+| H     | View Transitions                 | `document.startViewTransition`      |
+| I     | Shadow dom                       | Working with shadow dom             |
+| J     | Slots                            | Working with slots                  |
+| K     | Typescript                       | Using TypeScript instead of JS      |
 
-These do not block the main weekly path; tackle them in any order.
+These do not block the main weekly path; tackle them in any order. Topic **F** is the mechanism Journey B runs
+on, so it doubles as a warm-up for B1.
+
+> **Renumbered.** Topics C–K were previously A–I, to make room for the journeys. The old **Topic C½ (Packaging
+> & ES Modules)** is retired - Journey B covers the same ground with a real capability split behind it.
 
 ---
 

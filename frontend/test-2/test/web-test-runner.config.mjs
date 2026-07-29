@@ -1,6 +1,7 @@
 import { importMapsPlugin } from '@web/dev-server-import-maps'
 
 const testImportMappings = {
+  // './testing-utils/': '../../testing-utils/',
   // Add module remaps here, per test folder
 }
 

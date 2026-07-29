@@ -1,8 +1,10 @@
 {
-  "id": "web-components-deep-dive",
+  "id": "add-form-canonical-001",
   "title": "Web Components Deep Dive",
   "day": "Wednesday",
   "room": "Track A",
+  "startTime": "11:00",
+  "sessionFormat": "Talk",
   "tags": [
     {
       "label": "Frontend",
@@ -13,10 +15,6 @@
     {
       "name": "Alice Kent",
       "initials": "AK"
-    },
-    {
-      "name": "James Smith",
-      "initials": "JS"
     }
   ]
 }

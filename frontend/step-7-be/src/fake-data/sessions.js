@@ -25,7 +25,7 @@ export const sessions = {
       attendees: [pick(INITIALS_AND_NAMES), pick(INITIALS_AND_NAMES), pick(INITIALS_AND_NAMES)].filter(
         (v, i, a) => a.indexOf(v) === i   // deduplicate
       ),
-      sessionType: 'Keynote',
+      sessionFormat: 'Keynote',
     },
     {
       id: 'cf25-2',
@@ -40,7 +40,7 @@ export const sessions = {
       attendees: [pick(INITIALS_AND_NAMES), pick(INITIALS_AND_NAMES)].filter(
         (v, i, a) => a.indexOf(v) === i   // deduplicate
       ),
-      sessionType: 'Workshop',
+      sessionFormat: 'Workshop',
     },
     {
       id: 'cf25-3',
@@ -52,7 +52,7 @@ export const sessions = {
       attendees: [pick(INITIALS_AND_NAMES), pick(INITIALS_AND_NAMES), pick(INITIALS_AND_NAMES)].filter(
         (v, i, a) => a.indexOf(v) === i   // deduplicate
       ),
-      sessionType: 'Talk',
+      sessionFormat: 'Talk',
     },
     {
       id: 'cf25-4',
@@ -67,7 +67,7 @@ export const sessions = {
       attendees: [pick(INITIALS_AND_NAMES)].filter(
         (v, i, a) => a.indexOf(v) === i   // deduplicate
       ),
-      sessionType: 'Lightning Talk',
+      sessionFormat: 'Lightning Talk',
     },
     {
       id: 'cf25-5',
@@ -79,7 +79,7 @@ export const sessions = {
       attendees: [pick(INITIALS_AND_NAMES), pick(INITIALS_AND_NAMES), pick(INITIALS_AND_NAMES), pick(INITIALS_AND_NAMES)].filter(
         (v, i, a) => a.indexOf(v) === i   // deduplicate
       ),
-      sessionType: 'Keynote',
+      sessionFormat: 'Keynote',
     },
   ],
   'devdays-2025': [

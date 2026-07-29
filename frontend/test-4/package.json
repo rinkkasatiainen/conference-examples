@@ -8,7 +8,7 @@
     "test:store:real": "web-test-runner test/*.contract.test.js --config test/web-test-runner.store-real.config.mjs",
     "test:store:fake": "web-test-runner --node-resolve --config test/web-test-runner.config.mjs",
     "test:watch": "web-test-runner \"test/**/*.test.js\" --node-resolve --watch --config test/web-test-runner.config.mjs",
-    "test:specific": "web-test-runner --files=test/**/*${PATTERN:-*}*.test.js --node-resolve --config test/web-test-runner.config.mjs"
+    "test:specific": "web-test-runner --files=test/**/*${PATTERN:-${npm_config_pattern:-*}}*.test.js --node-resolve --config test/web-test-runner.config.mjs"
   },
   "devDependencies": {
     "@web/dev-server-import-maps": "^0.2.1",

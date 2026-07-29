@@ -3,7 +3,6 @@ export async function fixture(html) {
   container.id = 'testRoot'
   container.innerHTML = html
   document.body.appendChild(container)
-  await customElements.whenDefined(container.firstElementChild.localName)
   return container.firstElementChild
 }
 

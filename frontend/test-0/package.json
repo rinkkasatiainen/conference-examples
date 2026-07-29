@@ -7,7 +7,7 @@
     "test": "web-test-runner \"test/**/*.test.js\" --node-resolve --config test/web-test-runner.config.mjs",
     "test:watch": "web-test-runner \"test/**/*.test.js\" --node-resolve --watch",
     "test:manual": "web-test-runner \"test/**/*.test.js\" --node-resolve --config test/web-test-runner.config.mjs --manual",
-    "test:specific": "web-test-runner --files=test/**/*${PATTERN:-*}*.test.js --node-resolve --config test/web-test-runner.config.mjs"
+    "test:specific": "web-test-runner --files=test/**/*${PATTERN:-${npm_config_pattern:-*}}*.test.js  --node-resolve --config test/web-test-runner.config.mjs"
   },
   "devDependencies": {
     "chai": "^5.2.0",

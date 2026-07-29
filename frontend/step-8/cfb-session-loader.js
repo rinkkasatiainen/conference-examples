@@ -40,7 +40,7 @@ export class CfbSessionLoader extends HTMLElement {
       this.#setStatus('error', `failed: ${err.message}`)
 
       this.dispatchEvent(
-        new CustomEvent('loaderError', {
+        new CustomEvent('cfb-loader-error', {
           bubbles: true,
           composed: true,
           detail: { loader: 'sessions', eventId, error: err.message },

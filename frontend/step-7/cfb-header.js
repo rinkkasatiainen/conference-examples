@@ -1,51 +1,53 @@
-import createScheduleStore from './lib/store/schedule-store.js'
+// Layout shell for the conference
+// conference header row. All visible content is slotted from outside:
+//
+//   <* slot="meta">     - conference title / location / date (e.g. cfb-schedule-meta)
+//   <* slot="actions">  - optional controls; multiple nodes are supported
 
-const scheduleStore = createScheduleStore()
+const SHADOW_CSS = `
+    :host {
+        display: block;
+    }
+
+    .cfb-schedule__header {
+        display:               grid;
+        grid-template-columns: 1fr auto;
+        align-items:           center;
+        gap:                   1rem;
+    }
+
+    .cfb-schedule__actions {
+        display:     flex;
+        flex-wrap:   wrap;
+        gap:         0.5rem;
+        justify-content: flex-end;
+    }
+
+    @media (max-width: 40rem) {
+        .cfb-schedule__header {
+            grid-template-columns: 1fr;
+        }
+
+        .cfb-schedule__actions {
+            justify-content: stretch;
+        }
+    }
+`
 
 export class CfbHeader extends HTMLElement {
     static elementName = 'cfb-header'
 
-    static get observedAttributes() {
-        return ['data-event-id']
-    }
-
-    connectedCallback() {
-        if (this.dataset.eventId) {
-            this.#render()
-            return
-        }
-        this.#renderPlaceholder()
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name !== 'data-event-id' || oldValue === newValue) {
-            return
-        }
-        this.#render()
-    }
-
-    async #render() {
-        const eventId = this.dataset.eventId
-        if (!eventId) {
-            this.#renderPlaceholder()
-            return
-        }
-
-        const schedule = await scheduleStore.getSchedule(eventId)
-        if (!schedule) {
-            this.#renderPlaceholder('Waiting for conference details…')
-            return
-        }
-
-        this.innerHTML = `
+    constructor() {
+        super()
+        const root = this.attachShadow({ mode: 'open' })
+        root.innerHTML = `
+            <style>${SHADOW_CSS}</style>
             <header class="cfb-schedule__header">
-                <h2>${schedule.name}</h2>
-                <p>${schedule.location} &mdash; ${schedule.date}</p>
+                <slot name="meta"></slot>
+                <div class="cfb-schedule__actions">
+                    <slot name="actions"></slot>
+                </div>
             </header>
         `
-    }
-
-    #renderPlaceholder(message = 'Waiting for conference details…') {
-        this.innerHTML = `<p class="cfb-schedule__placeholder">${message}</p>`
     }
 }

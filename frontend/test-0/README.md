@@ -1,204 +1,153 @@
 # Test Step T-0 - Setup · Mocha + Web Test Runner
 
-Welcome to the testing track of the CodeFreeze Board challenges!
+Welcome to the **testing track**. This is one where we practice on how to test each type of component that we built in
+the 'step-N' examples.
 
-While the main weekly steps focus on *building* components, this track focuses
-on *testing* them. The two tracks are designed to go hand-in-hand - you can
-run them in parallel or come back to add tests after each step.
+> **Before you start:** [getting-started.md](./getting-started.md) · Test hub flow: [
+`how-to-test.md`](../how-to-test.md)
 
-Before you can test anything, you need a test runner. This step is all about
-getting one green dot on the screen.
+### Async / solo
 
----
-
-## Why not JSDOM / Jest?
-
-You might be used to running component tests with **Jest** + **JSDOM** or a
-similar setup. JSDOM is a JavaScript re-implementation of the DOM - it is
-fast and portable, but it does **not** support Custom Elements or Shadow DOM.
-That means `customElements.define()`, `connectedCallback`, and
-`this.attachShadow()` simply do not work there.
-
-`@web/test-runner` solves this by running your tests inside a **real browser
-engine**. Your component code runs in the exact same environment as production
-- because it literally is.
-
-```
-Jest + JSDOM          @web/test-runner
-──────────────────    ──────────────────────────────────
-fast, no browser      real Chromium / Firefox / WebKit
-no Custom Elements    customElements.define() ✓
-no Shadow DOM         attachShadow() ✓
-no :defined selector  all CSS selectors ✓
-```
-
-And, as Aki has a hate-hate relationship with **Jest** (it being super slow),
-having a tool that runs mocha and uses sinon and chai, is only a plus.
+This testing track works with pairs or as async/solo work. If you work in pairs, please still document your learnings in
+the `learning-log.md` file. And for solo work, let that be your pairing partner and use that as rubber duck and document
+your thinking. What I have heard from participants is, that the learning log is the most crucial part of the process.
 
 ---
 
-## What to build
+## Learning goal
 
-- [ ] Initialise an npm project in this folder
-- [ ] Install `@web/test-runner`, `@esm-bundle/chai`, and
-      `@web/dev-server-import-maps` as dev dependencies
-- [x] Add test scripts to `package.json`
-- [x] Create `test/web-test-runner.config.mjs` with the import maps plugin
-- [x] Write a smoke test in `test/example/smoke.test.js` that fails
-- [ ] Run tests `npm run test` and `npm run test:manual`
-- [ ] Fix the test, run again
+By the end of T-0 you can:
+
+- Run tests using `@web/test-runner` using npm scripts.
+- Explain why it's running the tests in a **real browser**
+- Explain why JSDOM (and hence Jest) is a poor fit for Custom Elements
+
+---
+
+## 1) Connections
+
+Do these **in order**; write in [your T-0 learning log](./learning-log.md).
+
+1. **Why not Jest?** - [Guess before Concepts](./learning-log.md#t-0-connections-jest-guess)
+2. **Topic link** - [Your testing background](./learning-log.md#t-0-connections-topic)
+
+---
+
+## 2) Concepts
+
+### @web/test-runner ??
+
+**`@web/test-runner`** is a modern, lightweight testing tool specifically designed for web applications.
+
+Unlike traditional runners that fake a browser environment inside Node.js, it spins up **real, actual browsers** to run
+your tests.
+
+### How it works?
+
+To run the tests in a real browser, it needs a web server to serve the test files which contains the components that are
+being tested. It does that by following the following steps:
+
+1. **Launching a Dev Server**: It starts a local web server that reads your project files natively using standard
+   browser ES Modules. There is no bundle or compile step.
+2. **Opening Real Browsers**: It uses browser automation tools (like Playwright or Puppeteer) to launch real, headless
+   instances of Chrome, Firefox, or Safari.
+3. **Executeing Locally**: Your test code is loaded into a real browser page via a standard script tag, running exactly
+   like it would for an end-user.
+4. **Reporting to Terminal**: The browser passes the test outcomes, console logs, and errors straight back to your
+   terminal interface.
+
+You can also see the tests running in browser, by instructing the tests to happen in `--manual` mode, when you can open
+the browser and see the tests running. This is also a great way to both debug the tests and to see the actual components
+rendering in the browser.
+
+### Manual mode!
+
+By default, `@web/test-runner` runs your tests invisibly in "headless" browsers. However, adding the --manual flag
+changes the behavior completely: instead of automation, it gives you a live interactive web page to visually inspect and
+debug your components. In [test-5](../test-5/README.md), you can see this in action where you can even see the animation
+as part of the test execution.
+
+**how does it work?**
+
+1. When you run the tests in `--manual` mode, the runner boots up the server, but pauses the execution
+2. It displays the address of the test page in the terminal (often `http://localhost:8000`)
+3. You can open that page in **any browser** and see the tests running
+4. You can open each test file (test suites) in the browser and see the tests running in isolation, and debug them using
+   the browser's DevTools
+
+**Why this is nice.**
+
+- **See Your Animations**: For things like your card-flip animation, you can watch it execute in slow motion using the
+  browser's native DevTools performance tab.
+- **Real UI Debugging**: You can open DevTools, use the DOM inspector element picker, tweak the global Light DOM CSS
+  styles live on the page, and see instantly why a component's layout is breaking.
+- **Cross-Device Testing**: Because it serves over a standard local IP, you can open the test suite URL on an actual
+  physical iPhone or Android device to test true mobile touch events and responsiveness.
+
+### Why not JSDOM / Jest?
+
+Coming from React/Vue etc, you most likely have used Jest to test your components. Jest runs tests on JSDOM, while as we
+have learned, `@web/test-runner` runs tests on real browsers. If you are building core Vanilla Web Components that live
+in the Light DOM, Jest introduces unnecessary complexity and false confidence. Here is why `@web/test-runner` is the
+right choice:
+
+- **It tests reality, not a simulation**: Your Light DOM components interact directly with the page's global styles,
+  form submissions, and layout engine. Jest uses JSDOM, which forces you to write mocks for basic browser
+  features like animations (requestAnimationFrame), element dimensions (offsetWidth), and native form validation.
+  `@web/test-runner` runs your code in a real browser, executing your card-flip animations and form states flawlessly
+  without a single mock.
+- **A purely native workflow**: Your components are written using modern, browser-native ES Modules (ESM). Because Jest
+  runs inside Node.js, it forces you to set up complex build tools (Babel, Vite, or Webpack) just to transpile your code
+  so Node can read it. `@web/test-runner serves` your native files straight to the browser over standard HTTP. There is
+  zero compilation, zero build configuration, and zero risk of a build tool altering your code's behavior between
+  testing and production.
+
+| Feature                   | Jest + JSDOM (Node.js Simulation)                               | @web/test-runner (Real Browser Execution)                            |
+|:--------------------------|:----------------------------------------------------------------|:---------------------------------------------------------------------|
+| **Execution Environment** | Fake browser simulated in Node.js.                              | Real browsers (Chrome, Firefox, Safari).                             |
+| **Workflow Build Step**   | **Requires compilation** (transforms ESM to CommonJS).          | **Zero-build** (serves native ES Modules directly).                  |
+| **User Interactions**     | **Synthetic events** (clicks work on hidden/disabled elements). | **Trusted events** (real mouse/keyboard engine via automation APIs). |
+| **Form Integration**      | **Simulated & buggy** (fails on native validation APIs).        | **Native & flawless** (full support for validation states).          |
+| **Layout & Geometry**     | **None** (`getBoundingClientRect()` always returns `0`).        | **Full** (calculates exact pixel sizes and positions).               |
+| **Animations & Layout**   | **No support** (requires heavy mocking of frames/timers).       | **Full support** (runs CSS transitions and layout scripts).          |
+| **Style Intersections**   | **Ignored** (cannot compute how global CSS affects elements).   | **Accurate** (tests true global CSS inheritance in Light DOM).       |
+
+And, as Aki has a hate-hate relationship with **Jest** (for example it being super slow), having a tool that runs mocha
+and uses sinon and chai, is only a plus.
+
+Complete [Myth or fact](./learning-log.md#t-0-concepts-myth-fact) in your learning log after skimming the sections
+below.
+
+---
+
+## 3) Concrete practice
+
+Before you can test components, get one green dot on the screen.
+
+This is initialized with all the necessary files and folders for the exercise. Your job is to run the tests, and update
+the test to make it pass
+
+### Steps to do
+
+- [ ] install the dependencies in this folder (`npm install`, `yarn install`, `pnpm install` - whatever you prefer)
+- [ ] run `npm run test` and see it fail
+- [ ] fix the test,
+- [ ] run `npm run test` again and see it pass
 
 ## Constraints
 
 - Max **20 minutes** - this is pure tooling setup, not component work yet.
 - No component code in this step.
 
+Detailed setup: **[tips.md](./tips.md)** (scripts, config, import maps, smoke test, npm commands).
+
 ---
 
-## Tips
+## 4) Conclusions
 
-### Installing the packages
-
-```bash
-npm init -y
-npm install --save-dev @web/test-runner chai
-npm install --save-dev @web/dev-server-import-maps
-```
-
-Notice that `@web/test-runner-playwright` is **not** in the list. Read on to
-find out why.
-
-### The `package.json` test scripts
-
-Add these scripts to `package.json`:
-
-```json
-{
-  "scripts": {
-    "test":          "web-test-runner \"test/**/*.test.js\" --node-resolve --config test/web-test-runner.config.mjs",
-    "test:watch":    "web-test-runner \"test/**/*.test.js\" --node-resolve --watch",
-    "test:manual":   "web-test-runner \"test/**/*.test.js\" --node-resolve --config test/web-test-runner.config.mjs --manual",
-    "test:specific": "web-test-runner --files=test/**/*${PATTERN:-*}*.test.js --node-resolve --config test/web-test-runner.config.mjs"
-  }
-}
-```
-
-| Script | What it does |
-|--------|-------------|
-| `npm test` | Run the full suite once and exit |
-| `npm run test:watch` | Re-run on every file save (great during active development) |
-| `npm run test:manual` | Open the WTR debug UI in the browser - useful when you want to step through a test with DevTools |
-| `npm run test:specific` | Run only files matching a pattern, e.g. `PATTERN=cfb-tag npm run test:specific` |
-
-The `--node-resolve` flag lets the runner resolve bare `import` specifiers
-(like `chai`) from `node_modules`, just like a bundler would.
-
-### The config file
-
-Create the config at `test/web-test-runner.config.mjs` - notice it lives
-**inside** the `test/` folder, which is why the scripts pass
-`--config test/web-test-runner.config.mjs` explicitly.
-
-```js
-import { importMapsPlugin } from '@web/dev-server-import-maps'
-
-const testImportMappings = {
-  // Add module remaps here, per test folder
-}
-
-const plugins = [
-  importMapsPlugin({
-    inject: {
-      importMap: {
-        imports: testImportMappings,
-      },
-    },
-  }),
-]
-
-export default {
-  plugins,
-  nodeResolve: true,
-  browserStartTimeout: 60000,
-  testFramework: {
-    config: {
-      timeout: 3000,
-    },
-  },
-  files: ['test/**/*.test.js'],
-}
-```
-
-### Why `importMapsPlugin`?
-
-An **import map** is a browser standard that lets you remap bare module
-specifiers - `import './my-module.js'` - to a different URL at load time,
-without touching the source file.
-
-In a test context this is extremely useful: you can swap a real dependency for
-a fake one just for the test run, without any build step or wrapping code.
-
-```js
-// Redirect every import of the real API client to a lightweight stub
-const testImportMappings = {
-  '/src/api/client.js': '/test/fakes/api-client.fake.js',
-}
-```
-
-When the browser loads any file that does `import './api/client.js'`, it gets
-the fake instead. The component code is completely unaware of the swap. This
-is a clean, standards-based alternative to Jest's `jest.mock()`.
-
-### Why no Playwright launcher?
-
-When you leave the `browsers` array out of the config, `@web/test-runner` falls
-back to its **built-in Chrome launcher**, which uses the **Chrome DevTools
-Protocol (CDP)** to drive whatever Chrome or Chromium is already installed on
-your machine.
-
-Playwright is a separate browser automation layer on top of CDP. It is powerful
-(multi-browser, cross-platform), but it comes with a cost:
-
-- It downloads its own browser binaries (~170 MB per browser) even if you
-  already have Chrome installed
-- It adds an extra dependency and a longer `npm install`
-- It is simply not needed when you only need Chromium on a developer machine
-  where Chrome is already present
-
-The built-in CDP launcher is faster to install, starts up slightly quicker,
-and covers everything we need for these challenges. If you later need to run
-tests in Firefox or WebKit, you can re-add the Playwright launcher for those
-engines specifically.
-
-### Your first test
-
-Create `test/example/smoke.test.js`. Keep it trivially simple - the goal is
-only to verify the toolchain works end-to-end. Run it and see it fail:
-
-```js
-import { expect } from 'chai'
-
-describe('smoke', () => {
-  it('true is true', () => {
-    expect(true).to.be.false
-  })
-})
-```
-
-### Running the tests
-
-```bash
-npm test                                   # full suite, run once
-npm run test:watch                         # re-run on file save
-npm run test:manual                        # open debug UI in browser
-PATTERN=cfb-tag npm run test:specific      # run only cfb-tag tests
-```
-
-You should see output like:
-
-```
-Chrome: |██████████████████████████| 1/1 test files | 1 passed, 0 failed
-```
+1. [Loop back - Jest/JSDOM guess](./learning-log.md#t-0-loop-back-jest)
+2. [Ticket out](./learning-log.md#t-0-conclusions-ticket-out)
+3. Add **one or two sentences** in the [test hub `learning-log-test.md`](../learning-log-test.md#t-0-key-takeaway)
 
 ---
 
@@ -207,12 +156,12 @@ Chrome: |███████████████████████�
 Should you finish early, here are some ideas to go deeper:
 
 - [ ] **Second browser** - add `firefoxLauncher` or `webkitLauncher` from
-      `@web/test-runner-playwright` to the `browsers` array and run tests in
-      multiple engines at once
+  `@web/test-runner-playwright` to the `browsers` array and run tests in
+  multiple engines at once
 - [ ] **Coverage** - add `--coverage` to the test script and open the generated
-      `coverage/` report in a browser
+  `coverage/` report in a browser
 - [ ] **Import map swap** - add a fake module to `testImportMappings` and
-      verify a test can import the fake instead of the real thing
+  verify a test can import the fake instead of the real thing
 
 ---
 

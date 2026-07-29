@@ -16,12 +16,13 @@ import { CfbMenu } from '../step-4/cfb-menu.js'
 import { CfbSchedule } from '../step-4/cfb-schedule.js'
 import { CfbFlipCard } from '../step-5/cfb-flip-card.js'
 import { CfbSessionCard } from '../step-5/cfb-session-card.js'
-import { CfbSessionType } from '../step-6/cfb-session-type.js'
+import { CfbSessionFormat } from '../step-6/cfb-session-format.js'
 import { CfbEditSessionForm } from '../step-6/cfb-edit-session-form.js'
 import { CfbBoardOrchestrator } from './cfb-board-orchestrator.js'
 import { CfbScheduleLoader } from './cfb-schedule-loader.js'
 import { CfbSessionLoader } from './cfb-session-loader.js'
 import { CfbHeader } from './cfb-header.js'
+import { CfbScheduleMeta } from './cfb-schedule-meta.js'
 import { CfbUpdatesSessions } from './cfb-updates-sessions.js'
 import { CfbAddSessionForm } from '../step-6/cfb-add-session-form.js'
 import { configureBackendApi } from './lib/api/backend-api.js'
@@ -34,12 +35,13 @@ customElements.define(CfbSchedule.elementName, CfbSchedule)
 customElements.define(CfbFlipCard.elementName, CfbFlipCard)
 customElements.define(CfbSessionCard.elementName, CfbSessionCard)
 customElements.define(CfbEditSessionForm.elementName, CfbEditSessionForm)
-customElements.define(CfbSessionType.elementName, CfbSessionType)
-customElements.define(CfbBoardOrchestrator.elementName, CfbBoardOrchestrator)
-customElements.define(CfbScheduleLoader.elementName, CfbScheduleLoader)
-customElements.define(CfbSessionLoader.elementName, CfbSessionLoader)
+customElements.define(CfbSessionFormat.elementName, CfbSessionFormat)
+customElements.define(CfbBoardOrchestrator.elementName,   CfbBoardOrchestrator)
+customElements.define(CfbSessionLoader.elementName,       CfbSessionLoader)
+customElements.define(CfbScheduleLoader, CfbScheduleLoader)
 customElements.define(CfbHeader.elementName, CfbHeader)
-customElements.define('cfb-updates-sessions', CfbUpdatesSessions)
+customElements.define(CfbScheduleMeta.elementName, CfbScheduleMeta)
+customElements.define(CfbUpdatesSessions.elementName, CfbUpdatesSessions)
 customElements.define(CfbAddSessionForm.elementName, CfbAddSessionForm)
 
 // ─── Event-switcher buttons ───────────────────────────────────────────────────

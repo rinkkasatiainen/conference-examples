@@ -38,21 +38,21 @@ getSchedule(eventId) {
 
 connectedCallback()
 {
-  this.addEventListener('scheduleLoaded', this.#onLoaderDone)
-  this.addEventListener('sessionsLoaded', this.#onLoaderDone)
+  this.addEventListener('cfb-schedule-loaded', this.#onLoaderDone)
+  this.addEventListener('cfb-sessions-loaded', this.#onLoaderDone)
 }
 
 disconnectedCallback()
 {
-  this.removeEventListener('scheduleLoaded', this.#onLoaderDone)
-  this.removeEventListener('sessionsLoaded', this.#onLoaderDone)
+  this.removeEventListener('cfb-schedule-loaded', this.#onLoaderDone)
+  this.removeEventListener('cfb-sessions-loaded', this.#onLoaderDone)
 }
 ```
 
 ## Dispatch pattern (loaders)
 
 ```js
-this.dispatchEvent(new CustomEvent('sessionsLoaded', {
+this.dispatchEvent(new CustomEvent('cfb-sessions-loaded', {
   bubbles: true,
   composed: true,
   detail: { eventId, updatedAt: Date.now() },

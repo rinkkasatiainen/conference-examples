@@ -9,9 +9,9 @@
 //   4. <cfb-menu>               - fires cfb-session-removed using step-4 events.js
 
 import { CfbTag } from '../step-1/cfb-tag.js' // ✅
-import { CfbSessionGenerator } from '../step-3/cfb-session-generator.js' // ✅
 import { CfbSessionCard } from './cfb-session-card.js' // ✅ rewritten from step-2
 import { CfbSchedule } from './cfb-schedule.js' // 🚧 rewrittern from step-3
+import { CfbSessionGenerator } from '../step-3/cfb-session-generator.js' // ✅
 import { CfbBoardOrchestrator } from './cfb-board-orchestrator.js' // 🚧 from step-3
 import { CfbMenu } from './cfb-menu.js' // ✅
 import { CfbSessionLoader } from './cfb-session-loader.js' // ✨

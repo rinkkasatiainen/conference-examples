@@ -1,25 +1,12 @@
-import { CfbTag } from '../../step-1/cfb-tag.js'
 import { CfbSessionCard } from '../../step-2/cfb-session-card.js'
-import { expect } from 'chai'
-import { fixture, cleanup } from './helpers/fixture.js'
-import { sessionDetails } from '../../step-2/builds-session-details.js'
-import { Randomizer } from './helpers/randomizer.js'
+import { sessionWith } from './helpers/session-builder.js'
 
-customElements.define('cfb-tag', CfbTag)
 customElements.define(CfbSessionCard.elementName, CfbSessionCard)
 
+// This small helper function might be useful. Use it, or delete it.
+const sessionHtml = (session = sessionWith()) =>
+  `<cfb-session-card data-session-details='${JSON.stringify(session)}'></cfb-session-card>`
+
 describe('<cfb-session-card>', () => {
-  afterEach(cleanup)
-
-  describe('title', () => {
-  })
-
-  describe('tags', () => {
-  })
-
-  describe('attendees', () => {
-  })
-
-  describe('data-session-details reactivity', () => {
-  })
+  // TODO: Add your tests here.
 })

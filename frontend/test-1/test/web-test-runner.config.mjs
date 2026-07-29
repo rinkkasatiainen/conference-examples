@@ -1,7 +1,7 @@
 import { importMapsPlugin } from '@web/dev-server-import-maps'
 
 const testImportMappings = {
-  // Add module remaps here, per test folder
+  // The schema files import from 'chai' directly; remap to the browser-compatible build
 }
 
 const plugins = [

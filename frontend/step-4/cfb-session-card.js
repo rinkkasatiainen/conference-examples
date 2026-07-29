@@ -1,5 +1,5 @@
 import { cfbSessionRemoved } from './lib/events.js'
-import getSessionTypeClass from './lib/session-types.js'
+import getSessionFormatClass from './lib/session-formats.js'
 
 function escapeAttr(s) {
   return String(s)
@@ -30,10 +30,6 @@ export class CfbSessionCard extends HTMLElement {
       this.#sessionDetails = JSON.parse(newValue)
       this.#render(this.#sessionDetails)
     }
-
-    this.querySelectorAll('[data-action="remove"]').forEach(
-      it => it.addEventListener('click', this.#removeSession)//.bind(this))
-    )
   }
 
   #render(sessionDetails) {
@@ -47,19 +43,19 @@ export class CfbSessionCard extends HTMLElement {
     const avatars = sessionDetails.attendees
       .map(attendee => `<div class="cfb-avatar" aria-label="${attendee.name}">${attendee.initials}</div>`)
 
-    const sessionType = sessionDetails.sessionType?.trim() ?? ''
-    const hasSessionType = Boolean(sessionType)
+    const sessionFormat = sessionDetails.sessionFormat?.trim() ?? ''
+    const hasSessionFormat = Boolean(sessionFormat)
     const articleClasses = [
       'cfb-card',
-      hasSessionType && 'cfb-card--session-type',
-      getSessionTypeClass(sessionType)
+      hasSessionFormat && 'cfb-card--session-format',
+      getSessionFormatClass(sessionFormat)
     ].filter(Boolean).join(' ')
 
-    const articleAria = hasSessionType
-      ? ` aria-label="${escapeAttr(`${sessionDetails.title}. Session type: ${sessionType}.`)}"`
+    const articleAria = hasSessionFormat
+      ? ` aria-label="${escapeAttr(`${sessionDetails.title}. Session format: ${sessionFormat}.`)}"`
       : ''
 
-    const titleAriaHidden = hasSessionType ? ' aria-hidden="true"' : ''
+    const titleAriaHidden = hasSessionFormat ? ' aria-hidden="true"' : ''
 
     this.innerHTML =
       `<article class="${articleClasses}"${articleAria} role="article">
@@ -81,11 +77,11 @@ export class CfbSessionCard extends HTMLElement {
         </footer>
       </article>`
 
-    if (hasSessionType) {
+    if (hasSessionFormat) {
       // OMG this is nice.
       this.querySelector('article.cfb-card').style.setProperty(
-        '--cfb-session-type-suffix',
-        JSON.stringify(` (${sessionType})`),
+        '--cfb-session-format-suffix',
+        JSON.stringify(` (${sessionFormat})`),
       )
     }
 

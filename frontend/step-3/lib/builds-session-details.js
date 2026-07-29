@@ -9,9 +9,9 @@
  * @param {string}  [fields.room]        - optional, scheduling room
  * @param {Array}   [fields.tags]        - defaults to []
  * @param {string}  [fields.startTime]   - optional, e.g. from a time input (HH:mm)
- * @param {string}  [fields.sessionType] - optional, e.g. Talk / Workshop
+ * @param {string}  [fields.sessionFormat] - optional, e.g. Talk / Workshop
  * @param {Array}   [fields.attendees]   - defaults to []
- * @returns {{ id: string, title: string, day?: string, room?: string, tags: Array, attendees: Array, startTime?: string, sessionType?: string }}
+ * @returns {{ id: string, title: string, day?: string, room?: string, tags: Array, attendees: Array, startTime?: string, sessionFormat?: string }}
  */
 export function sessionDetails({
   id,
@@ -21,15 +21,15 @@ export function sessionDetails({
   tags ,
   attendees,
   startTime,
-  sessionType,
+  sessionFormat,
 } = {}) {
   const defaults = { id: crypto.randomUUID(), tags: [], attendees: [] }
-  const base = buildBaseWithKeysHavingValues(id, title, day, room, tags, attendees, startTime, sessionType)
+  const base = buildBaseWithKeysHavingValues(id, title, day, room, tags, attendees, startTime, sessionFormat)
   return {...defaults, ...base}
 }
 
-function buildBaseWithKeysHavingValues(id, title, day, room, tags, attendees) {
-  const base = Object.entries({ id, title, day, room, tags, attendees }).reduce((acc, [key, value]) => {
+function buildBaseWithKeysHavingValues(id, title, day, room, tags, attendees, startTime, sessionFormat,) {
+  const base = Object.entries({ id, title, day, room, tags, attendees, startTime, sessionFormat  }).reduce((acc, [key, value]) => {
     if (value !== undefined) acc[key] = value
     return acc
   }, {})

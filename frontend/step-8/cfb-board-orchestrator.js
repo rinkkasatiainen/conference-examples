@@ -6,15 +6,15 @@ export class CfbBoardOrchestrator extends HTMLElement {
   #currentEventId = null
 
   connectedCallback() {
-    this.addEventListener('scheduleLoaded', this.#onLoaderDone)
-    this.addEventListener('sessionsLoaded', this.#onLoaderDone)
-    this.addEventListener('sessionsBackendUpdated', this.#onSessionsBackendUpdated)
+    this.addEventListener('cfb-schedule-loaded', this.#onLoaderDone)
+    this.addEventListener('cfb-sessions-loaded', this.#onLoaderDone)
+    this.addEventListener('cfb-sessions-backend-updated', this.#onSessionsBackendUpdated)
   }
 
   disconnectedCallback() {
-    this.removeEventListener('scheduleLoaded', this.#onLoaderDone)
-    this.removeEventListener('sessionsLoaded', this.#onLoaderDone)
-    this.removeEventListener('sessionsBackendUpdated', this.#onSessionsBackendUpdated)
+    this.removeEventListener('cfb-schedule-loaded', this.#onLoaderDone)
+    this.removeEventListener('cfb-sessions-loaded', this.#onLoaderDone)
+    this.removeEventListener('cfb-sessions-backend-updated', this.#onSessionsBackendUpdated)
   }
 
   #onLoaderDone = (e) => {
@@ -29,13 +29,13 @@ export class CfbBoardOrchestrator extends HTMLElement {
 
     this.#loaded.add(e.type)
 
-    if (this.#loaded.has('scheduleLoaded') && this.#loaded.has('sessionsLoaded')) {
+    if (this.#loaded.has('cfb-schedule-loaded') && this.#loaded.has('cfb-sessions-loaded')) {
       this.#notifyScheduleOnly(eventId, updatedAt)
       this.#loaded.clear()
       return
     }
 
-    if (e.type === 'sessionsLoaded' && this.#currentEventId === eventId) {
+    if (e.type === 'cfb-sessions-loaded' && this.#currentEventId === eventId) {
       this.#notifyScheduleOnly(eventId, updatedAt)
     }
   }
@@ -48,7 +48,7 @@ export class CfbBoardOrchestrator extends HTMLElement {
 
   #onSessionsBackendUpdated = (e) => {
     const { eventId, updatedAt } = e.detail
-    console.log('sessionsBackendUpdated', eventId, updatedAt)
+    console.log('cfb-sessions-backend-updated', eventId, updatedAt)
     console.log('this could show a toast or something')
   }
 

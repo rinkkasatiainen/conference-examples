@@ -34,8 +34,7 @@ Below is a summary of the learning goals of each of the steps.
 - Build your first IndexedDB-backed session store (`cfb-db`) and persist session records.
 - Demonstrate how data coupling can be removed from organism
 - Demonstrate the use branches of siblings (loader does not need to wrap store, etc)
-- etc.
-- sessions rendered from IndexedDB data instead of hardcoded arrays.
+- Render sessions from IndexedDB data instead of hardcoded arrays.
 - Demonstrate board refresh triggered by a data-update signal.
 
 ## Step 5 - Add a Session · HTML Form Elements
@@ -44,21 +43,22 @@ Below is a summary of the learning goals of each of the steps.
 - Build a custom element form that creates valid session objects.
 - Show native browser validation blocking invalid submissions.
 
-## Step 6 - `<cfb-session-type>` · Custom Form Element
+## Step 6 - `<cfb-session-format>` · Custom Form Element
 
 ### 1) Learning Outcome (visible/measurable)
-- Build a form-associated `<cfb-session-type>` control using `ElementInternals`.
+- Build a form-associated `<cfb-session-format>` control using `ElementInternals`.
 - Show selected value included in `FormData` from parent forms.
 - Demonstrate required validation behavior equivalent to native form controls.
 
-## Step 7 - Load from Backend · `fetch` + MSW
+## Step 7 - Load from Backend · `fetch`
 
 ### 1) Learning Outcome (visible/measurable)
 - Build loaders that fetch schedule/session data and store it in IndexedDB.
 - Show the orchestrator waits for both loader completion signals before refreshing schedule.
-- Demonstrate the same component code working with mocked API responses (MSW).
+- Run the loaders against the real `step-7-be` backend. (Intercepting `fetch` with MSW is a **testing-track**
+  concern — see [`test-7`](./test-7/README.md).)
 
-## Step 8 - Live Updates · WebSocket + MSW
+## Step 8 - Live Updates · WebSocket
 
 ### 1) Learning Outcome (visible/measurable)
 - Build a live updates component that receives pushed session updates.

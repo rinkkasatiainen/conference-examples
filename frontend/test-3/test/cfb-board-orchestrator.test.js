@@ -1,74 +1,40 @@
 import { expect } from 'chai'
 import { cleanup, fixture } from './helpers/fixture.js'
+import { Randomizer } from '../../test-2/test/helpers/randomizer.js'
 import { cfbSessionCreated } from '../../step-3/lib/events.js'
 import { sessionDetails } from '../../step-3/lib/builds-session-details.js'
-import { Randomizer } from '../../test-2/test/helpers/randomizer.js'
 import { CfbBoardOrchestrator } from '../../step-3/cfb-board-orchestrator.js'
 
 customElements.define('cfb-board-orchestrator', CfbBoardOrchestrator)
 
-const randomSession = sessionWith()
+const todo = msg => it.skip(msg, () => { /* no-op */ })
 
 describe('<cfb-board-orchestrator>', () => {
   afterEach(cleanup)
 
-  it('sets data-sessions on cfb-schedule after a session-created event', async () => {
-    const el = await fixture(`
-      <cfb-board-orchestrator>
-        <div class="any"></div>
-        <div class="cfb-updates-schedule"></div>
-      </cfb-board-orchestrator>
-    `)
-    const schedule = el.querySelector('.cfb-updates-schedule')
+  // Read each todo, then promote it into a real `it(...)`, one at a time.
+  //
+  // The orchestrator listens for `cfb-session-created` events bubbling UP and
+  // pushes the accumulated sessions DOWN as `data-sessions` on its
+  // `.cfb-updates-schedule` child. Drive it with synthetic dispatch - no button:
+  //
+  //   el.dispatchEvent(cfbSessionCreated(sessionWith({ id: 's1' })))
+  //   const pushed = JSON.parse(schedule.getAttribute('data-sessions'))
+  //
+  // Build payloads with the `sessionDetails` + `Randomizer` builder from T-2/T-3.
 
-    el.dispatchEvent(cfbSessionCreated(sessionWith({ id: 's1' })))
-    // await tick(0)
-
-    const sessions = JSON.parse(schedule.getAttribute('data-sessions'))
-    expect(sessions.some(s => s.id === 's1')).to.be.true
+  describe('listening for cfb-session-created', () => {
+    todo('sets data-sessions on the .cfb-updates-schedule child after one event')                 // 1 session
+    todo('accumulates two events - both sessions present, the second does not replace the first') // 2 sessions
+    todo('keeps sessions with different ids distinct - no mix-up')                                 // many
+    todo('sets the data-session on all listeners') // 2 listeners
   })
 
-  it('does not mix up sessions from different ids', async () => {
-    const el = await fixture(`
-      <cfb-board-orchestrator>
-        <cfb-schedule class="cfb-updates-schedule"></cfb-schedule>
-      </cfb-board-orchestrator>
-    `)
-    const schedule = el.querySelector('.cfb-updates-schedule')
-
-    el.dispatchEvent(cfbSessionCreated(sessionWith({ id: 'alpha' })))
-    el.dispatchEvent(cfbSessionCreated(sessionWith({ id: 'beta' })))
-    await Promise.resolve()
-
-    const sessions = JSON.parse(schedule.getAttribute('data-sessions'))
-    const ids = sessions.map((s) => s.id)
-    expect(ids).to.include('alpha')
-    expect(ids).to.include('beta')
+  describe('what it pushes down stays sound', () => {
+    todo('every session written to data-sessions still matches the session-details contract')
   })
 
-  it.skip('stops responding to events after disconnectedCallback')
+  describe('lifecycle', () => {
+    todo('stops responding to events after disconnectedCallback')                                 // 0 after teardown
+  })
 })
-
-function sessionWith(mockWith = {}) {
-  const randomSession = {
-    title: Randomizer.stringOf(10),
-    tags: [
-      Randomizer.tag(),
-      Randomizer.tag()
-    ],
-    attendees: [
-      Randomizer.attendee(),
-      Randomizer.attendee(),
-      Randomizer.attendee()
-    ],
-  }
-
-  return sessionDetails({ ...randomSession, ...mockWith })
-}
-
-
-export async function tick(timeoutInMs = 100) {
-  return new Promise(resolve => {
-    setTimeout(resolve, timeoutInMs)
-  })
-}

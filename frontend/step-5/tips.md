@@ -28,7 +28,7 @@ validation for the element
 ```javascript
 const data = new FormData(form)
 const title = data.get('title')
-const sessionType = data.get('session-type')
+const sessionFormat = data.get('session-format')
 // etc.
 ```
 
@@ -99,6 +99,96 @@ Both are valid. Pick based on UX complexity:
 A practical rule: if the component starts collecting many `if (isEdit)` branches for layout and behavior, split it. Keep
 data/event contracts shared instead (`cfb-session-created`) while allowing different UI containers.
 
+## Slots, shadow DOM, and why global CSS still works
+
+A question that comes up every time someone reads [`cfb-flip-card.js`](./cfb-flip-card.js): the flip card *must* use a
+shadow root to have a `<slot>`, yet the article and the edit form placed into those slots are still styled by
+`../styles.css`. How?
+
+**Slotted content never enters the shadow DOM.** It stays in the light DOM and is only *rendered* at the slot's
+position. CSS scoping follows ownership, not rendering position.
+
+### The rule
+
+An element is styled by the stylesheets of **the tree it belongs to** (`node.getRootNode()`), not the tree it visually
+appears in. The browser builds a *flattened tree* for layout and painting - slotted nodes get spliced into the slot's
+place - but style resolution happens against the node's own root.
+
+| Element                                             | Root node       | Styled by         |
+|-----------------------------------------------------|-----------------|-------------------|
+| `<article slot="front" class="cfb-card">`            | `document`      | `../styles.css`   |
+| `<cfb-edit-session-form slot="back">`                | `document`      | `../styles.css`   |
+| `.scene`, `.inner`, `.face--back`                    | the shadow root | only `SHADOW_CSS` |
+
+So `.cfb-card` in the global stylesheet matches the article for exactly the same reason it would if there were no custom
+element at all - that article is a plain child of `<cfb-session-card>` in the document. The shadow root only says
+"render whatever is in `slot="front"` right here, inside my 3-D geometry".
+
+The isolation works in both directions:
+
+- A global `.face { … }` rule would **not** hit the flip card's `.face` - that lives inside the shadow.
+- `SHADOW_CSS`'s `.face--back { overflow-y: auto }` **cannot** reach the edit form's internals. It only styles the
+  shadow-side wrapper that the form is rendered into.
+
+Inherited properties (`color`, `font`, `line-height`) do cross the boundary downward from the host. That is inheritance,
+a separate mechanism from selector matching, and it is why shadow content does not look unstyled by default.
+
+### What the shadow CSS *could* reach
+
+If `cfb-flip-card` wanted to style the slotted node itself, its only hook is
+[`::slotted()`](https://developer.mozilla.org/en-US/docs/Web/CSS/::slotted):
+
+```css
+::slotted([slot="back"]) {
+    height: 100%;
+}
+```
+
+Even that matches only the top-level slotted node - never its descendants. This is deliberate: the component author
+cannot reach into your markup, and you cannot reach into theirs.
+
+### Why this is the design we want here
+
+`cfb-flip-card` is a **geometry and timing** component - "knows nothing about sessions", as its own comment says. What
+it owns:
+
+- `perspective: 1200px` on `.scene`, `transform-style: preserve-3d` + `transition: transform` on `.inner`,
+  `backface-visibility: hidden` on `.face`, `rotateY(180deg)` on `.face--back` - the 3-D machinery that app CSS must not
+  be able to break by accident
+- `:host` / `:host(.is-flipping)` - the host's own transitionable box during the expand-to-centre animation
+
+What it deliberately does **not** own: what a card looks like. That is `../styles.css`. Two independently versionable
+concerns, no CSS collisions, and any markup can go into those slots.
+
+The same reasoning drives the backdrop: it is created with `document.body.appendChild(…)` **so that external CSS can
+style `.cfb-card-flip__backdrop`**. If it lived in the shadow root, you could not touch it from your stylesheet.
+
+### The tell: which query method you need
+
+`cfb-flip-card.js` queries both trees, and the method used tells you where a node lives:
+
+```js
+const front = this.querySelector('[slot="front"]')      // light DOM - the slotted article
+const inner = this.shadowRoot.querySelector('.inner')   // shadow DOM - the rotating wrapper
+```
+
+Same in `cfb-session-card.js`: `this.querySelector('[data-action="edit"]')` finds the Edit button *through* the flip
+card, because that markup is light DOM. Had it been rendered into a shadow root, that call would return `null`.
+`cfb-session-card` renders with plain `innerHTML` and no shadow at all, which is why everything it produces is
+document-styled.
+
+### Gotchas worth knowing
+
+1. **`preserve-3d` is fragile.** If a slotted element (or a wrapper) gets `overflow: hidden`, `filter`, `opacity < 1`,
+   or `contain: paint`, it forms a containing block that flattens the 3-D context and the flip renders as 2-D. App CSS
+   can break the component here even though it cannot select into it.
+2. **Outer CSS beats `:host`.** A document rule `cfb-flip-card { display: flex }` overrides `:host { display: block }`
+   regardless of specificity - `:host` rules are intentionally lowest-priority, so the page author keeps the last word
+   on the host element.
+3. **Events retarget.** `transitionend` is listened to on `.inner` *inside* the shadow, so `event.target` is the real
+   node. Had it been caught after bubbling out to the document, the target would be retargeted to `<cfb-flip-card>` and
+   you would lose which internal node fired it.
+
 ## Session shape (unchanged from Step 4)
 
 Aligned with **`sessionDetails`** from [ `../step-3/lib/builds-session-details.js`](../step-3/lib/builds-session-details.js)
@@ -109,7 +199,7 @@ const details = {
     title : 'My Talk',
     day : 'Wednesday',
     room : 'Track A',
-    sessionType : 'Talk',
+    sessionFormat : 'Talk',
     startTime : '10:00',
     tags : [{ label: 'Frontend', color: 'green' }],
     attendees : [{ initials: 'AK', name: 'Alice Kent' }],
@@ -163,18 +253,18 @@ You can use the following form structure as your base, if you wish. It has style
             </fieldset>
 
             <fieldset class="cfb-add-session-form__group">
-                <legend>Session type *</legend>
+                <legend>Session format *</legend>
                 <label class="cfb-add-session-form__radio">
-                    <input type="radio" name="session-type" value="Talk" required/> Talk
+                    <input type="radio" name="session-format" value="Talk" required/> Talk
                 </label>
                 <label class="cfb-add-session-form__radio">
-                    <input type="radio" name="session-type" value="Workshop"/> Workshop
+                    <input type="radio" name="session-format" value="Workshop"/> Workshop
                 </label>
                 <label class="cfb-add-session-form__radio">
-                    <input type="radio" name="session-type" value="Keynote"/> Keynote
+                    <input type="radio" name="session-format" value="Keynote"/> Keynote
                 </label>
                 <label class="cfb-add-session-form__radio">
-                    <input type="radio" name="session-type" value="Lightning Talk"/> Lightning Talk
+                    <input type="radio" name="session-format" value="Lightning Talk"/> Lightning Talk
                 </label>
             </fieldset>
 

@@ -3,14 +3,14 @@ import { EventTypes as CfbEventTypes } from './lib/events.js'
 export class CfbBoardOrchestrator extends HTMLElement {
 
   connectedCallback() {
-    this.addEventListener('scheduleLoaded', this.#onLoaderDone)
-    this.addEventListener('sessionsLoaded', this.#onLoaderDone)
+    this.addEventListener('cfb-schedule-loaded', this.#onLoaderDone)
+    this.addEventListener('cfb-sessions-loaded', this.#onLoaderDone)
     // TODO: Add an event listener that reacts to the fact that sessions have been updated in the backend
   }
 
   disconnectedCallback() {
-    this.removeEventListener('scheduleLoaded', this.#onLoaderDone)
-    this.removeEventListener('sessionsLoaded', this.#onLoaderDone)
+    this.removeEventListener('cfb-schedule-loaded', this.#onLoaderDone)
+    this.removeEventListener('cfb-sessions-loaded', this.#onLoaderDone)
     // TODO: remove the said event listener
   }
 

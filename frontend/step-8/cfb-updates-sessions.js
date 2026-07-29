@@ -53,7 +53,7 @@ export class CfbUpdatesSessions extends HTMLElement {
     }
 
     #notifySaved(eventId) {
-        this.dispatchEvent(new CustomEvent('sessionsBackendUpdated', {
+        this.dispatchEvent(new CustomEvent('cfb-sessions-backend-updated', {
             bubbles: true,
             composed: true,
             detail: { eventId, updatedAt: Date.now() },

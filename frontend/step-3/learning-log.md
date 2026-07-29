@@ -1,6 +1,7 @@
 # Learning log - Step 3
 
-Use this file while you work through [Step 3 README](./README.md). When you finish the step, add your **key takeaway** in
+Use this file while you work through [Step 3 README](./README.md). When you finish the step, add your **key takeaway**
+in
 the [journey hub `learning-log.md`](../learning-log.md#step-3-key-takeaway).
 
 ---
@@ -14,7 +15,7 @@ _Solo, ~2 minutes. Answer **before** you read Concepts - guess, don’t look at 
 **Without importing parent components**, how could a “Add session” control tell the rest of the page that a new session
 exists? One or two sentences.
 
-> 
+>
 
 _(You will revisit this in Conclusions.)_
 
@@ -26,10 +27,11 @@ _(You will revisit this in Conclusions.)_
 
 _Solo, ~3 minutes._
 
-In Step 2, one card got data through **`data-session-details`**. In Step 3, **many** sessions appear and the list changes.
+In Step 2, one card got data through **`data-session-details`**. In Step 3, **many** sessions appear and the list
+changes.
 In one or two sentences: what has to change about **where** session data lives?
 
-> 
+>
 
 ---
 
@@ -76,7 +78,7 @@ _After reading the README Concepts sections - ~1 minute._
 **Similarities / differences:** Compare “child fires an event, ancestor handles it” to one pattern you already know
 (React props/callbacks, backend webhooks, anything). One similarity, one difference - bullet or two.
 
-> 
+>
 
 ---
 
@@ -86,32 +88,24 @@ _After reading the README Concepts sections - ~1 minute._
 
 _Answer from memory first; then peek at the README or source if needed._
 
-1. What is the **event type string** this step uses when the generator dispatches? *(Hint: see [`events.js`](./events.js).)*
+1. What is the **event type string** this step uses when the generator dispatches? *(Hint:
+   see [`events.js`](./events.js).)*
 
-   > 
+   >
 
 2. Why is **`bubbles: true`** (and often **`composed: true`**) important for the generator’s event?
 
-   > 
+   >
 
 3. How does state travel **down** to `<cfb-schedule>` - attribute name and what is serialized?
 
-   > 
+   >
+
+4. Why should the orchestrator not query of `this.querySelector('cfb-schedule')`, even though you and me knows that the
+   schedule element exists in the child.
 
 ---
 
-<a id="step-3-concept-flow-sketch"></a>
-
-### Step 3 - Concept check: Flow sketch (visual)
-
-_Solo, ~3 minutes. Draw a flowchart of events in a paper / ASCII
-
-On paper or in ASCII here, draw **four boxes** in a row: **button click → generator → orchestrator → schedule**.
-Add **very short note** on each **arrow** on what is the trigger (event, state change, etc)
-
->
-
----
 
 [← Back to README - 3) Concrete practice](./README.md#3-concrete-practice)
 
@@ -146,13 +140,14 @@ about after this step. Paste their reply (or your notes) below.
 
 _Answer in your log - short phrases are enough._
 
-1. Where is the **`cfb-session-created`** event **defined** (file / constant name), and which component **dispatches** it?
+1. Where is the **`cfb-session-created`** event **defined** (file / constant name), and which component **dispatches**
+   it?
 
-   > 
+   >
 
 2. In **one line**: what travels **up** the DOM vs **down** in this step?
 
-   > 
+   >
 
 ---
 
@@ -160,9 +155,12 @@ _Answer in your log - short phrases are enough._
 
 ### Step 3 - Conclusions: Loop back - how does the button reach the board?
 
-_Look at your answer under [“How does the button reach the board?”](#step-3-connections-how-notify) Update in one or two lines if needed._
+_Look at your answer under [“How does the button reach the board?”](#step-3-connections-how-notify) Update in one or two
+lines if needed._
 
 >
+
+---
 
 ### Key takeaway (journey hub)
 

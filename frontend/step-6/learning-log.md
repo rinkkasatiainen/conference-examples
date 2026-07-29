@@ -1,7 +1,12 @@
 # Learning log - Step 6
 
-Use this file while you work through [Step 6 README](./README.md). When you finish the step, add your **key takeaway**
-in the [journey hub `learning-log.md`](../learning-log.md#step-6-key-takeaway).
+Use this file while you work through [Step 6 README](./README.md). When you finish the step, add your **key takeaway** in the [journey hub `learning-log.md`](../learning-log.md#step-6-key-takeaway).
+
+This step uses **Training from the Back of the Room** ideas adapted for **solo / async**: **different** prompt types, **writing** and a small **sketch**, and **short** timeboxes. Follow the **order** in the README so your first guesses stay honest.
+
+---
+
+[← Back to README - 1) Connections](./README.md#1-connections)
 
 ---
 
@@ -11,13 +16,13 @@ in the [journey hub `learning-log.md`](../learning-log.md#step-6-key-takeaway).
 
 _Solo, ~2 minutes. Answer **before** you read Concepts._
 
-In step-5, the CfbAddSessionForm added all the options for the _Session Type_ with pure radio groups.
+Step 5 collected **`session-format`** with **radio inputs** sharing **`name="session-format"`**.
 
-Now you'll learn how to replace that group with a custom element `cfb-session-type` - which is a component that does not
-have any `input` hiding the logic, but custom HTML.
+You replace that block with **`<cfb-session-format name="session-format" required></cfb-session-format>`** - a custom element
+with **no** hidden `<input type="radio">`.
 
-**Before you read the APIs:** how do you *think* the browser could still put **`session-type`** into
-**`new FormData(form)`** on submit? One or two sentences (a wrong guess is fine).
+**Before you read the APIs:** how do you *think* the browser could still put **`session-format`** into **`new FormData(form)`** 
+on submit? One or two sentences (a wrong guess is fine).
 
 > ___
 
@@ -31,9 +36,8 @@ _(You will [loop back](#step-6-loop-back-formdata-guess) in Conclusions.)_
 
 _Solo, ~3 minutes._
 
-List **three** things that should **stay the same** in **`cfb-add-session-form.js`** / **`cfb-edit-session-form.js`**
-after you swap radio buttons for **`<cfb-session-type>`** - think the whole flow from clicking 'submit' to dispatching
-events.
+List **three** things that should **stay the same** in **`cfb-add-session-form.js`** / **`cfb-edit-session-form.js`** 
+after you swap radios for **`<cfb-session-format>`** - think: submit handler, events, `id` generation, store pipeline.
 
 > ___
 
@@ -41,14 +45,16 @@ events.
 
 <a id="step-6-connections-surprise"></a>
 
-### Step 6 - Connections: Surprise (solo or pair)
+### Step 6 - Connections: Surprise (solo) or compare (pair)
 
 _~3 minutes._
 
-**Solo:** One thing about **form-associated custom elements** or **`ElementInternals`** you expect will trip you up -
-one line.
+**Solo:** One thing about **form-associated custom elements** or **`ElementInternals`** you expect will trip you up - one line.
 
-> ___
+**If you compare later:** what will you verify first after submit - **Application → IndexedDB**, **Console**, or 
+**Elements** on the form?
+
+> 
 
 ---
 
@@ -58,15 +64,14 @@ one line.
 
 _Solo, ~2 minutes. Answer **A** or **B** - not both._
 
-**A)** Name one **native** control that already participates in **`FormData`** without you writing a submit “collector”
-for it.
+**A)** Name one **native** control that already participates in **`FormData`** without you writing a submit “collector” 
+for it. One line: why is that similar to what **`setFormValue`** is trying to do?
 
-> ___
+> 
 
-**B)** In one sentence: Without knowledge of custom form elements, when would you **still** prefer radios over a custom
-tile UI?
+**B)** In one sentence: when would you **still** prefer radios over a custom tile UI?
 
-> ___
+> 
 
 ---
 
@@ -83,10 +88,10 @@ _After reading the README Concepts sections - ~1 minute._
 **Two bullets:**
 
 1. What does **`internals.setFormValue(null)`** communicate vs a non-empty string?
-2. Who should call **`reportValidity()`** for a bad **`required`** state - only the custom element, only
+2. Who should call **`reportValidity()`** for a bad **`required`** state - only the custom element, only 
    the `<form>`, or both can be involved?
 
-> ___
+> 
 
 ---
 
@@ -94,58 +99,38 @@ _After reading the README Concepts sections - ~1 minute._
 
 ### Step 6 - Concept check: Mini quiz
 
-_Answer **from memory first** (~4 minutes). Then peek at the README or [`cfb-session-type.js`](./cfb-session-type.js) if
-needed._
+_Answer **from memory first** (~4 minutes). Then peek at the README or [`cfb-session-format.js`](./cfb-session-format.js) if needed._
 
 1. Which **static** class field marks a custom element as **form-associated**?
 
-   > ___
+   > 
 
-2. Which method on **`ElementInternals`** writes the control’s value so **`FormData`** can see it under the **`name`**
-   attribute?
+2. Which method on **`ElementInternals`** writes the control’s value so **`FormData`** can see it under the **`name`** attribute?
 
-   > ___
+   > 
 
-3. Which **`ElementInternals`** method lets you mirror native **`required`** / **`valueMissing`** behaviour with a
-   custom message?
+3. Which **`ElementInternals`** method lets you mirror native **`required`** / **`valueMissing`** behaviour with a custom message?
 
-   > ___
+   > 
+
+---
+
+<a id="step-6-concept-flow-sketch"></a>
+
+### Step 6 - Concept check: Flow sketch (visual)
+
+_Solo, ~3 minutes. Training from the Back of the Room - “images / different activity.”_
+
+Draw **six boxes** in a row: **user picks a tile** → **`<cfb-session-format>`** → **parent `<form>`** → **`FormData` / session object** → **`cfb-session-created`** (or **`cfb-session-updated`**) → **store / IDB**.
+
+Add **one short label** on each **arrow** (e.g. **`setFormValue`**, **`checkValidity`**, event name).
+
+> 
 
 ---
 
 [← Back to README - 3) Concrete practice](./README.md#3-concrete-practice)
 
----
-
-<a id="step-5-myth-fact-facilitator"></a>
-
-### Step 5 - Concrete Practice: Think it and Ink it
-
-1. Think of one minute what you learned on this session?. Then write that down
-
-   > ___ 
-
----
-
-<a id="step-5-myth-fact-facilitator"></a>
-
-### Step 5 - Concrete Practice: Ask a question from facilitator:
-
-1. Write **one** short statement that could be read as **myth** or **fact** - **`ElementInternals`**, **form-associated
-   custom elements**, **accessibility for tile pickers**, or **how this pattern compares to framework-controlled form
-   state**.
-
-2. **Ask your facilitator** that question explicitly - e.g. in a PR comment, chat message, or during a sync: *“Myth or
-   fact: …?”*
-
-**My myth/fact question**
-
->
-
-**Facilitator reply** _(or your own notes after you asked)_
-
->
- 
 ---
 
 [← Back to README - 4) Conclusions](./README.md#4-conclusions)
@@ -160,11 +145,11 @@ _~4 minutes. Short phrases are enough._
 
 1. Where is **`formAssociated`** declared, and where is **`attachInternals()`** called?
 
-   > ___
+   > 
 
-2. In one line: how does **`required`** on **`<cfb-session-type>`** surface a native validation message on submit?
+2. In one line: how does **`required`** on **`<cfb-session-format>`** surface a native validation message on submit?
 
-   > ___
+   > 
 
 ---
 
@@ -172,10 +157,9 @@ _~4 minutes. Short phrases are enough._
 
 ### Step 6 - Conclusions: Loop back - FormData guess
 
-_Look at your answer under [FormData guess](#step-6-connections-formdata-guess). Update in one or two lines: what
-actually happens in the browser?_
+_Look at your answer under [FormData guess](#step-6-connections-formdata-guess). Update in one or two lines: what actually happens in the browser?_
 
-> ___
+> 
 
 ---
 
@@ -183,11 +167,32 @@ actually happens in the browser?_
 
 ### Step 6 - Conclusions: Forms across Step 5 + Step 6
 
-In **three** bullets: what did you learn about **forms** in Step 5 vs Step 6? (native constraints vs custom control,
+_From [`../PLAN.md`](../PLAN.md) - land what “forms” meant two weeks in a row._
+
+In **three** bullets: what did you learn about **forms** in Step 5 vs Step 6? (native constraints vs custom control, 
 **`FormData`**, ownership of validation, anything you will reuse.)
 
-> ___
+> 
 
 ---
+
+<a id="step-6-concrete-facilitator-question"></a>
+
+### Step 6 - Conclusions: Question for your facilitator
+
+_Solo, ~5 minutes._
+
+Ask your facilitator **one** question about **`ElementInternals`**, **form-associated custom elements**, **accessibility for tile pickers**, or **how this pattern compares to framework-controlled form state**. Paste their reply (or your notes) below.
+
+**My question**
+
+>
+
+**Facilitator reply / notes**
+
+>
+
+---
+
 
 [← Journey hub (key takeaways)](../learning-log.md)

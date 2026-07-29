@@ -7,7 +7,7 @@ A molecule wraps smaller pieces (tags, avatars) behind one tag name and one rend
 You will implement **`<cfb-session-card>`** - the finished markup, JSON attribute name, and **rich attendee** payload
 shape are spelled out in **[Concrete practice](#3-concrete-practice)** (after Connections and Concepts).
 
-> **Before you start:** branch, HTTP server, console clean - see [getting-started.md](./getting-started.md).
+> **Before you start:** make a git branch, setup HTTP server, etc. - see [getting-started.md](./getting-started.md).
 
 ### Async / solo
 
@@ -53,31 +53,62 @@ Do these **in order**; capture answers in [your Step 2 learning log](./learning-
 
 ### Molecule vs atom
 
-- **`<cfb-session-card>`** owns the **card component**: layout regions (header, tags row, footer), the menu control,
-  and **mapping** session data → child tags / avatars.
+Brad Frost explains atoms vs. molecules vs organisms
+in [Atomic Design web page](https://atomicdesign.bradfrost.com/chapter-2/)
+
+> - Atoms are the basic building blocks of all matter. Each chemical element has distinct properties, and they can’t be
+    > broken down further without losing their meaning. (Yes, it’s true atoms are composed of even smaller bits like
+    protons,
+    > electrons, and neutrons, but atoms are the smallest functional unit.)
+> - Molecules are groups of two or more atoms held together by chemical bonds. These combinations of atoms take on their
+    > own unique properties, and become more tangible and operational than atoms.
+> - Organisms are assemblies of molecules functioning together as a unit. These relatively complex structures can range
+    > from single-celled organisms all the way up to incredibly sophisticated organisms like human beings.
+
+From this real-life chemistry, he made a design methodology that follows the structure:
+
+> **Atoms** -> **Molecules** -> **Organisms** -> **Templates** -> **Pages**
+
+It serves as a mental model for us to thing 'what behavior belongs to where'. In the previous step, we learned the
+simplest type, an `atom`. This time, we'll see a `molecule` in action. It's **a web component that groups two or more
+atoms** to build a coherent element. That molecule is `cfb-session-card`.
+
+In practice, in this exercise, it means
+
+- **`<cfb-session-card>`**, as a molecule, owns the **card component**: it defines the layout regions (header, tags row,
+  footer), builds on the menu control behavior, and **mapping** session data into visible HTML elements (including
+  title, tags and avatars)
 - **`<cfb-tag>`** stays an atom: it only knows label + colour - the card passes those via attributes (and later might
   have some hover-over functionality, but that is the responsibility of that said **atom**).
 
 ### Data flow
 
-- **Parent → children:** the card parses JSON and sets **`data-label` / `data-color`** on each `<cfb-tag>`
-- **Structured input:** keep session data in one attribute (`data-session-details`) as JSON - same pattern used later on
-  the full board. Keep payloads reasonably small. Later we will learn other ways to pass data from parent to child.
+In this exercise, we also learn a bit about data flow. In essence the parent element can pass data to any child element
+by setting attribute values of the child HTML element. The element's responsibility is then to deal with the attribute -
+note, the attribute might change by the lifecycle events.
+
+In this exercise, the following are true
+
+- **Data flows through Parent → children:** the `cfb-session-card` parses JSON defined in the static HTML, and sets
+  **`data-label` / `data-color`** on each `<cfb-tag>` it generates
+- **Structured input as a shape:** Pass the session data in one attribute (`data-session-details`) as JSON to
+  `cfb-session-card` element - same event shape is later used later on the full board. Keep payloads reasonably small.
+  Later we will learn other ways to pass data from parent to a children (you might already see tha this does not
+  ecessarily scale too well in real apps)
   Passing through attributes is not the only way, but the simplest. And for now, we're learning the basics.
 
 ### Lifecycle
 
 - Implement **`connectedCallback`** for first paint (often after reading attributes).
-- Declare **`observedAttributes`** to include `data-session-details` (and any other `data-*` you observe).
+- Declare **`observedAttributes`** to include `data-session-details`
 - Use **`attributeChangedCallback`** to parse JSON and **re-render** when the attribute changes (e.g. DevTools edit or
   parent updates).
 
 ### Rendering notes
 
-- **`innerHTML`** with strings that include `<cfb-tag>` is a common approach; the parser creates elements and custom
-  elements **upgrade** like any other HTML. (Alternatives: `document.createElement`, templates - see Extras.)
-- **Slots** (`<slot>`) are an alternative way to project content without stuffing JSON into one attribute - optional
-  deeper dive in Extras.
+**`innerHTML`** with strings that include `<cfb-tag>` is a common approach; the parser creates elements and custom
+elements **upgrade** like any other HTML. You can do the same with `document.createElement`, templates and such. Yet,
+in small scale, writing HTML directly is often the easiest.
 
 ### One-minute review (~1 min)
 

@@ -50,13 +50,13 @@
     color:         var(--cfb-text);
 }
 
-/* Keeps session-type emoji beside a multi-line title (text wraps inside, not as a separate flex row). */
+/* Keeps session-format emoji beside a multi-line title (text wraps inside, not as a separate flex row). */
 .cfb-card__title-text {
     flex:      1;
     min-width: 0;
 }
 
-.cfb-card--session-type .cfb-card__title::before {
+.cfb-card--session-format .cfb-card__title::before {
     flex-shrink: 0;
     line-height: 1.25;
 }
@@ -66,40 +66,40 @@
     color:     var(--cfb-text-muted);
 }
 
-/* Session type: .cfb-card--session-type + .cfb-card__session-type--* on article (same emoji map as <cfb-session-type>) */
-.cfb-card--session-type.cfb-card__session-type--talk .cfb-card__title::before {
+/* Session format: .cfb-card--session-format + .cfb-card__session-format--* on article (same emoji map as <cfb-session-format>) */
+.cfb-card--session-format.cfb-card__session-format--talk .cfb-card__title::before {
     content:        '💬';
     font-size:      1em;
     font-weight:    400;
 }
 
-.cfb-card--session-type.cfb-card__session-type--workshop .cfb-card__title::before {
+.cfb-card--session-format.cfb-card__session-format--workshop .cfb-card__title::before {
     content:        '🔧';
     font-size:      1em;
     font-weight:    400;
 }
 
-.cfb-card--session-type.cfb-card__session-type--keynote .cfb-card__title::before {
+.cfb-card--session-format.cfb-card__session-format--keynote .cfb-card__title::before {
     content:        '🎤';
     font-size:      1em;
     font-weight:    400;
 }
 
-.cfb-card--session-type.cfb-card__session-type--lightning-talk .cfb-card__title::before {
+.cfb-card--session-format.cfb-card__session-format--lightning-talk .cfb-card__title::before {
     content:        '⚡';
     font-size:      1em;
     font-weight:    400;
 }
 
-.cfb-card--session-type.cfb-card__session-type--unknown .cfb-card__title::before {
+.cfb-card--session-format.cfb-card__session-format--unknown .cfb-card__title::before {
     content: none;
 }
 
-.cfb-card--session-type.cfb-card__session-type--unknown .cfb-card__title::after {
+.cfb-card--session-format.cfb-card__session-format--unknown .cfb-card__title::after {
     font-size:   var(--text-xs);
     font-weight: 400;
     color:       var(--cfb-text-muted);
-    content:     var(--cfb-session-type-suffix);
+    content:     var(--cfb-session-format-suffix);
 }
 
 .cfb-card__tags {

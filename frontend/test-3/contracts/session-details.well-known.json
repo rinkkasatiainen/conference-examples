@@ -1,0 +1,22 @@
+{
+  "id": "opening-keynote",
+  "title": "Opening Keynote",
+  "day": "Wednesday",
+  "room": "Main Hall",
+  "tags": [
+    {
+      "label": "Keynote",
+      "color": "blue"
+    }
+  ],
+  "attendees": [
+    {
+      "name": "Aino Korhonen",
+      "initials": "AK"
+    },
+    {
+      "name": "Jukka Leinonen",
+      "initials": "JL"
+    }
+  ]
+}

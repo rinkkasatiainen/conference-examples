@@ -1,10 +1,8 @@
 # Step 4 - Load from IndexedDB
 
-In Steps 1–3 you built UI and **in-memory** flows. Refreshing the page dropped session state. Now sessions **persist in
-the browser** using **IndexedDB** - while keeping **storage code separate** from components.
-
-The **full wiring** (database name, event type strings, loader vs store) lives in **Concepts** and in
-**`session-store.js`/ `events.js`** - after **Connections** - so your first guesses in the learning log stay honest.
+In Steps 1–3 you built UI and **in-memory** flows. Refreshing the page dropped session state. In this step, you'll learn
+the next step: how to **persist** the data in the browser using **IndexedDB**, while still building on top of the
+_Events up, state down_ pattern
 
 > **Before you start:** branch, HTTP server, **same origin** for IDB - see [getting-started.md](./getting-started.md).
 
@@ -22,8 +20,7 @@ README says “pair.” **Short timeboxes** matter more than the format.
 By the end of this step, you can:
 
 - Open (or upgrade) an **IndexedDB** database with a **`sessions`** object store and **Promise**-based helpers.
-- Describe **who reads/writes** session rows (`session-store.js`) vs **who only reacts** to signals (loader, store
-  wrapper, schedule).
+- Describe **who reads/writes** session rows (`session-store.js`) vs **who only reacts** to signals
 - Explain how **`cfb-sessions-loaded-to-idb`** triggers a **downward “poke”** via **`data-latest-updated-at`** so
   **`cfb-schedule`** **pulls fresh rows from IDB** instead of receiving a giant JSON blob from the orchestrator.
 - Demonstrate how to compose components with clear data flow (using structured inputs, storage, parent-to-child
@@ -52,7 +49,7 @@ Do these **in order**; capture answers in [your Step 4 learning log](./learning-
 ## 2) Concepts
 
 In this session, we'll explore **IndexedDB**, **storage vs UI**, and we continue to learn pub/sub with **events** going
-up triggering actions down (not state down).
+up triggering actions/state down.
 
 ### IndexedDB in one paragraph
 
@@ -75,7 +72,8 @@ new components - and that will be a pattern we'll see more and more in the futur
 
 ### Events (`events.js`)
 
-[`events.js`](./lib/events.js) is the **single place** for Step 4 event constants:
+[`events.js`](./lib/events.js) is the **single place** for Step 4 event constants. As seen also earlier, this follows
+the pattern of using event factories to create and agree on event shapes.
 
 | Constant                | String                           | Typical use                                                               |
 |-------------------------|----------------------------------|---------------------------------------------------------------------------|
@@ -83,11 +81,14 @@ new components - and that will be a pattern we'll see more and more in the futur
 | `SESSION_REMOVED`       | **`cfb-session-removed`**        | Remove menu → store                                                       |
 | `SESSION_LOADED_TO_IDB` | **`cfb-sessions-loaded-to-idb`** | Loader finished seeding **or** store finished mutating IDB → orchestrator |
 
-Factories: **`cfbSessionsLoadedToIDB()`**, **`cfbSessionRemoved(...)`**, plus **`cfbSessionCreated`** from Step 3.
+Factories used in this step are: **`cfbSessionsLoadedToIDB()`**, **`cfbSessionRemoved(...)`**, plus *
+*`cfbSessionCreated`** from Step 3.
 
 ### DOM layout (this repo)
 
-See [`index.html`](./index.html):
+The HTML DOM changes in this stepa a bit, see [`index.html`](./index.html). This time, we add a few components, one for
+loading the data from IndexedDB on page load (`cfb-session-loader`), and another for making changes to the data in
+IndexedDB (`cfb-session-store`). This is also seen below:
 
 ```html
 
@@ -103,11 +104,13 @@ See [`index.html`](./index.html):
 We added a `cfb-session-loader` to the dom, and wrapped the contents of board in step-3 with a `cfb-session-store`.
 These two changes displays the pattern we'll get more and more used to in the future. The orchestrator is the 'main'
 component that coordinates the main flow of data and events in the application in general, while the other two new
-components are _organisms_ that take care of a bit smaller parts of the flow.
+components are _organisms_ that take care of a bit smaller parts of the flow. (later, the `cfb-session-generator` will
+not live inside the `cfb-session-store`)
 
 The component hierarchies are crucial to understand the data flow - if behavior of the organism is to react to events,
 the source element of the events must be directly descended from the organism. This is why `cfb-session-store` is
-wrapping the _generator_ and _schedule_ components.
+wrapping the _generator_ and _schedule_ components. That's because these components are the ones that trigger a change
+in the IndexedDB (either create a random session, or delete a session).
 
 The orchestrator remains the one component whose main responsibility remains to coordinate when the schedule should
 update (without storing any data internally)
@@ -126,10 +129,13 @@ of sharing data between components without storing it internally, like in step-3
 
 In short: Why **`data-latest-updated-at`** instead of pushing **`data-sessions`** JSON from the orchestrator? The
 orchestrator **does not ship the array** - it only signals **“re-read from IDB”**; **`cfb-schedule`** pulls
-**`getAllSessions()`** after the timestamp changes.
+**`getAllSessions()`** after the timestamp changes. This way the orchestrator does not even need to know about the shape
+and structure of the data in the IndexedDB, it only needs to now the contract - "When this event happens, children
+with these classnames should be informed that something has changed."
 
-Session cards still render as **`<cfb-session-card data-session-details='…'>`** using **`sessionDetails`** shape from [
-`../step-3/lib/builds-session-details.js`](../step-3/lib/builds-session-details.js). (in theory, this could also be read
+Session cards still render as **`<cfb-session-card data-session-details='…'>`** using **`sessionDetails`** shape from
+[`../step-3/lib/builds-session-details.js`](../step-3/lib/builds-session-details.js). (in theory, this could also be
+read
 from IndexedDB, but that would be too big change for this step.)
 
 The list of the events for this example are in [`events.js`](./lib/events.js) and explained below:
@@ -148,8 +154,8 @@ Legend:
 ### Storage vs UI (`session-store.js`)
 
 Rule of thumb is: Component is has only one write operation (and optionally can dispatch events). A write operation is
-either **saving** data to the storage, or **re-rendering** the UI. That means - a component that renders UI, does not
-write anything to the storage.
+either **saving** data to the storage, **re-rendering** the UI or making a **backend api call**. That means - a
+component that renders UI, does not write anything to the storage. Hence, we need another component.
 
 Also, it's useful to have a **single place** for the storage, in this case it's **`session-store.js`** (see below). This
 is a library function that **wraps** the IndexedDB API, **providing** a **single place** for the storage that the other
@@ -158,6 +164,9 @@ components can use.
 In this step, we implement few session store methods: `getAllSessions()`, `saveSessions()`, `deleteSession()`, etc.
 
 ### End-to-end flow (reference)
+
+This flow has two interesting end-2-end flow. One on page (re)load, and another when a new session is created/or
+existing removed. Both are defined below.
 
 Legend:
 
@@ -182,9 +191,9 @@ Legend:
     |
     ▼
 🚧 cfb-board-orchestrator
-    listens to 'cfb-sessions-loaded-to-idb'
+    listens to 'cfb-sessions-loaded-to-idb' (registered in connectedCallback)
     informs all children that have 'listens-schedule-updates' that 'now there is new data in IndexedDb'.
-    Does not read IndexedDB / pass the data down - that will be done by the components directly.
+    !! Does not read IndexedDB / pass the data down - that will be done by the components directly.
     │  attribute change goes DOWN
     ▼
 🚧 cfb-schedule
@@ -207,14 +216,8 @@ For the flow of editing the sessions (adding or removing), see below.
     ▼                                             │
                                                   │
 🚧 cfb-board-orchestrator (same as initial load) ◄┘
+    ... in the end updates 'data-latest-updated-at' on the cfb-schedule
 ```
-
-Why **`data-latest-updated-at`** instead of pushing **`data-sessions`** JSON from the orchestrator? The orchestrator *
-*does not ship the array** - it only signals **“re-read from IDB”**; **`cfb-schedule`** pulls **`getAllSessions()`**
-after the timestamp changes.
-
-Session rows still render as **`<cfb-session-card data-session-details='…'>`** using **`sessionDetails`** shape from [
-`../step-2/lib/builds-session-details.js`](../step-3/lib/builds-session-details.js).
 
 ---
 
@@ -395,7 +398,7 @@ If you finish early:
 - Clicking it fires a `cfb-session-removed` event (defined in [events.js](./events.js)) that bubbles up to
   `<cfb-session-store>`.
 - The store deletes the entry from IDB via `deleteSession(id)` (which you need to implement),
-- and fires `sessionsLoaded` the same path used for initial load and adding sessions.
+- and fires `cfb-sessions-loaded` the same path used for initial load and adding sessions.
 - To see this working, refresh the page and the removed session stays gone.
 - Key files: `cfb-session-card.js`, `events.js`, `cfb-session-store.js`, `session-store.js`
 
@@ -406,17 +409,17 @@ If you finish early:
 ▼
 ✅ cfb-session-card (press 'remove' button')
 create new event
-│    │
-│    ▼
-│    ✅ events.js
-│        create the new event
+│ │
+│ ▼
+│ ✅ events.js
+│ create the new event
 ▼
 🚧 cfb-session-store
 deletes session from session store
-│    │
-│    ▼
-│    ✅ session-store
-│        remove session from IndexedDB
+│ │
+│ ▼
+│ ✅ session-store
+│ remove session from IndexedDB
 And dispatches an event up the chain
 ▼
 ✅ cfb-board-orchestrator

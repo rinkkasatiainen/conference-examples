@@ -5,10 +5,11 @@ import { CfbMenu } from '../step-4/cfb-menu.js'
 import { CfbSchedule } from '../step-4/cfb-schedule.js'
 import { CfbFlipCard } from '../step-5/cfb-flip-card.js'
 import { CfbSessionCard } from '../step-5/cfb-session-card.js'
-import { CfbSessionType } from '../step-6/cfb-session-type.js'
+import { CfbSessionFormat } from '../step-6/cfb-session-format.js'
 import { CfbEditSessionForm } from '../step-6/cfb-edit-session-form.js'
 import { CfbAddSessionForm } from '../step-6/cfb-add-session-form.js'
 import { CfbHeader } from '../step-7/cfb-header.js'
+import { CfbScheduleMeta } from '../step-7/cfb-schedule-meta.js'
 import { CfbScheduleLoader } from '../step-7/cfb-schedule-loader.js'
 import { CfbBoardOrchestrator } from './cfb-board-orchestrator.js'
 import { CfbSessionLoader } from './cfb-session-loader.js'
@@ -26,7 +27,7 @@ customElements.define(CfbSchedule.elementName, CfbSchedule)
 customElements.define(CfbFlipCard.elementName, CfbFlipCard)
 customElements.define(CfbSessionCard.elementName, CfbSessionCard)
 customElements.define(CfbEditSessionForm.elementName, CfbEditSessionForm)
-customElements.define(CfbSessionType.elementName, CfbSessionType)
+customElements.define(CfbSessionFormat.elementName, CfbSessionFormat)
 customElements.define(CfbAddSessionForm.elementName, CfbAddSessionForm)
 customElements.define(CfbBoardOrchestrator.elementName, CfbBoardOrchestrator)
 customElements.define(CfbScheduleLoader.elementName, CfbScheduleLoader)
@@ -38,6 +39,7 @@ customElements.define(
   CfbInitiateARandomSessionCreation
 )
 customElements.define(CfbHeader.elementName, CfbHeader)
+customElements.define(CfbScheduleMeta.elementName, CfbScheduleMeta)
 customElements.define('cfb-updates-sessions', CfbUpdatesSessions)
 
 document.addEventListener('DOMContentLoaded', () => {

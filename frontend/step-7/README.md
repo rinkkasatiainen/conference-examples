@@ -1,18 +1,17 @@
-# Step 7 - Load from Backend · `fetch` + MSW
+# Step 7 - Load from Backend · `fetch`
 
 In earlier steps the board got data from **generators**, **forms**, and **IndexedDB** seeds. Real products would get the
 data from a backend call by loading **schedule metadata** and **sessions** over **HTTP**, persist them somewhere, then
 render in the page.
 
-In this step the frontend makes a= **`fetch`** call to backend (here via a thin
-**[`lib/api/backend-api.js`](./lib/api/backend-api.js)** helper), save the data to **IDB**, and signal existence of data
-with **bubbling `CustomEvent`s**. This is a natural next step in making the board more production-like.
+In this step the frontend makes a **`fetch`** call to the backend (here via a thin
+**[`lib/api/backend-api.js`](./lib/api/backend-api.js)** helper), saves the data to **IDB**, and signals the existence of
+data with **bubbling `CustomEvent`s**. This is a natural next step in making the board more production-like.
 
-In 'test-7', we also learn of a mockServiceWorker (MSW) that intercepts **`fetch`** and **responds** with **JSON** data.
-This is useful sometimes for frontend development, but especially useful in testing -> that's another learning goal
-altogether.
+This build step talks to the **real `step-7-be` backend**. Intercepting `fetch` with a mock service worker (MSW) is a
+**testing-track** concern — you meet it in [`test-7`](../test-7/README.md), not here.
 
-**Before you start:** branch, HTTP server from **`frontend/`**, MSW or **`step-7-be`** ->
+**Before you start:** branch, HTTP server from **`frontend/`**, **`step-7-be`** running ->
 see [getting-started.md](./getting-started.md).
 
 **Testing companion (optional):** [Test step T-7 · fetch stubbing](../test-7/README.md)
@@ -112,7 +111,7 @@ Later, in Step-8, we will split these responsibilities even further, but for now
 
 we see the same structure as in Step-3, in the pub/sub pattern.
 
-The two loader classes dispatch **`scheduleLoaded`** and **`sessionsLoaded`** events, which the `CfbBoardOrchestrator`
+The two loader classes dispatch **`cfb-schedule-loaded`** and **`cfb-sessions-loaded`** events, which the `CfbBoardOrchestrator`
 listens to. Once both events are received, it informs the `CfbSchedule` component that it can render the schedule. It
 does it similarly as in Step-4, informing the Schedule that 'new data exists in IndexedDB'.
 
@@ -137,7 +136,7 @@ User opens page
 ✨ cfb-schedule-loader          ✨ cfb-session-loader
    → getBackendApi().getSchedule   → getBackendApi().getSessions
    → schedule-store (IDB)          → session-store (IDB)
-   → dispatch scheduleLoaded       → dispatch sessionsLoaded
+   → dispatch cfb-schedule-loaded       → dispatch cfb-sessions-loaded
         │                                   │
         └──────────── bubbles ──────────────┘
                           ▼
@@ -177,7 +176,7 @@ some component will:
 
 1. fetch the latest data from the backend
 2. store it in the IndexedDB
-3. inform the `CfbBoardOrchestrator` that the data has changed. (using `sessionsLoaded` event)
+3. inform the `CfbBoardOrchestrator` that the data has changed. (using `cfb-sessions-loaded` event)
 
 This looks a lot like the responsibility of `CfbSessionLoader` component, right? So - how would we implement this,
 looking at the HTML structure:
@@ -228,13 +227,13 @@ When both are done, move on to **Concrete practice**.
 
 | File                                                                                                                          | Role                                                                                                |
 |-------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
-| [`cfb-schedule-loader.js`](./cfb-schedule-loader.js)                                                                          | Schedule **`fetch`** path, IDB write, **`scheduleLoaded`** / **`loaderError`**                      |
-| [`cfb-session-loader.js`](./cfb-session-loader.js)                                                                            | Sessions **`fetch`** path, **`data-reload-token`**, **`sessionsLoaded`**                            |
-| [`cfb-board-orchestrator.js`](./cfb-board-orchestrator.js)                                                                    | Waits for loader events; sets **`data-latest-updated-at`**; extension: **`sessionsBackendUpdated`** |
+| [`cfb-schedule-loader.js`](./cfb-schedule-loader.js)                                                                          | Schedule **`fetch`** path, IDB write, **`cfb-schedule-loaded`** / **`cfb-loader-error`**                      |
+| [`cfb-session-loader.js`](./cfb-session-loader.js)                                                                            | Sessions **`fetch`** path, **`data-reload-token`**, **`cfb-sessions-loaded`**                            |
+| [`cfb-board-orchestrator.js`](./cfb-board-orchestrator.js)                                                                    | Waits for loader events; sets **`data-latest-updated-at`**; extension: **`cfb-sessions-backend-updated`** |
 | [`../step-4/cfb-schedule.js`](../step-4/cfb-schedule.js)                                                                      | **`data-latest-updated-at`** → pull sessions from IDB → render                                      |
 | [`lib/api/backend-api.js`](./lib/api/backend-api.js)                                                                          | **`fetch`** + **`res.ok`** + JSON                                                                   |
 | [`lib/store/session-store.js`](./lib/store/session-store.js) / [`lib/store/schedule-store.js`](./lib/store/schedule-store.js) | Persistence helpers loaders call                                                                    |
-| [`mocks/handlers.js`](./mocks/handlers.js)                                                                                    | MSW **`http.get`** handlers keyed by **`eventId`**                                                  |
+| [`mocks/handlers.js`](./mocks/handlers.js)                                                                                    | _Optional_ MSW handlers — testing-track material (see `test-7`)                                                  |
 | [`index.js`](./index.js)                                                                                                      | **`configureBackendApi`**, optional **`worker.start()`**, element registration                      |
 | [`index.html`](./index.html)                                                                                                  | Loader markup, **`.listens-schedule-updates`**, event switcher buttons                              |
 
@@ -247,14 +246,14 @@ rebuild in your own branch if your facilitator assigns implementation from scrat
   with an updated board for that event.
 - [ ] You can name the **two** success event types the orchestrator waits for and the **attribute** it sets on the
   schedule.
-- [ ] You can point to **where** **`fetch`** is called and **where** MSW is started (two different files).
-- [ ] With **`res.ok === false`**, the loader surfaces an **error** state and dispatches **`loaderError`** (trace in [
+- [ ] You can point to **where** **`fetch`** is called and **where** the backend base URL is configured (two different files).
+- [ ] With **`res.ok === false`**, the loader surfaces an **error** state and dispatches **`cfb-loader-error`** (trace in [
   `cfb-session-loader.js`](./cfb-session-loader.js)).
 
 **Constraints**
 
 - HTML, JavaScript, and CSS only - **no** frameworks inside the custom elements.
-- **MSW** is the only **mock** dependency for the browser path; **`step-7-be`** is optional real HTTP.
+- **`step-7-be`** is the backend for this step; mocking `fetch` (MSW) is left to the **testing track**.
 - Target about **45 minutes** for core tracing + log activities.
 
 **Definition of done**
@@ -277,7 +276,7 @@ Update [First fetch](./learning-log.md#step-7-loop-back-first-fetch).
 
 ### 3) PLAN prompts
 
-- [MSW outside components](./learning-log.md#step-7-conclusions-msw-benefit)
+- [Mocks live at the edge, not inside components](./learning-log.md#step-7-conclusions-msw-benefit)
 - [True / False - coordination](./learning-log.md#step-7-conclusions-tf-coordination)
 - [True / False - mocks removed](./learning-log.md#step-7-conclusions-tf-mocks-removed)
 
@@ -298,16 +297,12 @@ Add **one or two sentences** in the [journey hub `learning-log.md`](../learning-
 
 If you finish early:
 
-- [ ] Add **`<cfb-loader-status>`** driven only by **`scheduleLoaded`** / **`sessionsLoaded`** / **`loaderError`** - no
+- [ ] Add **`<cfb-loader-status>`** driven only by **`cfb-schedule-loaded`** / **`cfb-sessions-loaded`** / **`cfb-loader-error`** - no
   direct imports of loader classes.
-- [ ] **`http.get`** **`passthrough`** for one **`eventId`** so it hits a real server; keep others mocked.
-- [ ] Return **500** from one handler; prove **`loaderError`** surfaces in the UI.
 - [ ] Cache **`updatedAt`** in IDB and **skip** **`fetch`** when data is fresher than **60** seconds.
--
 
-We also learn of a mockServiceWorker (MSW) that intercepts **`fetch`** and **responds** with **JSON** data. This is
-useful
-sometimes for frontend development, but especially useful in testing -> that's another learning goal altogether.
+> The MSW-based extras (return **500** from a handler, `passthrough` one `eventId`, prove **`cfb-loader-error`**
+> surfaces) live in the **testing track** — see [`test-7`](../test-7/README.md).
 
 ---
 
@@ -318,4 +313,4 @@ sometimes for frontend development, but especially useful in testing -> that's a
 - **`CustomEvent`** bubbling as a **completion** signal
 - **Orchestrator** coordinating **multiple async** sources without cross-imports
 - **`attributeChangedCallback`** as a **pull** trigger from IDB
-- **MSW** (or a real server) at the **edge**, not inside feature components
+- The **backend** (real, or a mock in tests) at the **edge**, not inside feature components

@@ -21,6 +21,20 @@
     backdrop-filter: blur(3px);
 }
 
+/* ── Placeholder (holds grid space while the card is fixed) ─── */
+.cfb-card-flip__placeholder {
+    display:        block;
+    pointer-events: none;
+    box-sizing:     border-box;
+}
+
+.cfb-card-flip__placeholder > * {
+    opacity:        0.4;
+    filter:         grayscale(0.35);
+    pointer-events: none;
+    user-select:    none;
+}
+
 /* =============================================================
    Edit form - lives in the "back" slot of <cfb-flip-card>
    ============================================================= */

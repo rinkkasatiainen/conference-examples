@@ -1,12 +1,13 @@
 # Step 5 - Add a Session · HTML Form Elements
 
 In Step 4 you persisted sessions in **IndexedDB** and refreshed the board with a **signal** (
-`cfb-sessions-loaded-to-idb`
-→ **`data-latest-updated-at`** → schedule **pulls** rows). This step swaps the **random generator** for a
-**real HTML form**. For the form we use few nice HTML features like: native constraints, - **`FormData`**, all while
-the **same** **`cfb-session-created`** pipeline so storage and schedule stay boring.
+`cfb-sessions-loaded-to-idb`). This step swaps the **random generator** for a **real HTML form**. For the form we use
+few nice HTML features like: native constraints, - **`FormData`**, all while the **same** **`cfb-session-created`**
+pipeline so storage and schedule stay boringly same.
 
 > **Before you start:** branch, HTTP server, same origin for IDB - see [getting-started.md](./getting-started.md).
+
+**Testing companion (optional):** [Test step T-5 · form validation](../test-5/README.md)
 
 ### Async / solo
 
@@ -68,7 +69,7 @@ In this board, clicking the '+ Add Session' button, it opens a modal. Both the b
 you.
 Notice also the `closedby="any"` attribute, which means that if you click outside of the dialog, it closes it
 automatically. With this setup, the basic layout for interacting with modal should be there. Basically, you should be
-able to open and close the 'add session modal'
+able to open and close the 'add session modal'. Just try it out first.
 
 ```javascript
 export class CfbAddSessionForm extends HTMLElement {
@@ -129,7 +130,7 @@ in [`generate-random-session.js`](../step-3/lib/generate-random-session.js). Bel
 | room        | from selected list |               | true             |
 | tags        | list tags          |               | true             |
 | speaker     | text               |               | false            |
-| sessionType | radio button       |               | true             |
+| sessionFormat | radio button       |               | true             |
 | startTime   | time               |               | (you can choose) |
 
 "
@@ -148,7 +149,7 @@ For example:
 
 ```HTML
 
-<form>
+<form id="example-form">
     <input name="email" value="john@example.com">
     <input name="age" value="25">
 </form>
@@ -161,32 +162,32 @@ email = john@example.com
 age = 25
 ```
 
-**`new FormData(form)`** walks the form’s **subtree** and collects **successful controls** that have a **`name`**.
-Each entry is **`(name, value)`** - the **`name`** is the dictionary key in JS. An example could be:
+This works as following: When calling **`new FormData(form)`**, it walks the form’s **subtree** and collects controls (
+in this step, all 'input' elements - in next step we learn to use a custom form element) that have a **`name`**. Each
+entry is **`(name, value)`** - the **`name`** is the dictionary key in JS. An example of the form above could be:
 
 ```js
-const form = this.querySelector('form') // this is a <cfb-add-session-form>
+const form = this.querySelector('#example-form') // this is a <cfb-add-session-form>
 const data = new FormData(form)
-const email = data.get('email')
-const age = data.get('age')
+const email = data.get('email') // "john@example.com"
+const age = data.get('age') // "25" - notice that the value is a string
 ```
 
-The important part of `FormData` is that it works on `name` attribute instead of `id` attribute. Let's see the
-difference: **`name` vs `id`**.
-
-To understand the difference let's break down their roles and usage scenarios:
+The important part of `FormData` is that it works on `name` attribute instead of `id` attribute. Let's break down the
+difference in roles and usage scenarios in forms: **`name` vs `id`**.
 
 | Attribute  | Typical job                                                                  |
 |------------|------------------------------------------------------------------------------|
 | **`name`** | **`FormData`** key;                                                          |
 | **`id`**   | Pair `<label for="…">` with a control and deep-linking, **`getElementById`** |
 
-As seen from the table above, **`name`** is the **key** in **`FormData`**. The **`id`** is for **deep linking** and
-**labelling**. Do not assume **`name`** and **`id`** are the same string.
+As seen from the table above, **`name`** is the **key** in **`FormData`**. The **`id`** especially useful for pairing a
+`label` with the corresponding linking. Do not assume **`name`** and **`id`** are the same string.
 
-### Form elements and their counter parts in FormData
+### Some useful Form elements and their counter parts in FormData
 
-**Text + select** - each control needs their own **`name`** (often matching the field you map into the session object):
+**Text + select** - each control needs their own **`name`** attribute. You set the name attribute on the `select`
+element.
 
 ```html
 <input name="title" type="text" required minlength="5">
@@ -198,20 +199,21 @@ As seen from the table above, **`name`** is the **key** in **`FormData`**. The *
 </select>
 ```
 
-**Radio group** - requires that each option has the same **`name`**, the **`value`** on each **`<input>`** is what
-**`FormData.get('session-type')`** returns for the selected one.
+**Radio group** - requires that each option has the same **`name`**. This way the **`value`** on each **`<input>`** is
+what **`FormData.get('session-format')`** returns for the selected one. See also how radio groups can be grouped in a
+`<fieldset>` element.
 
 ```html
 
 <fieldset>
-    <legend>Session type</legend>
-    <label><input type="radio" name="session-type" value="Talk" required> Talk</label>
-    <label><input type="radio" name="session-type" value="Workshop"> Workshop</label>
-    <label><input type="radio" name="session-type" value="Keynote"> Keynote</label>
+    <legend>Session format</legend>
+    <label><input type="radio" name="session-format" value="Talk" required> Talk</label>
+    <label><input type="radio" name="session-format" value="Workshop"> Workshop</label>
+    <label><input type="radio" name="session-format" value="Keynote"> Keynote</label>
 </fieldset>
 ```
 
-**FormData with elements that does not have data:**. If control does not have **`name`**, is `disabled`, or unchecked
+**FormData with elements that does not have data:** If does not have **`name`**, is `disabled`, or unchecked
 checkboxes are omitted from the formData payload
 
 ### Form behavior - validations
@@ -235,23 +237,23 @@ typically is:
   understand the context of the fields.
 - **Usage Rule**: The `<legend>` must be the very first child of the `<fieldset>`.
 
-An example could be (for a nice grouping of possible session types):
+An example could be (for a nice grouping of possible session formats):
 
 ```HTML
 
 <fieldset class="cfb-add-session-form__group">
-    <legend>Session type *</legend>
+    <legend>Session format *</legend>
     <label class="cfb-add-session-form__radio">
-        <input type="radio" name="session-type" value="Talk" required/> Talk
+        <input type="radio" name="session-format" value="Talk" required/> Talk
     </label>
     <label class="cfb-add-session-form__radio">
-        <input type="radio" name="session-type" value="Workshop"/> Workshop
+        <input type="radio" name="session-format" value="Workshop"/> Workshop
     </label>
     <label class="cfb-add-session-form__radio">
-        <input type="radio" name="session-type" value="Keynote"/> Keynote
+        <input type="radio" name="session-format" value="Keynote"/> Keynote
     </label>
     <label class="cfb-add-session-form__radio">
-        <input type="radio" name="session-type" value="Lightning Talk"/> Lightning Talk
+        <input type="radio" name="session-format" value="Lightning Talk"/> Lightning Talk
     </label>
 </fieldset>
 ```
@@ -340,7 +342,7 @@ To finish this exercise, you need to (detailed help below the table)
     - **Title** - `<input type="text">`, `required`, `minlength="5"`
     - **Day** - `<select>` (Wednesday / Thursday / Friday), `required`
     - **Room** - `<input type="text">` with a `<datalist>`, `required`
-    - **Session type** - four `<input type="radio">` (Talk / Workshop / Keynote / Lightning Talk), `required`
+    - **Session format** - four `<input type="radio">` (Talk / Workshop / Keynote / Lightning Talk), `required`
     - **Tags** - **optional list of tags** via text input + `<datalist>` suggestions.
       The UI can show selected tags as chips; submit value is serialized as one
       comma-separated string for `FormData`.
@@ -436,6 +438,7 @@ two custom event types for add vs update.
 - If you get stuck, note it in your learning log or ping your facilitator.
 
 ---
+
 ## Extras
 
 If you finish early:

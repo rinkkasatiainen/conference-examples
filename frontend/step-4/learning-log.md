@@ -46,7 +46,7 @@ the orchestrator in a larger app? (One short paragraph.)
 
 _Solo, ~3 minutes._
 
-In one or two sentences: what stayed the same in the **event-up / attribute-down** idea from Step 3, and 
+In one or two sentences: what stayed the same in the **event-up / attribute-down** idea from Step 3, and
 what changed now that **IndexedDB** exists?
 
 > ___
@@ -109,12 +109,12 @@ _Answer from memory first; then peek at [`session-store.js`](./session-store.js)
 
    >  ___
 
-2. Why keep **`openDb` / `saveSessions` / `getAllSessions`** in **`session-store.js`** instead of calling 
+2. Why keep **`openDb` / `saveSessions` / `getAllSessions`** in **`session-store.js`** instead of calling
    **`indexedDB.open`** directly inside **`cfb-schedule`**?
 
    >  ___
 
-3. After data is ready in IndexedDB, **`cfb-session-loader`** dispatches which **event type string**? 
+3. After data is ready in IndexedDB, **`cfb-session-loader`** dispatches which **event type string**?
    *(See [`events.js`](./events.js).)*
 
    >  ___
@@ -136,7 +136,7 @@ _Answer in your log - short phrases are enough._
    > ___
 
 2. What attribute does **`cfb-board-orchestrator`** set on **`listens-schedule-updates`** schedules, and why is it a
-  **timestamp** rather than the full session array?
+   **timestamp** rather than the full session array?
 
    > ___
 

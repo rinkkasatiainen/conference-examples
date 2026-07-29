@@ -1,6 +1,6 @@
 # How to use README.md and learning-log.md
 
-Each weekly step in `step-N/` follows **Training from the Back of the Room (TBR)** - adapted for **solo, async** work. 
+Each weekly step in `step-N/` follows **Training from the Back of the Room (TBR)** - adapted for **solo, async** work.
 You move through the same four phases in every step:
 
 | Phase                    | What it is for                                                                                         |

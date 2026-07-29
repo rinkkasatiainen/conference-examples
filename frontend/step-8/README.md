@@ -11,18 +11,22 @@ storing it in different component is the main architectural lesson from WebCompo
 
 Form add/edit/remove still goes through **`<cfb-updates-sessions>`** → HTTP - **unchanged** from Step 7.
 
-The backend (**[`step-8-be`](../step-8-be/README.md)**) is **already provided**. It supports now (in addition to what step-7 backend):
+The backend (**[`step-8-be`](../step-8-be/README.md)**) is **already provided**. It supports now (in addition to what
+step-7 backend):
+
 - WebSocket broadcast,
 - Adding a random session
 - Deleting a session
 
-> **Before you start:** branch, HTTP server from **`frontend/`**, **`step-8-be`** running - see [getting-started.md](./getting-started.md).
+> **Before you start:** branch, HTTP server from **`frontend/`**, **`step-8-be`** running -
+> see [getting-started.md](./getting-started.md).
 
 **Testing companion (optional):** [Test step T-8 · WebSocket stub](../test-8/README.md)
 
 ### Async / solo
 
-Use [your Step 8 learning log](./learning-log.md), a short note to your facilitator, or a sync when the README says “compare.” **Timeboxes** beat polish.
+Use [your Step 8 learning log](./learning-log.md), a short note to your facilitator, or a sync when the README says
+“compare.” **Timeboxes** beat polish.
 
 ---
 
@@ -32,8 +36,8 @@ By the end of this step, you can:
 
 - Open a **`WebSocket`**, parse **`message`** payloads, and **close** the socket in **`disconnectedCallback`**.
 - Explain why **`<cfb-live-session-updates>`** does **not** write IndexedDB directly
-- Trace **`sessionsLoaded`** bubbling to **`<cfb-board-orchestrator>`** so **`cfb-schedule`** re-renders - the **same**
-  path as Step 7’s initial load.
+- Trace **`cfb-sessions-loaded`** bubbling to **`<cfb-board-orchestrator>`** so **`cfb-schedule`** re-renders - the
+  **same** path as Step 7’s initial load.
 - Contrast **pull** (loader / form → HTTP → reload) with **push** (WebSocket → store → schedule) while having the same
   structure as in Step-7
 
@@ -44,7 +48,8 @@ By the end of this step, you can:
 Do these **in order**; capture answers in [your Step 8 learning log](./learning-log.md).
 
 1. **Solo, ~2 min - Think → ink (push vs pull)**  
-   [Push vs pull](./learning-log.md#step-8-connections-push-vs-pull) *(revisit in [Loop back](./learning-log.md#step-8-loop-back-push-vs-pull)).*
+   [Push vs pull](./learning-log.md#step-8-connections-push-vs-pull) *(revisit
+   in [Loop back](./learning-log.md#step-8-loop-back-push-vs-pull)).*
 
 2. **Solo, ~4 min - Bridge from Step 7**  
    [Bridge from Step 7](./learning-log.md#step-8-bridge-step-7).
@@ -59,17 +64,16 @@ Do these **in order**; capture answers in [your Step 8 learning log](./learning-
 
 ## 2) Concepts
 
-### Pull vs push in this app
-
-| Path                         | Trigger                               | Network                     | Who writes sessions IDB                                       | Schedule refresh                            |
-|------------------------------|---------------------------------------|-----------------------------|---------------------------------------------------------------|---------------------------------------------|
-| **Initial load**             | `data-event-id` / page load           | `GET` sessions              | **`<cfb-session-store-updates>`** (via **`sessionsFetched`**) | **`sessionsLoaded`** + **`scheduleLoaded`** |
-| **Form add / edit / remove** | User form or card menu                | `PUT` / `PATCH` / `DELETE`  | Loader refetch → store (via **`sessionsBackendUpdated`**)     | Same orchestrator path                      |
-| **Live / random**            | WebSocket message or colleague’s POST | WebSocket / `POST …/random` | **Store** (via **`liveSession*`** events)                     | **`sessionsLoaded`** only                   |
-
-**`<cfb-updates-sessions>`** stays on the **HTTP** row only. That is intentional: you can add real-time features **without** rewriting the form layer.
+In this step, you'll learn about WebSockets, a way to **push** updates from the backend to the frontend. Practically how
+this happens is that in the UI, there is a button to mimic a **random session** creation. When pressing that button, it
+will make a call to the backend to trigger a new session generation, which will then be broadcasted to all connected
+clients. So, if you have two browser tabs open, both will receive the same update.
 
 ### WebSocket lifecycle
+
+WebSocket is a **client-server** protocol, where the client (JS) opens a connection to the server (backend). By
+understanding the lifecycle events of a WebSocket, you can build a push system to the the board. The important lifecycle
+events are:
 
 - **`new WebSocket(url)`** - URL includes **`eventId`**: `ws://localhost:3001/ws/sessions/codefreeze-2025`.
 - **`open`** - connection accepted; show status in the UI (`data-state="open"`).
@@ -77,23 +81,57 @@ Do these **in order**; capture answers in [your Step 8 learning log](./learning-
 - **`close`** / **`error`** - update status; optional extras: reconnect with back-off.
 - **`disconnectedCallback`** - **`this.#socket?.close()`** so leaving the page does not leak connections.
 
+### HTML structure
+
+Looking at the HTML structure below, you can see the logic and behavior has been split into two parts: There is one part
+that fetches (and listens to) the data from the backend, and the other part that interacts with the user.
+
+The part that fetches data from backend has clear responsibilities -> changes to the data in BE are stored in the
+IndexedDB (in `cfb-session-store-updates`).
+The part tha interacts with the user has responsibility of displaying the data in the UI, and provide the necessary
+backend calls to update the data. All this is encapsulated under one element, `cfb-updates-sessions`. This is an
+organism that will be called to create, update or delete sessions (making HTTP calls), while the children of this will
+provide the UI behavior. This remains the same as in step-7.
+
+```html
+
+<cfb-board-orchestrator>
+    <div class="loader-status">
+        <!-- schedule loader is not important now -->
+        <cfb-session-store-updates>
+            <cfb-session-loader data-event-id="codefreeze-2025">
+            </cfb-session-loader>
+            <cfb-live-session-updates data-event-id="codefreeze-2025" data-url="ws://localhost:3001/ws/sessions">
+            </cfb-live-session-updates>
+        </cfb-session-store-updates>
+    </div>
+
+
+    <cfb-header> <!-- omitted for brevity --> </cfb-header>
+
+    <cfb-updates-sessions class="listens-event-changes" data-event-id="codefreeze-2025">
+        <cfb-add-session-form></cfb-add-session-form>
+        <cfb-schedule class="listens-schedule-updates" data-event-id="codefreeze-2025">
+        </cfb-schedule>
+    </cfb-updates-sessions>
+</cfb-board-orchestrator>
+```
+
 ### Store wrapper pattern
 
 **`<cfb-session-store-updates>`** is the **single write boundary** for session IndexedDB:
 
-| Child event | Store action | Outbound event |
-|-------------|--------------|----------------|
-| **`sessionsFetched`** | **`saveSessions`** (bulk replace) | **`sessionsLoaded`** |
-| **`liveSessionUpdated`** | **`upsertSession`** | **`sessionsLoaded`** |
-| **`liveSessionRemoved`** | **`deleteSession`** | **`sessionsLoaded`** |
+It listens to the events from backend, and updates the store accordingly. The following table shows the events it
+listens to and the store action it calls.
 
-Children **bubble** events; the store listens on **self** and does not import loader or WebSocket classes.
+| Inbound event            | Store action                      | Outbound event            |
+|--------------------------|-----------------------------------|---------------------------|
+| **`sessionsFetched`**    | **`saveSessions`** (bulk replace) | **`cfb-sessions-loaded`** |
+| **`liveSessionUpdated`** | **`upsertSession`**               | **`cfb-sessions-loaded`** |
+| **`liveSessionRemoved`** | **`deleteSession`**               | **`cfb-sessions-loaded`** |
 
-### Orchestrator tweak
-
-Step 7 waited for **both** **`scheduleLoaded`** and **`sessionsLoaded`** before the first paint. After that,
-a **solo** **`sessionsLoaded`** (live push or session reload) should still bump **`data-latest-updated-at`** on
-**`.listens-schedule-updates`**. See [`cfb-board-orchestrator.js`](./cfb-board-orchestrator.js).
+This way the orchestrator does not need to know anything about the backend - it just needs to inform the relevant
+elements that the IndexedDB is updated.
 
 ### End-to-end flow (reference)
 
@@ -123,7 +161,7 @@ Legend: ✨ new / changed in Step 8 · ✅ unchanged from earlier steps
                             ┌────────────────┐
                             │   IndexedDB    │
                             └────────┬───────┘
-                                     │ sessionsLoaded (bubbles)
+                                     │ cfb-sessions-loaded (bubbles)
                                      ▼
                          ┌───────────────────────┐
                          │ cfb-board-orchestrator│
@@ -139,7 +177,7 @@ Legend: ✨ new / changed in Step 8 · ✅ unchanged from earlier steps
 
   cfb-add-session-form ──► cfb-updates-sessions ──PUT/PATCH/DELETE──► API (step-8-be)
                                     │
-                                    │ sessionsBackendUpdated
+                                    │ cfb-sessions-backend-updated
                                     ▼
                          cfb-board-orchestrator ──reload──► cfb-session-loader
                                                               (back into store ↑)
@@ -181,7 +219,8 @@ When both are done, move on to **Concrete practice**.
 
 ### Starting point
 
-Copy **`step-7/`** into your working tree **or** use this folder’s reference files. You need a working Step 7 board (loaders, orchestrator, **`cfb-updates-sessions`**, forms).
+Copy **`step-7/`** into your working tree **or** use this folder’s reference files. You need a working Step 7 board (
+loaders, orchestrator, **`cfb-updates-sessions`**, forms).
 
 **Backend:** run **`step-8-be`** - not optional for core exercises.
 
@@ -190,51 +229,55 @@ Copy **`step-7/`** into your working tree **or** use this folder’s reference f
 Work in this order; check off as you go:
 
 1. **Refactor `<cfb-session-loader>`**
-   - Remove **`saveSessions`** from the loader.
-   - On success, dispatch **`sessionsFetched`** with **`{ eventId, sessions }`**.
-   - Keep **`data-reload-token`** / **`.listens-session-reloads`** behaviour from Step 7.
+    - Remove **`saveSessions`** from the loader.
+    - On success, dispatch **`sessionsFetched`** with **`{ eventId, sessions }`**.
+    - Keep **`data-reload-token`** / **`.listens-session-reloads`** behaviour from Step 7.
 
 2. **Add `<cfb-session-store-updates>`**
-   - Listen for **`sessionsFetched`**, **`liveSessionUpdated`**, **`liveSessionRemoved`**.
-   - Call **`saveSessions`** / **`upsertSession`** / **`deleteSession`** from [`../step-7/lib/store/session-store.js`](../step-7/lib/store/session-store.js).
-   - Dispatch **`sessionsLoaded`** after each write (same shape as Step 7).
+    - Listen for **`sessionsFetched`**, **`liveSessionUpdated`**, **`liveSessionRemoved`**.
+    - Call **`saveSessions`** / **`upsertSession`** / **`deleteSession`** from [
+      `../step-7/lib/store/session-store.js`](../step-7/lib/store/session-store.js).
+    - Dispatch **`cfb-sessions-loaded`** after each write (same shape as Step 7).
 
 3. **Add `<cfb-live-session-updates>`**
-   - Build URL: **`${data-url}/${data-event-id}`**.
-   - On **`sessionUpdated`** / **`sessionRemoved`**, dispatch **`liveSession*`** events (do **not** import the session store here).
-   - Close socket in **`disconnectedCallback`**.
-   - Surface connection state on the element (`data-state`, status text).
+    - Build URL: **`${data-url}/${data-event-id}`**.
+    - On **`sessionUpdated`** / **`sessionRemoved`**, dispatch **`liveSession*`** events (do **not** import the session
+      store here).
+    - Close socket in **`disconnectedCallback`**.
+    - Surface connection state on the element (`data-state`, status text).
 
 4. **Extend `<cfb-board-orchestrator>`**
-   - When **`sessionsLoaded`** arrives and the board already has a **`currentEventId`**, refresh **`.listens-schedule-updates`** even if **`scheduleLoaded`** is not in the same batch.
+    - When **`cfb-sessions-loaded`** arrives and the board already has a **`currentEventId`**, refresh *
+      *`.listens-schedule-updates`** even if **`cfb-schedule-loaded`** is not in the same batch.
 
 5. **Add `<cfb-initiate-a-random-session-creation>`**
-   - Button → **`POST /api/sessions/:eventId/random`** via **`backend-api`**.
-   - Do **not** update IDB here - wait for the WebSocket push (simulates another user).
+    - Button → **`POST /api/sessions/:eventId/random`** via **`backend-api`**.
+    - Do **not** update IDB here - wait for the WebSocket push (simulates another user).
 
 6. **Wire [`index.html`](./index.html)**
-   - Wrap loader + live component inside **`<cfb-session-store-updates>`**.
-   - Set **`data-url="ws://localhost:3001/ws/sessions"`** and matching **`data-event-id`**.
-   - Register new elements in [`index.js`](./index.js); extend the event-switcher to update live + random button ids.
+    - Wrap loader + live component inside **`<cfb-session-store-updates>`**.
+    - Set **`data-url="ws://localhost:3001/ws/sessions"`** and matching **`data-event-id`**.
+    - Register new elements in [`index.js`](./index.js); extend the event-switcher to update live + random button ids.
 
 7. **Extend `backend-api`** (if not present)
-   - **`postRandomSession(eventId)`**
-   - **`deleteSession(eventId, sessionId)`** on **`<cfb-updates-sessions>`** for card **Remove** (Step 7 gap).
+    - **`postRandomSession(eventId)`**
+    - **`deleteSession(eventId, sessionId)`** on **`<cfb-updates-sessions>`** for card **Remove** (Step 7 gap).
 
 ### Files to read (reference implementation)
 
-| File | Role |
-|------|------|
-| [`cfb-session-store-updates.js`](./cfb-session-store-updates.js) | Single IDB write boundary; emits **`sessionsLoaded`** |
-| [`cfb-session-loader.js`](./cfb-session-loader.js) | Fetch only → **`sessionsFetched`** |
-| [`cfb-live-session-updates.js`](./cfb-live-session-updates.js) | WebSocket → **`liveSession*`** events |
-| [`cfb-initiate-a-random-session-creation.js`](./cfb-initiate-a-random-session-creation.js) | POST random session (backend pushes to WS) |
-| [`cfb-updates-sessions.js`](./cfb-updates-sessions.js) | **Unchanged role** - HTTP for form + remove |
-| [`cfb-board-orchestrator.js`](./cfb-board-orchestrator.js) | Initial dual load + incremental **`sessionsLoaded`** |
-| [`lib/api/backend-api.js`](./lib/api/backend-api.js) | **`postRandomSession`**, **`deleteSession`** |
-| [`index.html`](./index.html) | Component tree and status pills |
+| File                                                                                       | Role                                                       |
+|--------------------------------------------------------------------------------------------|------------------------------------------------------------|
+| [`cfb-session-store-updates.js`](./cfb-session-store-updates.js)                           | Single IDB write boundary; emits **`cfb-sessions-loaded`** |
+| [`cfb-session-loader.js`](./cfb-session-loader.js)                                         | Fetch only → **`sessionsFetched`**                         |
+| [`cfb-live-session-updates.js`](./cfb-live-session-updates.js)                             | WebSocket → **`liveSession*`** events                      |
+| [`cfb-initiate-a-random-session-creation.js`](./cfb-initiate-a-random-session-creation.js) | POST random session (backend pushes to WS)                 |
+| [`cfb-updates-sessions.js`](./cfb-updates-sessions.js)                                     | **Unchanged role** - HTTP for form + remove                |
+| [`cfb-board-orchestrator.js`](./cfb-board-orchestrator.js)                                 | Initial dual load + incremental **`cfb-sessions-loaded`**  |
+| [`lib/api/backend-api.js`](./lib/api/backend-api.js)                                       | **`postRandomSession`**, **`deleteSession`**               |
+| [`index.html`](./index.html)                                                               | Component tree and status pills                            |
 
-This folder ships as a **reference implementation** - your job is to **trace, demo, and complete the learning log**, or rebuild following the list above on your branch.
+This folder ships as a **reference implementation** - your job is to **trace, demo, and complete the learning log**, or
+rebuild following the list above on your branch.
 
 **Build / trace until you can show:**
 
@@ -248,12 +291,14 @@ This folder ships as a **reference implementation** - your job is to **trace, de
 
 - HTML, JavaScript, and CSS only - **no** frameworks inside custom elements.
 - Target about **45 minutes** for core tracing + log activities.
-- **`step-8-be`** provides HTTP + WebSocket; MSW WebSocket mocking is an **optional extra** (see Extras).
+- **`step-8-be`** provides HTTP + WebSocket. (Faking the socket for tests is a **testing-track** concern — see
+  [`test-8`](../test-8/README.md).)
 
 **Definition of done**
 
 - You can draw **pull** and **push** paths to the same schedule refresh without peeking.
-- You complete [Question for your facilitator](./learning-log.md#step-8-concrete-facilitator-question) with one genuine question.
+- You complete [Question for your facilitator](./learning-log.md#step-8-concrete-facilitator-question) with one genuine
+  question.
 
 ---
 
@@ -310,13 +355,14 @@ if (type === 'sessionUpdated' && session) {
 ### HTML shell (core new wrapper)
 
 ```html
+
 <cfb-session-store-updates>
-  <cfb-session-loader class="listens-session-reloads" data-event-id="codefreeze-2025">
-  </cfb-session-loader>
-  <cfb-live-session-updates
-    data-event-id="codefreeze-2025"
-    data-url="ws://localhost:3001/ws/sessions">
-  </cfb-live-session-updates>
+    <cfb-session-loader class="listens-session-reloads" data-event-id="codefreeze-2025">
+    </cfb-session-loader>
+    <cfb-live-session-updates
+            data-event-id="codefreeze-2025"
+            data-url="ws://localhost:3001/ws/sessions">
+    </cfb-live-session-updates>
 </cfb-session-store-updates>
 ```
 
@@ -329,9 +375,11 @@ if (type === 'sessionUpdated' && session) {
 If you finish early:
 
 - [ ] **Reconnect** with exponential back-off when the socket closes unexpectedly.
-- [ ] **MSW WebSocket** handler (`ws.link`) to demo push without **`step-8-be`** - see [`../PLAN.md`](../PLAN.md) Step 8 snippet.
+- [ ] Fake the socket to demo push without **`step-8-be`** — this is exactly what the **testing track** does; see
+  [`test-8`](../test-8/README.md) (`FakeWebSocket`).
 - [ ] Dispatch a separate **`liveUpdate`** event so the UI can flash the card that changed.
-- [ ] Open **two events** (`codefreeze` vs `devdays`) in two tabs - confirm WebSocket traffic is **scoped** to **`eventId`** only.
+- [ ] Open **two events** (`codefreeze` vs `devdays`) in two tabs - confirm WebSocket traffic is **scoped** to *
+  *`eventId`** only.
 
 ---
 
@@ -339,5 +387,5 @@ If you finish early:
 
 - **`WebSocket`** lifecycle and cleanup in custom elements
 - **Single responsibility** - fetch vs listen vs store vs HTTP mutations
-- **Reusing** **`sessionsLoaded`** / orchestrator / schedule **pull** from Step 7
+- **Reusing** **`cfb-sessions-loaded`** / orchestrator / schedule **pull** from Step 7
 - **Collaborative UX** - random POST + broadcast simulates another user’s change
