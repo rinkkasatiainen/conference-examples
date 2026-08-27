@@ -1,4 +1,4 @@
-# Test Step T-8 — Live Updates · WebSocket Stub
+# Test Step T-8: Live Updates · WebSocket Stub
 
 **Build companion:** [Step 8](../step-8/README.md)
 
@@ -32,7 +32,7 @@ In [your T-8 learning log](./learning-log.md):
 
 | Piece                         | Role                                                                         |
 |-------------------------------|------------------------------------------------------------------------------|
-| `<cfb-live-session-updates>`  | WebSocket client — parses messages, dispatches DOM events                    |
+| `<cfb-live-session-updates>`  | WebSocket client, parses messages, dispatches DOM events                    |
 | `<cfb-session-store-updates>` | Listens for session events, writes IDB (test in integration / Step 8 extras) |
 | Orchestrator                  | Same `data-latest-updated-at` pull signal after store updates                |
 
@@ -128,7 +128,7 @@ See **[tips.md](./tips.md)**.
 
 ## 4) Conclusions
 
-1. [Loop back — WebSocket guess](./learning-log.md#t-8-loop-back-guess)
+1. [Loop back: WebSocket guess](./learning-log.md#t-8-loop-back-guess)
 2. [Ticket out](./learning-log.md#t-8-conclusions-ticket-out)
 3. Hub takeaway → [`learning-log-test.md`](../learning-log-test.md#t-8-key-takeaway)
 

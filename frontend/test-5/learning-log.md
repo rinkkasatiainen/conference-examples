@@ -1,4 +1,4 @@
-# Learning log — Test step T-5
+# Learning log - Test step T-5
 
 Use with [T-5 README](./README.md). Hub → [`learning-log-test.md`](../learning-log-test.md#t-5-key-takeaway).
 
@@ -12,7 +12,7 @@ Use with [T-5 README](./README.md). Hub → [`learning-log-test.md`](../learning
 
 <a id="t-5-connections-submit-guess"></a>
 
-### T-5 — Connections: Invalid submit
+### T-5 - Connections: Invalid submit
 
 _Guess before Concepts:_ If a required field is empty and you call `form.requestSubmit()`, does the submit handler run?
 
@@ -24,7 +24,7 @@ _(Revisit in [Loop back](#t-5-loop-back-submit).)_
 
 <a id="t-5-connections-bridge"></a>
 
-### T-5 — Bridge from Step 5
+### T-5 - Bridge from Step 5
 
 Name two native validation APIs you test instead of writing `if (title.length < 5)`.
 
@@ -38,18 +38,18 @@ Name two native validation APIs you test instead of writing `if (title.length < 
 
 <a id="t-5-concepts-myth-fact"></a>
 
-### T-5 — Myth or fact
+### T-5 - Myth or fact
 
-1. `FormData` can read selected radio values when fields are named. — M / F: ___
-2. Custom JS validation is always clearer than `checkValidity()`. — M / F: ___
-3. `form.elements.title` is safe for the title input named `title`. — M / F: ___
-4. A `waitForEvent` helper can prove an invalid submit does **not** dispatch. — M / F: ___
+1. `FormData` can read selected radio values when fields are named. - M / F: ___
+2. Custom JS validation is always clearer than `checkValidity()`. - M / F: ___
+3. `form.elements.title` is safe for the title input named `title`. - M / F: ___
+4. A `waitForEvent` helper can prove an invalid submit does **not** dispatch. - M / F: ___
 
 ---
 
 <a id="t-5-concepts-one-minute"></a>
 
-### T-5 — One-minute review
+### T-5 - One-minute review
 
 Why does proving an invalid submit **does not** dispatch need a **spy**, not `waitForEvent`? (One sentence.)
 
@@ -63,7 +63,7 @@ Why does proving an invalid submit **does not** dispatch need a **spy**, not `wa
 
 <a id="t-5-concrete-test-list"></a>
 
-### T-5 — Your test list
+### T-5 - Your test list
 
 Write your `todo(...)` list for `cfb-add-session-form.test.js` before promoting any. Start from the guard:
 
@@ -86,7 +86,7 @@ describe('<cfb-add-session-form>', () => {
 
 <a id="t-5-loop-back-submit"></a>
 
-### T-5 — Loop back — submit guess
+### T-5 - Loop back: submit guess
 
 >
 
@@ -94,7 +94,7 @@ describe('<cfb-add-session-form>', () => {
 
 <a id="t-5-conclusions-quick-check"></a>
 
-### T-5 — Quick check
+### T-5 - Quick check
 
 List **three** advantages of native constraint validation in tests (short phrases):
 
@@ -106,8 +106,8 @@ List **three** advantages of native constraint validation in tests (short phrase
 
 <a id="t-5-conclusions-ticket-out"></a>
 
-### T-5 — Ticket out
+### T-5 - Ticket out
 
-**Integration vs isolated form tests** — when do you mount `<cfb-add-session-form>` vs a plain `<form>`?
+**Integration vs isolated form tests**: when do you mount `<cfb-add-session-form>` vs a plain `<form>`?
 
 >

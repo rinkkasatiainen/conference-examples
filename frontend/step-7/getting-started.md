@@ -9,7 +9,7 @@ Work on a branch so feedback and history stay easy to follow.
 ## 2) Serve from the `frontend/` folder
 
 
-From **`frontend/`**:
+From `frontend/`:
 
 ```bash
 npx http-server -o .
@@ -19,9 +19,9 @@ Open [`index.html`](./index.html) and open step-7
 
 ## Use real Backend API for the calls
 
-The app’s default base URL is **`http://localhost:3001`** (see [`lib/api/backend-api.js`](./lib/api/backend-api.js)).
+The app’s default base URL is `http://localhost:3001` (see [`lib/api/backend-api.js`](./lib/api/backend-api.js)).
 
-From **`frontend/step-7-be/`**:
+From `frontend/step-7-be/`:
 
 ```bash
 npm install

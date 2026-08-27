@@ -2,7 +2,7 @@
 
 ## Import `<cfb-tag>` from Step 1
 
-`index.js` should register **`cfb-tag`** before **`cfb-session-card`** so tags inside the card upgrade correctly.
+`index.js` should register `cfb-tag` before `cfb-session-card` so tags inside the card upgrade correctly.
 This repo imports from [`../step-1/cfb-tag.js`](../step-1/cfb-tag.js) - keep `step-1/` beside `step-2/` or adjust the path.
 
 ## Skeleton `innerHTML`

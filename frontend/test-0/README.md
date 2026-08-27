@@ -10,7 +10,7 @@ the 'step-N' examples.
 
 This testing track works with pairs or as async/solo work. If you work in pairs, please still document your learnings in
 the `learning-log.md` file. And for solo work, let that be your pairing partner and use that as rubber duck and document
-your thinking. What I have heard from participants is, that the learning log is the most crucial part of the process.
+your thinking. What I have heard from participants is that the learning log is the most important part of the process.
 
 ---
 
@@ -51,7 +51,7 @@ being tested. It does that by following the following steps:
    browser ES Modules. There is no bundle or compile step.
 2. **Opening Real Browsers**: It uses browser automation tools (like Playwright or Puppeteer) to launch real, headless
    instances of Chrome, Firefox, or Safari.
-3. **Executeing Locally**: Your test code is loaded into a real browser page via a standard script tag, running exactly
+3. **Executing Locally**: Your test code is loaded into a real browser page via a standard script tag, running exactly
    like it would for an end-user.
 4. **Reporting to Terminal**: The browser passes the test outcomes, console logs, and errors straight back to your
    terminal interface.
@@ -91,26 +91,25 @@ have learned, `@web/test-runner` runs tests on real browsers. If you are buildin
 in the Light DOM, Jest introduces unnecessary complexity and false confidence. Here is why `@web/test-runner` is the
 right choice:
 
-- **It tests reality, not a simulation**: Your Light DOM components interact directly with the page's global styles,
+- **Real browser, no mocks**: Your Light DOM components interact directly with the page's global styles,
   form submissions, and layout engine. Jest uses JSDOM, which forces you to write mocks for basic browser
   features like animations (requestAnimationFrame), element dimensions (offsetWidth), and native form validation.
-  `@web/test-runner` runs your code in a real browser, executing your card-flip animations and form states flawlessly
-  without a single mock.
+  `@web/test-runner` runs your code in an actual browser, so your card-flip animations and form states run
+  without mocking any of it.
 - **A purely native workflow**: Your components are written using modern, browser-native ES Modules (ESM). Because Jest
   runs inside Node.js, it forces you to set up complex build tools (Babel, Vite, or Webpack) just to transpile your code
   so Node can read it. `@web/test-runner serves` your native files straight to the browser over standard HTTP. There is
-  zero compilation, zero build configuration, and zero risk of a build tool altering your code's behavior between
-  testing and production.
+  no build step, so a build tool can never alter your code's behavior between testing and production.
 
 | Feature                   | Jest + JSDOM (Node.js Simulation)                               | @web/test-runner (Real Browser Execution)                            |
 |:--------------------------|:----------------------------------------------------------------|:---------------------------------------------------------------------|
 | **Execution Environment** | Fake browser simulated in Node.js.                              | Real browsers (Chrome, Firefox, Safari).                             |
 | **Workflow Build Step**   | **Requires compilation** (transforms ESM to CommonJS).          | **Zero-build** (serves native ES Modules directly).                  |
 | **User Interactions**     | **Synthetic events** (clicks work on hidden/disabled elements). | **Trusted events** (real mouse/keyboard engine via automation APIs). |
-| **Form Integration**      | **Simulated & buggy** (fails on native validation APIs).        | **Native & flawless** (full support for validation states).          |
+| **Form Integration**      | **Simulated & buggy** (fails on native validation APIs).        | **Native** (`:invalid`, `validationMessage`, etc. work as in a browser). |
 | **Layout & Geometry**     | **None** (`getBoundingClientRect()` always returns `0`).        | **Full** (calculates exact pixel sizes and positions).               |
-| **Animations & Layout**   | **No support** (requires heavy mocking of frames/timers).       | **Full support** (runs CSS transitions and layout scripts).          |
-| **Style Intersections**   | **Ignored** (cannot compute how global CSS affects elements).   | **Accurate** (tests true global CSS inheritance in Light DOM).       |
+| **Animations & Layout**   | **No support** (requires heavy mocking of frames/timers).       | **Runs them** (actual CSS transitions and layout scripts execute).   |
+| **Style Intersections**   | **Ignored** (cannot compute how global CSS affects elements).   | **Computed** (real global CSS inheritance applies in Light DOM).     |
 
 And, as Aki has a hate-hate relationship with **Jest** (for example it being super slow), having a tool that runs mocha
 and uses sinon and chai, is only a plus.

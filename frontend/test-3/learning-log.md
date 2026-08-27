@@ -34,7 +34,7 @@ What is the canonical event **name string** (not `sessionAdded`)?
 
 <a id="t-3-connections-prev"></a>
 
-### T-3 — Bridge from T-2
+### T-3 - Bridge from T-2
 
 What helper from `test-2` helps build valid session payloads?
 
@@ -48,17 +48,17 @@ What helper from `test-2` helps build valid session payloads?
 
 <a id="t-3-concepts-myth-fact"></a>
 
-### T-3 — Myth or fact
+### T-3 - Myth or fact
 
-1. You must click the real button to test the orchestrator. — M / F: ___
-2. Event `detail` should be validated after stripping `_type`. — M / F: ___
-3. Step 4 uses the same `data-sessions` push pattern as Step 3. — M / F: ___
+1. You must click the real button to test the orchestrator. - M / F: ___
+2. Event `detail` should be validated after stripping `_type`. - M / F: ___
+3. Step 4 uses the same `data-sessions` push pattern as Step 3. - M / F: ___
 
 ---
 
 <a id="t-3-concepts-sketch"></a>
 
-### T-3 — Contract vs component test
+### T-3 - Contract vs component test
 
 In one sentence: what does a **contract test** prove that a DOM test alone might not?
 
@@ -72,7 +72,7 @@ In one sentence: what does a **contract test** prove that a DOM test alone might
 
 <a id="t-3-concrete-facilitator"></a>
 
-### T-3 — Question for facilitator
+### T-3 - Question for facilitator
 
 Write one contract-test question you would ask:
 
@@ -86,7 +86,7 @@ Write one contract-test question you would ask:
 
 <a id="t-3-loop-back-sketch"></a>
 
-### T-3 — Loop back — sketch
+### T-3 - Loop back: sketch
 
 Fix your sketch if anything changed after coding.
 
@@ -96,7 +96,7 @@ Fix your sketch if anything changed after coding.
 
 <a id="t-3-conclusions-ticket-out"></a>
 
-### T-3 — Ticket out
+### T-3 - Ticket out
 
 **Best insight** about testing pub/sub without coupling to child element names:
 

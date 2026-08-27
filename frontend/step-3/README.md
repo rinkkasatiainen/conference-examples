@@ -11,7 +11,7 @@ control can announce “new session” and **other** components update - **witho
 > **contract between** components instead of one component alone.
 
 This step is about **events bubbling up** and **state pushed down** through attributes. The exact event name, payload
-shape, and wiring live in **Concepts** and **`events.js`** - after you’ve done **Connections** - so your first guesses
+shape, and wiring live in **Concepts** and `events.js` - after you’ve done **Connections** - so your first guesses
 in the learning log stay honest.
 
 > **Before you start:** branch, HTTP server, clean console - see [getting-started.md](./getting-started.md).
@@ -30,9 +30,9 @@ the format.
 
 By the end of this step, you can:
 
-- Dispatch a **`CustomEvent`** that **bubbles** so a deep child can signal an ancestor **without imports**.
-- Implement an **orchestrator** that listens on itself, keeps internal state of  **`#sessions`**, and pushes
-  **`data-sessions`** down to `<cfb-schedule>`.
+- Dispatch a `CustomEvent` that **bubbles** so a deep child can signal an ancestor **without imports**.
+- Implement an **orchestrator** that listens on itself, keeps internal state of  `#sessions`, and pushes
+  `data-sessions` down to `<cfb-schedule>`.
 - Explain why **`observedAttributes` + `attributeChangedCallback`** act like simple **parent → child** data binding for
   the schedule.
 - Implement event-driven pub/sub with bubbling events and orchestrator coordinating state changes based on the events.
@@ -66,12 +66,12 @@ previous steps).
 
 ### Events up, state down
 
-To publish an event, a component calls **`dispatchEvent`** on itself. To listen for an event, an ancestor element calls
-**`addEventListener`** on itself with reference to the event type.
+To publish an event, a component calls `dispatchEvent` on itself. To listen for an event, an ancestor element calls
+`addEventListener` on itself with reference to the event type.
 
-In short in this exercise (see [index.html](./index.html) for the HTML stcuture:
+In this exercise (see [index.html](./index.html) for the HTML stcuture):
 
-- **Event bubbles up:** [`CfbSessionGenerator`](cfb-session-generator.js) calls **`dispatchEvent`** on itself with a
+- **Event bubbles up:** [`CfbSessionGenerator`](cfb-session-generator.js) calls `dispatchEvent` on itself with a
   `cfbSessionCreated` event. The event walks toward `document`;
   The [`CfbBoardOrchestrator`](cfb-board-orchestrator.js) listens for `cfb-session-created` events and acts on the
   event.'
@@ -79,12 +79,12 @@ In short in this exercise (see [index.html](./index.html) for the HTML stcuture:
   schedule, it needs to do few things:
     - it calls `preventDefault()` to prevent the default browser behavior, and `stopPropagation()` to prevent the event
       from bubbling up to the document. (these are not necessary calls, but serves here as example)
-    - it adds the session to the internal **`#sessions`** array. ...and
-    - it updates the **`data-sessions`** attribute on `<cfb-schedule>` with the new array, which is the next step in the
+    - it adds the session to the internal `#sessions` array. ...and
+    - it updates the `data-sessions` attribute on `<cfb-schedule>` with the new array, which is the next step in the
       flow.
 - **State pushed down:** the orchestrator keeps track of *sessions* locally and whenever an incoming event triggers the
-  event listener, it pushes the state down to [`CfbSchedule`](cfb-schedule.js) by changing the **`data-sessions`**
-  attribute. The schedule declares **`observedAttributes`** and **re-renders** when that attribute changes.
+  event listener, it pushes the state down to [`CfbSchedule`](cfb-schedule.js) by changing the `data-sessions`
+  attribute. The schedule declares `observedAttributes` and **re-renders** when that attribute changes.
 
 ---
 **Note!**
@@ -94,7 +94,7 @@ In short in this exercise (see [index.html](./index.html) for the HTML stcuture:
 > (this is the magic of the custom web components and registering them.)
 ---
 
-Neither the generator nor the schedule needs to **`import`** the orchestrator’s class. The **DOM tree** is the wiring
+Neither the generator nor the schedule needs to `import` the orchestrator’s class. The **DOM tree** is the wiring
 that is part of the **pub/sub** system.
 
 ### The event details: `sessionDetails` and `cfb-session-created`
@@ -206,8 +206,8 @@ More on busines capabilities in one of the extra challenges (to be done later).
 
 ### Listener hygiene
 
-Use a **stable** function reference for **`addEventListener`** / **`removeEventListener`** (e.g. a **bound** method or
-a **class field with fat arrow**). Remove listeners in **`disconnectedCallback`** to avoid memory leaks. This is one of
+Use a **stable** function reference for `addEventListener` / `removeEventListener` (e.g. a **bound** method or
+a **class field with fat arrow**). Remove listeners in `disconnectedCallback` to avoid memory leaks. This is one of
 the drawbacks of Javascript and custom elements - how `this` is bound in functions. More about this in
 the [Tips](./tips.md)
 
@@ -239,20 +239,20 @@ Now it's time to make the pub/sub board live. To have a live board -> where you 
 
 | File                                                       | Role                                                                                                  |
 |------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
-| [`cfb-session-generator.js`](./cfb-session-generator.js)   | Button → **`cfbSessionCreated`** with random session data                                             |
-| [`cfb-board-orchestrator.js`](./cfb-board-orchestrator.js) | Listen · maintain **`#sessions`** · **`setAttribute('data-sessions', …)`** on `.cfb-updates-schedule` |
-| [`cfb-schedule.js`](./cfb-schedule.js)                     | **Read** implementation: **`data-sessions`**, grouping, cards                                         |
+| [`cfb-session-generator.js`](./cfb-session-generator.js)   | Button → `cfbSessionCreated` with random session data                                             |
+| [`cfb-board-orchestrator.js`](./cfb-board-orchestrator.js) | Listen · maintain `#sessions` · `setAttribute('data-sessions', …)` on `.cfb-updates-schedule` |
+| [`cfb-schedule.js`](./cfb-schedule.js)                     | **Read** implementation: `data-sessions`, grouping, cards                                         |
 
 Build so you can **show**:
 
-- [ ] **`cfb-session-generator`**: button in **`connectedCallback`**; click builds a session
-  (use **`generateRandomSession`**) and dispatches **`cfbSessionCreated(...)`** from **`events.js`**
-- [ ] **`cfb-board-orchestrator`**: register a listener on **self** for **`EventTypes.SESSION_CREATED`** (event string
-  **`cfb-session-created`**); on each event, append to **`#sessions`** and set **`data-sessions`** on
-  **`querySelectorAll('.cfb-updates-schedule')`**.
-- [ ] **Remove** the same listener in **`disconnectedCallback`**.
-- [ ] **`cfb-schedule`**: trace **`observedAttributes`**, **`attributeChangedCallback`**, **`#render`**, and how it
-  emits **`<cfb-session-card data-session-details='…'>`**.
+- [ ] `cfb-session-generator`: button in `connectedCallback`; click builds a session
+  (use `generateRandomSession`) and dispatches `cfbSessionCreated(...)` from `events.js`
+- [ ] `cfb-board-orchestrator`: register a listener on **self** for `EventTypes.SESSION_CREATED` (event string
+  `cfb-session-created`); on each event, append to `#sessions` and set `data-sessions` on
+  `querySelectorAll('.cfb-updates-schedule')`.
+- [ ] **Remove** the same listener in `disconnectedCallback`.
+- [ ] `cfb-schedule`: trace `observedAttributes`, `attributeChangedCallback`, `#render`, and how it
+  emits `<cfb-session-card data-session-details='…'>`.
 
 **Constraints**
 
@@ -263,8 +263,8 @@ Build so you can **show**:
 
 - Clicking **Add random session** adds a visible card (or updates the list) **without** any component `import`ing
   another’s class for wiring.
-- **`data-sessions`** on `<cfb-schedule>` updates and the schedule re-renders.
-- You can name the event type **`cfb-session-created`** and point to **`sessionDetails`** / **`events.js`** in one
+- `data-sessions` on `<cfb-schedule>` updates and the schedule re-renders.
+- You can name the event type `cfb-session-created` and point to `sessionDetails` / `events.js` in one
   sentence.
 
 In [Question for your facilitator](./learning-log.md#step-3-concrete-facilitator-question), ask one real question and
@@ -288,7 +288,7 @@ Now you've learned how the pub/sub system works in HTML pages. Time for a **shor
 
 Answer in [your learning log - Quick check](./learning-log.md#step-3-conclusions-quick-check):
 
-- Where is **`cfb-session-created`** defined, and who **dispatches** it?
+- Where is `cfb-session-created` defined, and who **dispatches** it?
 - In one line: what travels **up** vs **down** in this step?
 
 ### 2) Loop back
@@ -312,13 +312,13 @@ Add **one or two sentences** in the [journey hub `learning-log.md`](../learning-
 
 If you finish early:
 
-- [ ] Dispatch **`sessionsCleared`** (or similar); orchestrator resets **`#sessions`** and pushes **`[]`** down.
-- [ ] Animate new cards with **`@keyframes`** when a card appears.
-- [ ] A small **session count** badge elsewhere: listen for **`cfb-session-created`** without importing the
+- [ ] Dispatch `sessionsCleared` (or similar); orchestrator resets `#sessions` and pushes `[]` down.
+- [ ] Animate new cards with `@keyframes` when a card appears.
+- [ ] A small **session count** badge elsewhere: listen for `cfb-session-created` without importing the
   orchestrator.
 - [ ] Compare this in-memory list with **Step 4** (IndexedDB): what does persistence buy you?
-- [ ] **Self-study (optional, not part of this step’s scope):** Dig into how **`this`** is bound in JavaScript - plain
-  functions vs **arrow functions**, **`.bind(this)`**, and object methods. It explains why **`removeEventListener`**
+- [ ] **Self-study (optional, not part of this step’s scope):** Dig into how `this` is bound in JavaScript - plain
+  functions vs **arrow functions**, `.bind(this)`, and object methods. It explains why `removeEventListener`
   must receive the **same** function reference you passed to **`addEventListener`
   ** ([listener hygiene above](#stable-listener-references)). [MDN:
   `this`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this) is a solid starting point.
@@ -327,8 +327,8 @@ If you finish early:
 
 ### End result (skills you can demonstrate)
 
-- **`CustomEvent`** + **`cfb-session-created`** with **`bubbles: true`** / **`composed: true`**
+- `CustomEvent` + `cfb-session-created` with `bubbles: true` / `composed: true`
 - **Orchestrator / mediator** - coordinate without coupling class names
-- **Push state down** via **`data-sessions`** + **`attributeChangedCallback`**
-- **Clean teardown** - **`removeEventListener`** in **`disconnectedCallback`**
-- **`sessionDetails`** as the shared session shape from **`events.js`**
+- **Push state down** via `data-sessions` + `attributeChangedCallback`
+- **Clean teardown** - `removeEventListener` in `disconnectedCallback`
+- `sessionDetails` as the shared session shape from `events.js`

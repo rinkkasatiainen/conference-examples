@@ -1,10 +1,10 @@
-# Test Step T-6 — Custom Form Element · `ElementInternals`
+# Test Step T-6: Custom Form Element · `ElementInternals`
 
 **Build companion:** [Step 6](../step-6/README.md)
 
 > **Before you start:** [getting-started.md](./getting-started.md) · [T-6 learning log](./learning-log.md)
 
-Test `<cfb-session-format>` as a **form participant**: `FormData`, `required`, tile selection — through user-visible
+Test `<cfb-session-format>` as a **form participant**: `FormData`, `required`, tile selection, through user-visible
 behaviour, not `internals` directly.
 
 ---
@@ -24,7 +24,7 @@ By the end of T-6 you can:
 In [your T-6 learning log](./learning-log.md):
 
 1. [FormData guess](./learning-log.md#t-6-connections-formdata-guess) *(before Concepts)*
-2. [Bridge from Step 6 — what stays the same](./learning-log.md#t-6-connections-bridge)
+2. [Bridge from Step 6: what stays the same](./learning-log.md#t-6-connections-bridge)
 
 ---
 
@@ -135,7 +135,7 @@ See **[tips.md](./tips.md)**.
 
 ## 4) Conclusions
 
-1. [Loop back — FormData guess](./learning-log.md#t-6-loop-back-formdata)
+1. [Loop back: FormData guess](./learning-log.md#t-6-loop-back-formdata)
 2. [Forms across two steps](./learning-log.md#t-6-forms-two-steps)
 3. [Ticket out](./learning-log.md#t-6-conclusions-ticket-out)
 4. Hub takeaway → [`learning-log-test.md`](../learning-log-test.md#t-6-key-takeaway)

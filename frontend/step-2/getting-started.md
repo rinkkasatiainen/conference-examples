@@ -10,7 +10,7 @@ Work on a branch from Step-1 so feedback and history stay easy to follow.
 
 `index.html` loads ES modules (`index.js` imports **Step 1’s** `cfb-tag.js`). Browsers block modules on `file://`.
 
-From **`frontend`** (this allows you easily change between /step-1/index.html and /step-2/index.html:
+From `frontend` (this allows you easily change between /step-1/index.html and /step-2/index.html:
 
 **Option A - one-off:**
 

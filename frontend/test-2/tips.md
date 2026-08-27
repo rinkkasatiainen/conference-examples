@@ -16,7 +16,7 @@ customElements.define('cfb-session-card', CfbSessionCard)
 
 ## Test data
 
-A fixed `SESSION` constant works for learning; for robust tests use `Randomizer` + `sessionWith()` (see `test-2/test/helpers/randomizer.js` and T-3 patterns).
+A fixed `SESSION` constant works for learning; for more reliable tests use `Randomizer` + `sessionWith()` (see `test-2/test/helpers/randomizer.js` and T-3 patterns).
 
 ```js
 const SESSION = {

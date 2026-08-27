@@ -1,4 +1,4 @@
-# Getting started — Test step T-3
+# Getting started - Test step T-3
 
 **Before** [T-3 README](./README.md).
 

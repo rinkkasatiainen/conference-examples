@@ -1,11 +1,11 @@
-# Test Step T-5 — Form Validation · Constraint API
+# Test Step T-5: Form Validation · Constraint API
 
 **Build companion:** [Step 5](../step-5/README.md)
 
 > **Before you start:** [getting-started.md](./getting-started.md) · [T-5 learning log](./learning-log.md)
 
-Test **native** form behaviour — `checkValidity()`, `ValidityState`, `FormData`, `requestSubmit()` — not hand-written
-validation.
+Test **native** form behaviour, not hand-written validation: `checkValidity()`, `ValidityState`, `FormData`,
+`requestSubmit()`.
 
 ---
 
@@ -72,7 +72,7 @@ The suites you will read and extend:
 
 | File                                           | Role                                                               |
 |------------------------------------------------|--------------------------------------------------------------------|
-| `test/cfb-add-session-form.test.js`            | Real `<cfb-add-session-form>` — `requestSubmit()` + event dispatch |
+| `test/cfb-add-session-form.test.js`            | Real `<cfb-add-session-form>`: `requestSubmit()` + event dispatch |
 | `test/cfb-session-updated.test.js`             | `cfbSessionUpdated()` event factory                                |
 | `test/cfb-session-removed.test.js`             | `cfbSessionRemoved()` event factory                                |
 | `test/session-step5.contract.test.js`          | Step 5 session fields in well-known JSON                           |
@@ -132,8 +132,8 @@ See **[tips.md](./tips.md)**.
 
 ## 4) Conclusions
 
-1. [Loop back — submit guess](./learning-log.md#t-5-loop-back-submit)
-2. [Quick check — three advantages](./learning-log.md#t-5-conclusions-quick-check)
+1. [Loop back: submit guess](./learning-log.md#t-5-loop-back-submit)
+2. [Quick check: three advantages](./learning-log.md#t-5-conclusions-quick-check)
 3. [Ticket out](./learning-log.md#t-5-conclusions-ticket-out)
 4. Hub takeaway → [`learning-log-test.md`](../learning-log-test.md#t-5-key-takeaway)
 

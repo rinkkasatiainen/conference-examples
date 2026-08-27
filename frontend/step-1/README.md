@@ -50,7 +50,7 @@ Do these in order; capture answers in [your Step 1 learning log](./learning-log.
    In [your learning log - Bridge from Step 0](./learning-log.md#step-1-bridge-step-0), write:
     - the **visible label text** on that atom;
     - the **full `class` value** on that `<span>` (including the colour modifier, if any);
-    - one line: what moves from “classes + inner text” into **`<cfb-tag data-label="…" data-color="…">`** in this step?
+    - one line: what moves from “classes + inner text” into `<cfb-tag data-label="…" data-color="…">` in this step?
       If you skipped Step 0, use the shared static board in [`../step-0/index.html`](../step-0/index.html) (or [
       `../index.html`](../index.html)) and pick any `<span class="cfb-tag …">` atom there instead.
 
@@ -108,14 +108,14 @@ To understand what they do, and how/when they are initialized, let's dig a bit d
 
 Custom elements expose lifecycle callbacks you hook into at key moments:
 
-1. **`connectedCallback`** - the custom element was inserted into the document
+1. `connectedCallback` - the custom element was inserted into the document
    (use to initialise, render, subscribe to events).
-2. **`disconnectedCallback`** - the element is removed from the document
+2. `disconnectedCallback` - the element is removed from the document
    (use to clean up listeners, timers, etc.).
-3. **`attributeChangedCallback`** - an **observed** attribute was added, removed, or changed. Declare which attributes
-   count via static **`observedAttributes`**.
+3. `attributeChangedCallback` - an **observed** attribute was added, removed, or changed. Declare which attributes
+   count via static `observedAttributes`.
    (use to track changes to the data)
-4. **`adoptedCallback`** - moved to another document (e.g. `adoptNode`).
+4. `adoptedCallback` - moved to another document (e.g. `adoptNode`).
    (Not used in these challenges.)
 
 These callbacks can run in **different orders** depending on whether you set attributes before or after the element

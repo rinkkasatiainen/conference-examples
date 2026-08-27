@@ -1,10 +1,10 @@
 # Step 6 - `<cfb-session-format>` · Form-associated custom element
 
-In Step 5 you built add/edit forms with **native** controls and **`FormData`**. This week you replace **only** the
-**session-format** radio group with **`<cfb-session-format>`** - a **form-associated** custom element. You'll learn to
+In Step 5 you built add/edit forms with **native** controls and `FormData`. This week you replace **only** the
+**session-format** radio group with `<cfb-session-format>` - a **form-associated** custom element. You'll learn to
 integrate a custom element into a form in a way that the **same** submit path, validation, and events stay intact.
 
-The field must still have the `name` attribute for `FormData` to work, honour the **`required`**, and work in **both**
+The field must still have the `name` attribute for `FormData` to work, honour the `required`, and work in **both**
 add and edit dialogs. A cheat would be to have a **hidden** native radio group, but as that would defeat the purpose of
 learning the form-associated element, it's highly encouraged to not use the cheat.
 
@@ -113,13 +113,13 @@ using methods like `setFormValue`, `setValidity` and `reportValidity`
 
 ### `Value` and `FormData`
 
-When calling `this.attachInternals()`, it returns a concept of **`ElementInternals`**, which makes you able to:
+When calling `this.attachInternals()`, it returns a concept of `ElementInternals`, which makes you able to:
 
 - set the value of the custom form element with `internals.setFormValue(value)`, where value is the value of
   `data-value` of the button.
-- set the value to **`null`** if none is selected.
+- set the value to `null` if none is selected.
 - See also, that the `name` attribute of the form is defined for the `cfb-session-format` element, and not within this
-  component. This is how **`FormData`** maps the value of the element to the collection of Form Data elements.
+  component. This is how `FormData` maps the value of the element to the collection of Form Data elements.
 
 ### Inner HTML of the new component
 
@@ -163,7 +163,7 @@ is not run at all if:
 - `form.submit()` in general bypasses validation - but `form.requestSubmit()` does work like a real click, running
   validations etc.
 
-In short - if the flow from 'clicking submit' follows the 'default' flow, the validations are run. This is crucial for
+If the flow from 'clicking submit' follows the 'default' flow, the validations are run. This is crucial for
 the custom form elements: If the custom element sets the validity of the element, that validation is part of the
 _validation flow_ of the submit flor.
 
@@ -196,8 +196,8 @@ The steps needed to be done for this step are:
 
 ### No hidden radio fallback
 
-- The **session-format** value must come from **`this.#internals.setFormValue()`** on your custom element - **not** from
-  a shadowed **`<input type="hidden">`** pretending to be the control. That keeps the learning goal honest.
+- The **session-format** value must come from `this.#internals.setFormValue()` on your custom element - **not** from
+  a shadowed `<input type="hidden">` pretending to be the control. That keeps the learning goal honest.
 
 ### End-to-end flow (reference)
 
@@ -261,7 +261,7 @@ To finish this exercise, you need to (detailed help below the table)
 | File                                                        | Role                                                                                             |
 |-------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
 | ✨ [`cfb-session-format.js`](./cfb-session-format.js)        | New custom element, focus of this session                                                        |
-| 🚧 [`cfb-add-session-form.js`](./cfb-add-session-form.js)   | Replace session-format **radios** with **`<cfb-session-format name="session-format" required>`** |
+| 🚧 [`cfb-add-session-form.js`](./cfb-add-session-form.js)   | Replace session-format **radios** with `<cfb-session-format name="session-format" required>` |
 | 🚧 [`cfb-edit-session-form.js`](./cfb-edit-session-form.js) | Same replacement · **preselect** type for the session being edited                               |
 | ✅ [`index.js`](./index.js)                                  | registers elements as before                                                                     |
 | ✅ [`index.html`](./index.html)                              | no changes from Step-5                                                                           |
@@ -295,30 +295,30 @@ To finish this exercise, you need to (detailed help below the table)
 
 ### **After building these, you can show:**
 
-- [ ] **`<cfb-session-format>`** with **`static formAssociated = true`** and **`attachInternals()`** early in the
+- [ ] `<cfb-session-format>` with `static formAssociated = true` and `attachInternals()` early in the
   instance
-  lifecycle (e.g. **class field** or **`constructor`** - match one style on your team).
+  lifecycle (e.g. **class field** or `constructor` - match one style on your team).
 - [ ] **Tiles** for **Talk**, **Workshop**, **Keynote**, **Lightning Talk** (emoji or icons) with a clear **selected**
   state.
-- [ ] **`internals.setFormValue(...)`** updates when the user selects a tile; empty / unselected state omits or clears
-  per your **`FormData`** contract.
-- [ ] **`required`**: invalid submit shows a **native-style** validation message; valid submit includes **
+- [ ] `internals.setFormValue(...)` updates when the user selects a tile; empty / unselected state omits or clears
+  per your `FormData` contract.
+- [ ] `required`: invalid submit shows a **native-style** validation message; valid submit includes **
   `session-format`
   **
-  in **`FormData`**.
+  in `FormData`.
 - [ ] **Add form** and **edit form** both use the custom element; **edit** shows the existing type.
-- [ ] **`formResetCallback`** (and **`formDisabledCallback`** if applicable) keep reset/disable flows correct.
+- [ ] `formResetCallback` (and `formDisabledCallback` if applicable) keep reset/disable flows correct.
 
 **Constraints**
 
 - HTML, JavaScript, and (optionally) CSS only - no frameworks.
-- **No** hidden native **`<input>`** as the real carrier for session format - **`ElementInternals`** owns the value.
+- **No** hidden native `<input>` as the real carrier for session format - `ElementInternals` owns the value.
 - Aim for about **30–45 minutes** on the core challenge.
 
 **Definition of done**
 
 - Submitting without a selection is **blocked** with a **browser validation** experience (not only a custom `alert`).
-- After selecting a type, **`FormData`** from the parent form includes **`session-format`** with the expected string.
+- After selecting a type, `FormData` from the parent form includes `session-format` with the expected string.
 - **Edit** opens with the correct tile selected; **reset** clears selection and validity as users expect.
 
 In [Question for your facilitator](./learning-log.md#step-6-concrete-facilitator-question), ask **one** real question
@@ -365,9 +365,9 @@ If you finish early:
 
 - [ ] Implement `formResetCallback` to empty the form when closing the dialog.
 - [ ] Implement the same custom component for the 'edit flow'
-- [ ] React to **`required`** dynamically in **`attributeChangedCallback`** and re-sync validity.
-- [ ] Custom validation copy via **`setValidity`** for more than **`valueMissing`**.
-- [ ] **Keyboard**: **`tabIndex`**, **arrow** keys between tiles, **Enter** / **Space** to select; expose *
+- [ ] React to `required` dynamically in `attributeChangedCallback` and re-sync validity.
+- [ ] Custom validation copy via `setValidity` for more than `valueMissing`.
+- [ ] **Keyboard**: `tabIndex`, **arrow** keys between tiles, **Enter** / **Space** to select; expose *
   *`aria-selected`** / roles appropriately.
 - [ ] Extract **tags** UI into its own form-associated or composite control and compare coupling trade-offs.
 - [ ] Add lightweight tests for keyboard + validation (see other steps’ test folders for patterns).
@@ -376,8 +376,8 @@ If you finish early:
 
 ### End result (skills you can demonstrate)
 
-- **`ElementInternals`** and **`attachInternals()`**
-- **`static formAssociated = true`**
-- **`setFormValue`**, **`setValidity`**, **`reportValidity`**
-- **`formResetCallback`** / **`formDisabledCallback`**
-- **Accessible**, keyboard-friendly custom controls inside real **`<form>`**s
+- `ElementInternals` and `attachInternals()`
+- `static formAssociated = true`
+- `setFormValue`, `setValidity`, `reportValidity`
+- `formResetCallback` / `formDisabledCallback`
+- **Accessible**, keyboard-friendly custom controls inside real `<form>`s

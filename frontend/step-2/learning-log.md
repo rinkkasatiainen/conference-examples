@@ -90,7 +90,7 @@ _Mark **M** (myth) or **F** (fact) first; then correct mistakes in one line each
    - Your first guess (M/F): ___
    - Correction / note: ___
 
-2. Passing session data as JSON on a single **`data-session-details`** attribute is a valid pattern for structured props
+2. Passing session data as JSON on a single `data-session-details` attribute is a valid pattern for structured props
    (keeping payload size reasonable).
 
    - Your first guess (M/F): ___

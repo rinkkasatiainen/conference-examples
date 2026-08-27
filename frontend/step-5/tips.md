@@ -191,7 +191,7 @@ document-styled.
 
 ## Session shape (unchanged from Step 4)
 
-Aligned with **`sessionDetails`** from [ `../step-3/lib/builds-session-details.js`](../step-3/lib/builds-session-details.js)
+Aligned with `sessionDetails` from [ `../step-3/lib/builds-session-details.js`](../step-3/lib/builds-session-details.js)
 
 ```javascript
 const details = {

@@ -37,12 +37,12 @@ _(You will [loop back](#step-8-loop-back-push-vs-pull) in Conclusions.)_
 
 _Solo, ~4 minutes._
 
-Step 7’s **`<cfb-session-loader>`** both **fetched** and **wrote** IndexedDB.
+Step 7’s `<cfb-session-loader>` both **fetched** and **wrote** IndexedDB.
 
 **Two bullets:**
 
 1. **Why** are we changing this now? What might be the benefits?
-2. **What stays the same** for **`cfb-updates-sessions`** and the add/edit form?
+2. **What stays the same** for `cfb-updates-sessions` and the add/edit form?
 
 >
 
@@ -69,12 +69,12 @@ mostly **push**, **poll**, or **both**?
 
 _Solo, ~2 minutes. Answer **A** or **B** - not both._
 
-**A)** Why does the WebSocket URL include **`eventId`** (`/ws/sessions/codefreeze-2025`) instead of one global 
+**A)** Why does the WebSocket URL include `eventId` (`/ws/sessions/codefreeze-2025`) instead of one global 
 feed for all conferences?
 
 >
 
-**B)** In one sentence: what goes wrong if **`cfb-live-session-updates`** imports **`saveSessions`** directly instead 
+**B)** In one sentence: what goes wrong if `cfb-live-session-updates` imports `saveSessions` directly instead 
 of dispatching an event to the store wrapper?
 
 >
@@ -93,8 +93,8 @@ _After reading the README Concepts sections - ~1 minute._
 
 **Two bullets:**
 
-1. Who should **own** closing the WebSocket - the live component, the orchestrator, or **`cfb-schedule`**?
-2. After a **`sessionUpdated`** message, which **one** event type does the store emit so the orchestrator can 
+1. Who should **own** closing the WebSocket - the live component, the orchestrator, or `cfb-schedule`?
+2. After a `sessionUpdated` message, which **one** event type does the store emit so the orchestrator can 
    refresh the schedule (same as Step 7’s loader completion)?
 
 >
@@ -107,19 +107,19 @@ _After reading the README Concepts sections - ~1 minute._
 
 _Answer **from memory first** (~4 minutes). Then peek at the README or source if needed._
 
-1. Name the **three** inbound event types **`cfb-session-store-updates`** listens for (exact strings).
+1. Name the **three** inbound event types `cfb-session-store-updates` listens for (exact strings).
 
    >
 
-2. What does **`cfb-session-loader`** dispatch **instead of** writing IndexedDB in Step 8?
+2. What does `cfb-session-loader` dispatch **instead of** writing IndexedDB in Step 8?
 
    >
 
-3. **`cfb-updates-sessions`** handles **`cfb-session-created`**, **`cfb-session-updated`**, and **`cfb-session-removed`**. Which of those use the **WebSocket** path?
+3. `cfb-updates-sessions` handles `cfb-session-created`, `cfb-session-updated`, and `cfb-session-removed`. Which of those use the **WebSocket** path?
 
    >
 
-4. Why does **`cfb-initiate-a-random-session-creation`** only **`POST`** to the API and **not** call **`saveSessions`** locally?
+4. Why does `cfb-initiate-a-random-session-creation` only `POST` to the API and **not** call `saveSessions` locally?
 
    >
 
@@ -135,7 +135,7 @@ Draw **two** parallel swimlanes labelled **PULL** and **PUSH**.
 
 Each lane needs **at least four boxes** ending at **`cfb-schedule` re-render**.
 
-Label **one arrow** per lane with the key event or attribute (e.g. **`sessionsFetched`**, **`sessionsLoaded`**, **`data-latest-updated-at`**).
+Label **one arrow** per lane with the key event or attribute (e.g. `sessionsFetched`, `sessionsLoaded`, `data-latest-updated-at`).
 
 > _(paste a photo link, ASCII sketch, or short description of your drawing)_
 
@@ -175,15 +175,15 @@ Ask **one** question about **WebSockets**, **the store wrapper pattern**, **orch
 
 _~4 minutes._
 
-1. What is the full WebSocket URL for **CodeFreeze 2025** with default **`step-8-be`**?
+1. What is the full WebSocket URL for **CodeFreeze 2025** with default `step-8-be`?
 
    >
 
-2. Open **two tabs** on the same event. Click **random session** in tab A. What do you observe in tab B - and which message **`type`** did the socket deliver?
+2. Open **two tabs** on the same event. Click **random session** in tab A. What do you observe in tab B - and which message `type` did the socket deliver?
 
    >
 
-3. Point to the file where **`cfb-updates-sessions`** handles **Remove** → backend **DELETE**.
+3. Point to the file where `cfb-updates-sessions` handles **Remove** → backend **DELETE**.
 
    >
 
@@ -215,7 +215,7 @@ Describe the **pull** path (loader or form → … → schedule) and the **push*
 
 ### Step 8 - Conclusions: True / False - close socket
 
-**Statement:** “A live component should close its WebSocket in **`disconnectedCallback`** when it is removed from the DOM.”
+**Statement:** “A live component should close its WebSocket in `disconnectedCallback` when it is removed from the DOM.”
 
 **True or false?** One sentence why.
 

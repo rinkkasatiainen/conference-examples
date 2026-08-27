@@ -1,4 +1,4 @@
-# Getting started — Test step T-8
+# Getting started - Test step T-8
 
 **Before** [T-8 README](./README.md).
 

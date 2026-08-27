@@ -1,4 +1,4 @@
-# Getting started — Test step T-4
+# Getting started - Test step T-4
 
 **Before** [T-4 README](./README.md).
 
@@ -15,7 +15,7 @@ npm test
 This step may run **multiple** scripts:
 
 ```bash
-npm run test:store:fake   # fast — fake IDB
+npm run test:store:fake   # fast, fake IDB
 npm run test:store:real   # contract vs real IndexedDB
 ```
 

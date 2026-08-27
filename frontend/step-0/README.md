@@ -116,7 +116,7 @@ to its parent. For example:
 - A card should not know about the board
 - A tag should not know about the card.
 
-In short, Atomic Design can be **thought of** as:
+As a quick reference:
 
 - **Atoms**: smallest units (for example, tag chip, avatar chip, design tokens).
 - **Molecules**: groups of atoms (for example, session card, navigation row).
@@ -207,7 +207,7 @@ organisms, and template-level layout.
 
 ### Local server
 
-Commands and folder paths live in [getting-started.md](./getting-started.md). Prefer serving from **`frontend/step-0`** so `../styles.css`
+Commands and folder paths live in [getting-started.md](./getting-started.md). Prefer serving from `frontend/step-0` so `../styles.css`
 resolves correctly.
 
 ---

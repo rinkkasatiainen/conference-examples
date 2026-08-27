@@ -27,7 +27,7 @@ _(You will revisit this in Conclusions.)_
 
 _Solo, ~3 minutes._
 
-In Step 2, one card got data through **`data-session-details`**. In Step 3, **many** sessions appear and the list
+In Step 2, one card got data through `data-session-details`. In Step 3, **many** sessions appear and the list
 changes.
 In one or two sentences: what has to change about **where** session data lives?
 
@@ -93,7 +93,7 @@ _Answer from memory first; then peek at the README or source if needed._
 
    >
 
-2. Why is **`bubbles: true`** (and often **`composed: true`**) important for the generator’s event?
+2. Why is `bubbles: true` (and often `composed: true`) important for the generator’s event?
 
    >
 
@@ -140,7 +140,7 @@ about after this step. Paste their reply (or your notes) below.
 
 _Answer in your log - short phrases are enough._
 
-1. Where is the **`cfb-session-created`** event **defined** (file / constant name), and which component **dispatches**
+1. Where is the `cfb-session-created` event **defined** (file / constant name), and which component **dispatches**
    it?
 
    >

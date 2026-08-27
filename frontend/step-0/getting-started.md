@@ -11,7 +11,7 @@ Create a branch for your work so feedback and history stay easy to follow.
 This step is **HTML and CSS only** - no JavaScript. Some browsers still render `index.html` reasonably well from 
 `file://`, but a tiny local server matches how you will work from Step 1 onward and avoids odd `file://` quirks with assets.
 
-From **`frontend/step-0`** (or your copy of this folder):
+From `frontend/step-0` (or your copy of this folder):
 
 **Option A - one-off:**
 

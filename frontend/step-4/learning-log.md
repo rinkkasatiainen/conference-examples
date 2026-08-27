@@ -30,7 +30,7 @@ _(You will revisit this in Conclusions.)_
 
 _Solo, ~5 minutes._
 
-In Step 3, **`cfb-board-orchestrator`** held **`#sessions`** and pushed **`data-sessions`** down. In this
+In Step 3, `cfb-board-orchestrator` held `#sessions` and pushed `data-sessions` down. In this
 step it **does not** hold session rows that way.
 
 **List what the orchestrator still does here vs Step 3.** Then answer: **what would be “too much” responsibility** for
@@ -105,16 +105,16 @@ In two bullets: **who reads IndexedDB** in this step’s architecture - and **wh
 
 _Answer from memory first; then peek at [`session-store.js`](./session-store.js) or [`events.js`](./events.js) if needed._
 
-1. In this repo, what **`DB_NAME`** constant does [`session-store.js`](./session-store.js) use when opening the database?
+1. In this repo, what `DB_NAME` constant does [`session-store.js`](./session-store.js) use when opening the database?
 
    >  ___
 
-2. Why keep **`openDb` / `saveSessions` / `getAllSessions`** in **`session-store.js`** instead of calling
-   **`indexedDB.open`** directly inside **`cfb-schedule`**?
+2. Why keep **`openDb` / `saveSessions` / `getAllSessions`** in `session-store.js` instead of calling
+   `indexedDB.open` directly inside `cfb-schedule`?
 
    >  ___
 
-3. After data is ready in IndexedDB, **`cfb-session-loader`** dispatches which **event type string**?
+3. After data is ready in IndexedDB, `cfb-session-loader` dispatches which **event type string**?
    *(See [`events.js`](./events.js).)*
 
    >  ___
@@ -131,11 +131,11 @@ _Answer from memory first; then peek at [`session-store.js`](./session-store.js)
 
 _Answer in your log - short phrases are enough._
 
-1. Name **two files** that **import** from **`session-store.js`** (or list two consumers of **`getAllSessions`**).
+1. Name **two files** that **import** from `session-store.js` (or list two consumers of `getAllSessions`).
 
    > ___
 
-2. What attribute does **`cfb-board-orchestrator`** set on **`listens-schedule-updates`** schedules, and why is it a
+2. What attribute does `cfb-board-orchestrator` set on `listens-schedule-updates` schedules, and why is it a
    **timestamp** rather than the full session array?
 
    > ___

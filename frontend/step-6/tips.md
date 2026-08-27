@@ -13,7 +13,7 @@ class CfbSessionFormat extends HTMLElement {
 }
 ```
 
-Without **`formAssociated`** + **`attachInternals()`**, the element is invisible to the form.
+Without `formAssociated` + `attachInternals()`, the element is invisible to the form.
 
 ## Write value to `FormData`
 
@@ -21,7 +21,7 @@ Without **`formAssociated`** + **`attachInternals()`**, the element is invisible
 this.#internals.setFormValue(this.#value ?? null)
 ```
 
-Use **`null`** when no value is selected so the field is omitted or empty in the form’s model, matching how you treat
+Use `null` when no value is selected so the field is omitted or empty in the form’s model, matching how you treat
 “no selection”.
 
 ### Required validation with a custom message
@@ -37,7 +37,7 @@ if (this.dataset.required && !this.#value) {
 }
 ```
 
-Pair this with the parent **`form.checkValidity()`** / **`form.reportValidity()`** so submit behaviour matches native
+Pair this with the parent `form.checkValidity()` / `form.reportValidity()` so submit behaviour matches native
 controls.
 
 ## Reset behaviour

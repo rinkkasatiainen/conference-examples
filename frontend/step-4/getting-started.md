@@ -8,7 +8,7 @@ Work on a branch so feedback and history stay easy to follow.
 
 ## 2) Serve this folder over HTTP
 
-From **`frontend`**:
+From `frontend`:
 
 **Option A - one-off:**
 
@@ -27,8 +27,8 @@ http-server . -o
 
 Open the served page. You should see the Step 4 header and the board area with text 'No sessions yet'
 
-Open DevTools → **Console**. Fix **module** errors before continuing - this step expects **`step-1/`**, **`step-2/`**,
-and **`step-3/`** paths from [`index.js`](./index.js) to resolve.
+Open DevTools → **Console**. Fix **module** errors before continuing - this step expects `step-1/`, `step-2/`,
+and `step-3/` paths from [`index.js`](./index.js) to resolve.
 
 ---
 

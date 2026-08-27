@@ -8,7 +8,7 @@ Work on a branch so feedback and history stay easy to follow.
 
 ## 2) Serve this folder over HTTP
 
-From **`frontend/`**:
+From `frontend/`:
 
 **Option A - one-off:**
 
@@ -29,7 +29,7 @@ http-server . -o
 
 Open the served page. You should see the Step 3 header and an orchestrator area with **Add random session** and a schedule region.
 
-Open DevTools → **Console**. Fix any **module** errors first (`cfb-tag`, `cfb-session-card`, `events.js`, etc.). The repo expects **`step-1/`** and **`step-2/`** next to **`step-3/`**.
+Open DevTools → **Console**. Fix any **module** errors first (`cfb-tag`, `cfb-session-card`, `events.js`, etc.). The repo expects `step-1/` and `step-2/` next to `step-3/`.
 
 ---
 

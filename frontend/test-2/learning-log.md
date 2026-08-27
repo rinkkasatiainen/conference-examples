@@ -73,7 +73,7 @@ You're testing `<cfb-session-card>` and want confidence the blue tag shows up co
 
 <a id="t-2-concrete-test-list"></a>
 
-### T-2 — Your test list
+### T-2 - Your test list
 
 Brain-dump before you assert. Write each behaviour as a `todo('...')` line. For example: for every **count**, expand it
 with `0, 1, 2, many` (one line per case).
@@ -106,7 +106,7 @@ describe('<cfb-card>', () => {
 
 <a id="t-2-conclusions-builder"></a>
 
-### T-2 — Builder pattern — in your own words
+### T-2 - Builder pattern, in your own words
 
 What does `sessionWith()` + `Randomizer` buy you that a hard-coded `SESSION` constant doesn't? Name at least one
 thing the randomness _prevents you from doing by accident_.
@@ -117,7 +117,7 @@ thing the randomness _prevents you from doing by accident_.
 
 <a id="t-2-conclusions-heuristic"></a>
 
-### T-2 — 0, 1, 2, many — which case earns its keep?
+### T-2 - 0, 1, 2, many: which case earns its keep?
 
 For the card's tag count, which of `0 / 1 / 2 / many` is most likely to catch a real bug, and why? When is
 **many** worth writing?

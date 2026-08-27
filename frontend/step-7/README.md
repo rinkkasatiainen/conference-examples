@@ -4,14 +4,14 @@ In earlier steps the board got data from **generators**, **forms**, and **Indexe
 data from a backend call by loading **schedule metadata** and **sessions** over **HTTP**, persist them somewhere, then
 render in the page.
 
-In this step the frontend makes a **`fetch`** call to the backend (here via a thin
+In this step the frontend makes a `fetch` call to the backend (here via a thin
 **[`lib/api/backend-api.js`](./lib/api/backend-api.js)** helper), saves the data to **IDB**, and signals the existence of
 data with **bubbling `CustomEvent`s**. This is a natural next step in making the board more production-like.
 
 This build step talks to the **real `step-7-be` backend**. Intercepting `fetch` with a mock service worker (MSW) is a
 **testing-track** concern — you meet it in [`test-7`](../test-7/README.md), not here.
 
-**Before you start:** branch, HTTP server from **`frontend/`**, **`step-7-be`** running ->
+**Before you start:** branch, HTTP server from `frontend/`, `step-7-be` running ->
 see [getting-started.md](./getting-started.md).
 
 **Testing companion (optional):** [Test step T-7 · fetch stubbing](../test-7/README.md)
@@ -27,7 +27,7 @@ Use [your Step 7 learning log](./learning-log.md), a short note to your facilita
 
 By the end of this step, you can:
 
-- Explain how the frontend makes a **`fetch`** call to backend and saves the data to **IDB**.
+- Explain how the frontend makes a `fetch` call to backend and saves the data to **IDB**.
 - Demonstrate a clear split of responsibility between _loading data_ and _tracking what needs to be updated_
 - Build a **realistic** **orchestrator** that **coordinates** and **tracks** multiple async sources and only then
   updates the UI.
@@ -62,8 +62,8 @@ when fetching data from backend, there are 2 things to await for: first the fetc
 - First check that the fetch was successful.
 - Then parse the JSON.
 
-Centralising **`fetch`** in **`backend-api.js`** keeps URLs, **`baseUrl`**, and JSON parsing in **one** place;
-loaders call **`getBackendApi().getSchedule(eventId)`** / **`getSessions(eventId)`** so they stay small. This is
+Centralising `fetch` in `backend-api.js` keeps URLs, `baseUrl`, and JSON parsing in **one** place;
+loaders call `getBackendApi().getSchedule(eventId)` / `getSessions(eventId)` so they stay small. This is
 also useful because the backendApi can be initialized with baseUrl etc. only once.
 
 The way the `backend-api.js` is implemented is that it returns a singleton object - a single backendApi instance for
@@ -111,7 +111,7 @@ Later, in Step-8, we will split these responsibilities even further, but for now
 
 we see the same structure as in Step-3, in the pub/sub pattern.
 
-The two loader classes dispatch **`cfb-schedule-loaded`** and **`cfb-sessions-loaded`** events, which the `CfbBoardOrchestrator`
+The two loader classes dispatch `cfb-schedule-loaded` and `cfb-sessions-loaded` events, which the `CfbBoardOrchestrator`
 listens to. Once both events are received, it informs the `CfbSchedule` component that it can render the schedule. It
 does it similarly as in Step-4, informing the Schedule that 'new data exists in IndexedDB'.
 
@@ -227,38 +227,38 @@ When both are done, move on to **Concrete practice**.
 
 | File                                                                                                                          | Role                                                                                                |
 |-------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
-| [`cfb-schedule-loader.js`](./cfb-schedule-loader.js)                                                                          | Schedule **`fetch`** path, IDB write, **`cfb-schedule-loaded`** / **`cfb-loader-error`**                      |
-| [`cfb-session-loader.js`](./cfb-session-loader.js)                                                                            | Sessions **`fetch`** path, **`data-reload-token`**, **`cfb-sessions-loaded`**                            |
-| [`cfb-board-orchestrator.js`](./cfb-board-orchestrator.js)                                                                    | Waits for loader events; sets **`data-latest-updated-at`**; extension: **`cfb-sessions-backend-updated`** |
-| [`../step-4/cfb-schedule.js`](../step-4/cfb-schedule.js)                                                                      | **`data-latest-updated-at`** → pull sessions from IDB → render                                      |
-| [`lib/api/backend-api.js`](./lib/api/backend-api.js)                                                                          | **`fetch`** + **`res.ok`** + JSON                                                                   |
+| [`cfb-schedule-loader.js`](./cfb-schedule-loader.js)                                                                          | Schedule `fetch` path, IDB write, `cfb-schedule-loaded` / `cfb-loader-error`                      |
+| [`cfb-session-loader.js`](./cfb-session-loader.js)                                                                            | Sessions `fetch` path, `data-reload-token`, `cfb-sessions-loaded`                            |
+| [`cfb-board-orchestrator.js`](./cfb-board-orchestrator.js)                                                                    | Waits for loader events; sets `data-latest-updated-at`; extension: `cfb-sessions-backend-updated` |
+| [`../step-4/cfb-schedule.js`](../step-4/cfb-schedule.js)                                                                      | `data-latest-updated-at` → pull sessions from IDB → render                                      |
+| [`lib/api/backend-api.js`](./lib/api/backend-api.js)                                                                          | `fetch` + `res.ok` + JSON                                                                   |
 | [`lib/store/session-store.js`](./lib/store/session-store.js) / [`lib/store/schedule-store.js`](./lib/store/schedule-store.js) | Persistence helpers loaders call                                                                    |
 | [`mocks/handlers.js`](./mocks/handlers.js)                                                                                    | _Optional_ MSW handlers — testing-track material (see `test-7`)                                                  |
-| [`index.js`](./index.js)                                                                                                      | **`configureBackendApi`**, optional **`worker.start()`**, element registration                      |
-| [`index.html`](./index.html)                                                                                                  | Loader markup, **`.listens-schedule-updates`**, event switcher buttons                              |
+| [`index.js`](./index.js)                                                                                                      | `configureBackendApi`, optional `worker.start()`, element registration                      |
+| [`index.html`](./index.html)                                                                                                  | Loader markup, `.listens-schedule-updates`, event switcher buttons                              |
 
 This folder ships as a **reference implementation** - your job is to **understand and demo** the pipeline, then adapt or
 rebuild in your own branch if your facilitator assigns implementation from scratch.
 
 **Build / trace until you can show:**
 
-- [ ] Swapping **`data-event-id`** (buttons in [`index.html`](./index.html)) triggers **two** parallel loads and ends
+- [ ] Swapping `data-event-id` (buttons in [`index.html`](./index.html)) triggers **two** parallel loads and ends
   with an updated board for that event.
 - [ ] You can name the **two** success event types the orchestrator waits for and the **attribute** it sets on the
   schedule.
-- [ ] You can point to **where** **`fetch`** is called and **where** the backend base URL is configured (two different files).
-- [ ] With **`res.ok === false`**, the loader surfaces an **error** state and dispatches **`cfb-loader-error`** (trace in [
+- [ ] You can point to **where** `fetch` is called and **where** the backend base URL is configured (two different files).
+- [ ] With `res.ok === false`, the loader surfaces an **error** state and dispatches `cfb-loader-error` (trace in [
   `cfb-session-loader.js`](./cfb-session-loader.js)).
 
 **Constraints**
 
 - HTML, JavaScript, and CSS only - **no** frameworks inside the custom elements.
-- **`step-7-be`** is the backend for this step; mocking `fetch` (MSW) is left to the **testing track**.
+- `step-7-be` is the backend for this step; mocking `fetch` (MSW) is left to the **testing track**.
 - Target about **45 minutes** for core tracing + log activities.
 
 **Definition of done**
 
-- You can draw the flow from **`fetch`** to **cards** without peeking.
+- You can draw the flow from `fetch` to **cards** without peeking.
 - You complete [Question for your facilitator](./learning-log.md#step-7-concrete-facilitator-question) with one genuine
   question.
 
@@ -297,20 +297,20 @@ Add **one or two sentences** in the [journey hub `learning-log.md`](../learning-
 
 If you finish early:
 
-- [ ] Add **`<cfb-loader-status>`** driven only by **`cfb-schedule-loaded`** / **`cfb-sessions-loaded`** / **`cfb-loader-error`** - no
+- [ ] Add `<cfb-loader-status>` driven only by `cfb-schedule-loaded` / `cfb-sessions-loaded` / `cfb-loader-error` - no
   direct imports of loader classes.
-- [ ] Cache **`updatedAt`** in IDB and **skip** **`fetch`** when data is fresher than **60** seconds.
+- [ ] Cache `updatedAt` in IDB and **skip** `fetch` when data is fresher than **60** seconds.
 
-> The MSW-based extras (return **500** from a handler, `passthrough` one `eventId`, prove **`cfb-loader-error`**
+> The MSW-based extras (return **500** from a handler, `passthrough` one `eventId`, prove `cfb-loader-error`
 > surfaces) live in the **testing track** — see [`test-7`](../test-7/README.md).
 
 ---
 
 ### End result (skills you can demonstrate)
 
-- **`fetch`**, **`res.ok`**, and **`try`/`catch`** around network + JSON
+- `fetch`, `res.ok`, and **`try`/`catch`** around network + JSON
 - **Loader** vs **display** component split
-- **`CustomEvent`** bubbling as a **completion** signal
+- `CustomEvent` bubbling as a **completion** signal
 - **Orchestrator** coordinating **multiple async** sources without cross-imports
-- **`attributeChangedCallback`** as a **pull** trigger from IDB
+- `attributeChangedCallback` as a **pull** trigger from IDB
 - The **backend** (real, or a mock in tests) at the **edge**, not inside feature components

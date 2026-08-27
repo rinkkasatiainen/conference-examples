@@ -2,7 +2,7 @@
 
 In Step 4 you persisted sessions in **IndexedDB** and refreshed the board with a **signal** (
 `cfb-sessions-loaded-to-idb`). This step swaps the **random generator** for a **real HTML form**. For the form we use
-few nice HTML features like: native constraints, - **`FormData`**, all while the **same** **`cfb-session-created`**
+few nice HTML features like: native constraints, - `FormData`, all while the **same** `cfb-session-created`
 pipeline so storage and schedule stay boringly same.
 
 > **Before you start:** branch, HTTP server, same origin for IDB - see [getting-started.md](./getting-started.md).
@@ -162,9 +162,9 @@ email = john@example.com
 age = 25
 ```
 
-This works as following: When calling **`new FormData(form)`**, it walks the form’s **subtree** and collects controls (
-in this step, all 'input' elements - in next step we learn to use a custom form element) that have a **`name`**. Each
-entry is **`(name, value)`** - the **`name`** is the dictionary key in JS. An example of the form above could be:
+This works as following: When calling `new FormData(form)`, it walks the form’s **subtree** and collects controls (
+in this step, all 'input' elements - in next step we learn to use a custom form element) that have a `name`. Each
+entry is `(name, value)` - the `name` is the dictionary key in JS. An example of the form above could be:
 
 ```js
 const form = this.querySelector('#example-form') // this is a <cfb-add-session-form>
@@ -178,15 +178,15 @@ difference in roles and usage scenarios in forms: **`name` vs `id`**.
 
 | Attribute  | Typical job                                                                  |
 |------------|------------------------------------------------------------------------------|
-| **`name`** | **`FormData`** key;                                                          |
-| **`id`**   | Pair `<label for="…">` with a control and deep-linking, **`getElementById`** |
+| `name` | `FormData` key;                                                          |
+| `id`   | Pair `<label for="…">` with a control and deep-linking, `getElementById` |
 
-As seen from the table above, **`name`** is the **key** in **`FormData`**. The **`id`** especially useful for pairing a
-`label` with the corresponding linking. Do not assume **`name`** and **`id`** are the same string.
+As seen from the table above, `name` is the **key** in `FormData`. The `id` especially useful for pairing a
+`label` with the corresponding linking. Do not assume `name` and `id` are the same string.
 
 ### Some useful Form elements and their counter parts in FormData
 
-**Text + select** - each control needs their own **`name`** attribute. You set the name attribute on the `select`
+**Text + select** - each control needs their own `name` attribute. You set the name attribute on the `select`
 element.
 
 ```html
@@ -199,8 +199,8 @@ element.
 </select>
 ```
 
-**Radio group** - requires that each option has the same **`name`**. This way the **`value`** on each **`<input>`** is
-what **`FormData.get('session-format')`** returns for the selected one. See also how radio groups can be grouped in a
+**Radio group** - requires that each option has the same `name`. This way the `value` on each `<input>` is
+what `FormData.get('session-format')` returns for the selected one. See also how radio groups can be grouped in a
 `<fieldset>` element.
 
 ```html
@@ -213,12 +213,12 @@ what **`FormData.get('session-format')`** returns for the selected one. See also
 </fieldset>
 ```
 
-**FormData with elements that does not have data:** If does not have **`name`**, is `disabled`, or unchecked
+**FormData with elements that does not have data:** If does not have `name`, is `disabled`, or unchecked
 checkboxes are omitted from the formData payload
 
 ### Form behavior - validations
 
-Browsers enforce **`required`**, **`minlength`**, **`type`**, and radio **group** rules in forms by default. For this
+Browsers enforce `required`, `minlength`, `type`, and radio **group** rules in forms by default. For this
 exercise, you don't need to do anything special - which shows the benefits of using standard HTML elements. No need to
 custom JS code with `if(title.length < 5)`, all this is provided.
 
@@ -312,7 +312,7 @@ user fills in the form and presses "Add session"
     re-renders the board
 ```
 
-Event **strings** and factories: re-exported from Step 4 in [`events.js`](./lib/events.js); **`cfb-session-updated`** is
+Event **strings** and factories: re-exported from Step 4 in [`events.js`](./lib/events.js); `cfb-session-updated` is
 the Step 5 extra for edit flows (see **Extras**).
 
 ---
@@ -359,7 +359,7 @@ To finish this exercise, you need to (detailed help below the table)
 
 ### 🚧 `cfb-session-store.js`
 
-- [ ] listen for **`cfbSessionUpdated`** event
+- [ ] listen for `cfbSessionUpdated` event
 - [ ] update session on IDB
 
 ### After building these, you can:
@@ -367,7 +367,7 @@ To finish this exercise, you need to (detailed help below the table)
 - [ ] Add a custom form element that handles validation and submission.
 - [ ] use Native input types (`select`, `datalist`, `radio`, `time`)
 - [ ] Built-in constraint validation (`required`, `minlength`) - no JS if/else
-- [ ] Demonstrate how to use **`reportValidity`** to surface native messages.
+- [ ] Demonstrate how to use `reportValidity` to surface native messages.
 - [ ] Build forms with **multiple fields** and **groups** of fields.
 - [ ] **`FormData` API** - extract all named fields in a single call with `new FormData(form)`
 - [ ] `form.checkValidity()` and `form.reportValidity()`
@@ -406,29 +406,23 @@ Add **one or two sentences** in the [journey hub `learning-log.md`](../learning-
 
 **Forms and the platform**
 
-- **Built-in validation** (`required`, `minlength`, `type="time"`, etc.) can
+- Built-in validation (`required`, `minlength`, `type="time"`, etc.) can
   carry most of the burden.
-- **`FormData`** is a practical one-shot readout of everything named in the
+- `FormData` is a practical one-shot readout of everything named in the
   form, including the selected radio value.
 
 **Composition and architecture**
 
-- **Lists in the form** (e.g. tags) can have a nicer UI (chips) while still
-  submitting a **single serialised value** (comma-separated) that `FormData`
+- Lists in the form (e.g. tags) can have a nicer UI (chips) while still
+  submitting a single serialised value (comma-separated) that `FormData`
   understands.
-- **Add vs edit** can be **two UIs** (dialog vs flip-card) and still use the
-  **same session payload** and one store, with **distinct event types**
+- Add vs edit can be two UIs (dialog vs flip-card) and still use the same
+  session payload and one store, with distinct event types
   (`cfb-session-created` vs `cfb-session-updated`) if you want updates to be
   observable separately (`put()` with the same `id` = update).
-- **Shadow DOM + slots**: the flip "chrome" can live in the shadow tree while
-  the **article and form stay in the light DOM**, so your existing CSS keeps
-  working - slots **project** children; they don't move them into the shadow
-  root.
-
-In short: you learned to lean on the browser for validation and `FormData` for
-collection, and to **separate** optional UI chrome (flip, dialog) from the
-**same** session payload the rest of the app persists - whether you use one or
-two custom event types for add vs update.
+- Shadow DOM + slots: the flip "chrome" can live in the shadow tree while the
+  article and form stay in the light DOM, so your existing CSS keeps working
+  - slots project children; they don't move them into the shadow root.
 
 ---
 
@@ -444,7 +438,7 @@ two custom event types for add vs update.
 If you finish early:
 
 - [ ] Implement the 'edit' flow for the cards.
-- [ ] Read **`cfb-flip-card.js`** - how **slots** keep light-DOM forms stylable.
+- [ ] Read `cfb-flip-card.js` - how **slots** keep light-DOM forms stylable.
 - [ ] Implement an upsert to indexedDB -> Update or Insert
 - [ ] In indexedDB, make sure that 'update' only works if the session exists in the IndexedDB
 
@@ -452,8 +446,8 @@ If you finish early:
 
 ### End result (skills you can demonstrate)
 
-- Native input types (**`select`**, **`datalist`**, **`radio`**, **`time`**) and thematical grouping of data using
-  (**`fieldset`** / **`legend`**)
-- **`FormData`** one-shot collection; **`crypto.randomUUID()`** for **`id`**
-- Custom element as **form + dialog owner**; **`disconnectedCallback`** hygiene for listeners
-- Same **IDB refresh pipeline** as Step 4 after **`cfb-session-created`**
+- Native input types (`select`, `datalist`, `radio`, `time`) and thematical grouping of data using
+  (`fieldset` / `legend`)
+- `FormData` one-shot collection; `crypto.randomUUID()` for `id`
+- Custom element as **form + dialog owner**; `disconnectedCallback` hygiene for listeners
+- Same **IDB refresh pipeline** as Step 4 after `cfb-session-created`

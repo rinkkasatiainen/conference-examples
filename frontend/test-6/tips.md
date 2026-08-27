@@ -1,6 +1,6 @@
 # Tips
 
-[← Back to README — 3) Concrete practice](./README.md#3-concrete-practice)
+[← Back to README - 3) Concrete practice](./README.md#3-concrete-practice)
 
 ## Implementation reminders
 
@@ -8,7 +8,7 @@ Read `step-6/cfb-session-format.js` once before asserting:
 
 - Tiles use **`data-value="Talk"`** (not `data-type`)
 - Selected: **`cfb-session-format__tile--selected`**, `aria-checked="true"`
-- `#isRequired()` checks **`data-required`**; production forms use `required` — tests may set both
+- `#isRequired()` checks **`data-required`**; production forms use `required`, tests may set both
 
 ## Test through public behaviour
 
@@ -24,7 +24,7 @@ Add/edit form tests use events from **`step-5/lib/events.js`** (not `step-5/even
 
 ## Fixture helper
 
-Skip `customElements.whenDefined('div')` for plain hosts — see `test-6/test/helpers/fixture.js` (only await custom element tag names).
+Skip `customElements.whenDefined('div')` for plain hosts. See `test-6/test/helpers/fixture.js` (only await custom element tag names).
 
 ## Package layout
 

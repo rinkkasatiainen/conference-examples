@@ -1,10 +1,10 @@
-# Test Step T-7 — Loader Components · Mocking the Network (MSW)
+# Test Step T-7: Loader Components · Mocking the Network (MSW)
 
 **Build companion:** [Step 7](../step-7/README.md)
 
 > **Before you start:** [getting-started.md](./getting-started.md) · [T-7 learning log](./learning-log.md)
 
-Test Step 7 loaders by intercepting the network with **MSW** — no live backend. Verify success stores data and fires *
+Test Step 7 loaders by intercepting the network with **MSW** (no live backend). Verify success stores data and fires *
 *`sessionsLoaded`** / **`scheduleLoaded`**, and failures fire **`loaderError`**. Test the orchestrator in isolation with
 synthetic loader events.
 
@@ -16,7 +16,7 @@ By the end of T-7 you can:
 
 - Intercept HTTP with MSW handlers (`worker.use`) and reset them in `afterEach`
 - Assert loader status via `dataset.state` and bubbling loader events
-- Test `<cfb-board-orchestrator>` without IDB — both loaders must complete for the same `eventId`
+- Test `<cfb-board-orchestrator>` without IDB, both loaders must complete for the same `eventId`
 
 ---
 
@@ -131,7 +131,7 @@ See **[tips.md](./tips.md)**.
 
 ## 4) Conclusions
 
-1. [Loop back — fetch stub guess](./learning-log.md#t-7-loop-back-guess)
+1. [Loop back: fetch stub guess](./learning-log.md#t-7-loop-back-guess)
 2. [Ticket out](./learning-log.md#t-7-conclusions-ticket-out)
 3. Hub takeaway → [`learning-log-test.md`](../learning-log-test.md#t-7-key-takeaway)
 

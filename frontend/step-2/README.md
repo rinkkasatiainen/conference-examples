@@ -4,7 +4,7 @@ In Step 1 you built an **atom** - `<cfb-tag>`. Now you **compose** atoms into a 
 every column.
 
 A molecule wraps smaller pieces (tags, avatars) behind one tag name and one rendering boundary.
-You will implement **`<cfb-session-card>`** - the finished markup, JSON attribute name, and **rich attendee** payload
+You will implement `<cfb-session-card>` - the finished markup, JSON attribute name, and **rich attendee** payload
 shape are spelled out in **[Concrete practice](#3-concrete-practice)** (after Connections and Concepts).
 
 > **Before you start:** make a git branch, setup HTTP server, etc. - see [getting-started.md](./getting-started.md).
@@ -75,10 +75,10 @@ atoms** to build a coherent element. That molecule is `cfb-session-card`.
 
 In practice, in this exercise, it means
 
-- **`<cfb-session-card>`**, as a molecule, owns the **card component**: it defines the layout regions (header, tags row,
+- `<cfb-session-card>`, as a molecule, owns the **card component**: it defines the layout regions (header, tags row,
   footer), builds on the menu control behavior, and **mapping** session data into visible HTML elements (including
   title, tags and avatars)
-- **`<cfb-tag>`** stays an atom: it only knows label + colour - the card passes those via attributes (and later might
+- `<cfb-tag>` stays an atom: it only knows label + colour - the card passes those via attributes (and later might
   have some hover-over functionality, but that is the responsibility of that said **atom**).
 
 ### Data flow
@@ -99,14 +99,14 @@ In this exercise, the following are true
 
 ### Lifecycle
 
-- Implement **`connectedCallback`** for first paint (often after reading attributes).
-- Declare **`observedAttributes`** to include `data-session-details`
-- Use **`attributeChangedCallback`** to parse JSON and **re-render** when the attribute changes (e.g. DevTools edit or
+- Implement `connectedCallback` for first paint (often after reading attributes).
+- Declare `observedAttributes` to include `data-session-details`
+- Use `attributeChangedCallback` to parse JSON and **re-render** when the attribute changes (e.g. DevTools edit or
   parent updates).
 
 ### Rendering notes
 
-**`innerHTML`** with strings that include `<cfb-tag>` is a common approach; the parser creates elements and custom
+`innerHTML` with strings that include `<cfb-tag>` is a common approach; the parser creates elements and custom
 elements **upgrade** like any other HTML. You can do the same with `document.createElement`, templates and such. Yet,
 in small scale, writing HTML directly is often the easiest.
 
@@ -129,8 +129,8 @@ assume your implementation is done.
 
 ### Reference - markup and session payload
 
-Use **`data-session-details`** with JSON that matches the shape below. **Rich attendee** objects include **`name`**
-(full name, e.g. for `aria-label`) and **`initials`** (visible text).
+Use `data-session-details` with JSON that matches the shape below. **Rich attendee** objects include `name`
+(full name, e.g. for `aria-label`) and `initials` (visible text).
 
 ```html
 
@@ -141,15 +141,15 @@ Use **`data-session-details`** with JSON that matches the shape below. **Rich at
 
 Build `<cfb-session-card>` so you can **show** all of the following:
 
-- [ ] Create `cfb-session-card.js` and register **`cfb-session-card`** from `index.js` (alongside `<cfb-tag>` from
+- [ ] Create `cfb-session-card.js` and register `cfb-session-card` from `index.js` (alongside `<cfb-tag>` from
   Step 1 - see `index.js` import pattern).
 - [ ] Render a card that visually matches the **static** session cards in
   [`../step-0/index.html`](../step-0/index.html): header with **title** and **`⋯` menu** control, **tags row** using
-  **`<cfb-tag>`**, **footer** with attendee **initials** in `cfb-avatar` atoms.
+  `<cfb-tag>`, **footer** with attendee **initials** in `cfb-avatar` atoms.
 - [ ] A good pattern is to hard-code the HTML structure then starting to make it dynamic. (copy from the static board)
 - [ ] Hold session data in a **small internal structure** first if you like, then drive the UI from a parsed
-  **`data-session-details`** JSON attribute.
-- [ ] Use **`connectedCallback`** for initial render path.
+  `data-session-details` JSON attribute.
+- [ ] Use `connectedCallback` for initial render path.
 - [ ] Use **`observedAttributes` + `attributeChangedCallback`** so changing `data-session-details` **re-renders** the
   card.
 - [ ] Session JSON shape (minimum fields used in this step):
@@ -183,10 +183,10 @@ Build `<cfb-session-card>` so you can **show** all of the following:
 
 **Definition of done**
 
-- Editing **`data-session-details`** in DevTools (or in HTML) updates the visible title, tags, and avatars without a
+- Editing `data-session-details` in DevTools (or in HTML) updates the visible title, tags, and avatars without a
   full page reload.
 - At least **two** `<cfb-tag>` atoms render from session `tags`.
-- Avatars use **`initials`** visibly and expose **`name`** where appropriate (e.g. `aria-label` on the element).
+- Avatars use `initials` visibly and expose `name` where appropriate (e.g. `aria-label` on the element).
 
 In [Concrete practice: myth or fact for the facilitator](./learning-log.md#step-2-concrete-facilitator-myth-fact), write
 one question of your own and **ask your facilitator**; capture the reply in the log.
@@ -229,7 +229,7 @@ Add **one or two sentences** in the [journey hub `learning-log.md`](../learning-
 
 ### Import `<cfb-tag>` from Step 1
 
-`index.js` should register **`cfb-tag`** before **`cfb-session-card`** so tags inside the card upgrade correctly.
+`index.js` should register `cfb-tag` before `cfb-session-card` so tags inside the card upgrade correctly.
 This repo imports from [`../step-1/cfb-tag.js`](../step-1/cfb-tag.js) - keep `step-1/` beside `step-2/` or adjust the
 path.
 

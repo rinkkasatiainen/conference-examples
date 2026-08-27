@@ -1,6 +1,6 @@
-# Test Step T-4 — IndexedDB Store · Async Round-Trips
+# Test Step T-4: IndexedDB Store · Async Round-Trips
 
-**Build companion:** [Step 4](../step-4/README.md) — **`cfb-sessions-loaded-to-idb`** + **`data-latest-updated-at`**.
+**Build companion:** [Step 4](../step-4/README.md) - **`cfb-sessions-loaded-to-idb`** + **`data-latest-updated-at`**.
 
 > **Before you start:** [getting-started.md](./getting-started.md) · [T-4 learning log](./learning-log.md)
 
@@ -22,7 +22,7 @@ By the end of T-4 you can:
 
 In [your T-4 learning log](./learning-log.md):
 
-1. [Real IDB vs fake — where do you stand?](./learning-log.md#t-4-connections-idb-choice)
+1. [Real IDB vs fake: where do you stand?](./learning-log.md#t-4-connections-idb-choice)
 2. [Bridge from Step 4](./learning-log.md#t-4-connections-bridge)
 3. [What changed from T-3?](./learning-log.md#t-4-connections-prev)
 
@@ -170,7 +170,7 @@ See **[tips.md](./tips.md)** (real vs fake IDB, `waitForEvent`, assertion table)
 
 ## 4) Conclusions
 
-1. [Loop back — real vs fake](./learning-log.md#t-4-loop-back-idb)
+1. [Loop back: real vs fake](./learning-log.md#t-4-loop-back-idb)
 2. [Ticket out](./learning-log.md#t-4-conclusions-ticket-out)
 3. Hub takeaway → [`learning-log-test.md`](../learning-log-test.md#t-4-key-takeaway)
 

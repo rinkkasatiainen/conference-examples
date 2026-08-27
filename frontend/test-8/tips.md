@@ -1,4 +1,4 @@
-# T-8 tips — WebSocket stub
+# T-8 tips: WebSocket stub
 
 ## FakeWebSocket
 
@@ -25,7 +25,7 @@ From `step-8/lib/events.js`:
 - `sessionUpdated` message → `cfb-session-updated` (`EventTypes.SESSION_UPDATED`)
 - `sessionRemoved` message → `cfb-session-removed` (`EventTypes.SESSION_REMOVED`)
 
-The live component does **not** dispatch `sessionsLoaded` — downstream store components handle IDB writes.
+The live component does **not** dispatch `sessionsLoaded`, downstream store components handle IDB writes.
 
 ## Cleanup test
 

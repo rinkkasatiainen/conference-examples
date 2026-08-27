@@ -8,7 +8,7 @@ Create a branch (or continue same from step-0) for your work so feedback and his
 
 ## 2) Serve this folder over HTTP
 
-`index.html` loads `index.js` as an ES module (`type="module"`). Browsers block that on `file://`, so use a local server from **`frontend/step-1`** (or your copy of this folder).
+`index.html` loads `index.js` as an ES module (`type="module"`). Browsers block that on `file://`, so use a local server from `frontend/step-1` (or your copy of this folder).
 
 **Option A - one-off:**
 

@@ -164,8 +164,8 @@ See **[tips.md](./tips.md)** (registration, test data, queries, assertion table)
 
 ## 4) Conclusions
 
-1. [Builder pattern — in your own words](./learning-log.md#t-2-conclusions-builder)
-2. [0, 1, 2, many — which case earns its keep?](./learning-log.md#t-2-conclusions-heuristic)
+1. [Builder pattern - in your own words](./learning-log.md#t-2-conclusions-builder)
+2. [0, 1, 2, many: which case earns its keep?](./learning-log.md#t-2-conclusions-heuristic)
 3. Hub takeaway → [`learning-log-test.md`](../learning-log-test.md#t-2-key-takeaway)
 
 ---

@@ -33,8 +33,8 @@ _(You will [loop back](#step-5-loop-back-submit-guess) in Conclusions.)_
 
 _Solo, ~3 minutes._
 
-In Step 4, new sessions reached IndexedDB via **`cfb-session-created`** (generator) → **`<cfb-session-store>`** 
-→ **`cfb-sessions-loaded-to-idb`** → orchestrator bumps **`data-latest-updated-at`** → **`<cfb-schedule>`** pulls rows.
+In Step 4, new sessions reached IndexedDB via `cfb-session-created` (generator) → `<cfb-session-store>` 
+→ `cfb-sessions-loaded-to-idb` → orchestrator bumps `data-latest-updated-at` → `<cfb-schedule>` pulls rows.
 
 **If you only replace the generator with a form that dispatches the same `cfb-session-created` shape, what parts of 
 that chain stay unchanged?** List them as a short bullet list.
@@ -61,7 +61,7 @@ Who should define the Id of the session? Frontend or Backend? Why?
 
 _~3 minutes. **Different** mode - pick one._
 
-**Solo:** One thing about **HTML constraint validation** or **`FormData`** that surprised you in the past 
+**Solo:** One thing about **HTML constraint validation** or `FormData` that surprised you in the past 
 (or that you expect might surprise you this week). One line.
 
 **If you later compare with a peer:** What will each of you watch first in DevTools on submit -**Console**, **Network**, or **Elements**?
@@ -97,7 +97,7 @@ _Solo, ~2 minutes. Answer **A** or **B** - not both. **Short** - one or two line
 
 _Solo, ~3 minutes. **Different** format - no perfect art._
 
-On paper or in this log, draw **boxes and arrows** from: **user submit** → **`<cfb-add-session-form>`** → **event** → **store** → **IDB** → **orchestrator** → **schedule**.  
+On paper or in this log, draw **boxes and arrows** from: **user submit** → `<cfb-add-session-form>` → **event** → **store** → **IDB** → **orchestrator** → **schedule**.  
 Label **only** the **event name(s)** and **attribute** the schedule watches (peek at the README Concepts if you are stuck - then note *what you had wrong*).
 
 _(Optional: snap a photo into your notes elsewhere; here, ASCII is enough.)_
@@ -114,8 +114,8 @@ _After reading README Concepts - ~1 minute. **Shorter** is better than complete.
 
 Two bullets:
 
-1. What does **`form.checkValidity()`** do *for you* vs what **`required`** does *for the browser*?
-2. What is **one** field you read with **`FormData`** vs **one** value you might **not** trust only to `FormData.get` 
+1. What does `form.checkValidity()` do *for you* vs what `required` does *for the browser*?
+2. What is **one** field you read with `FormData` vs **one** value you might **not** trust only to `FormData.get` 
    (hint: tags / chips in this repo)?
 
 > 
@@ -130,11 +130,11 @@ _Answer **from memory first** (~5 minutes). Then peek at [`cfb-add-session-form.
 
 **Quiz**
 
-1. Which **`name=`** on the form collects the **selected radio** value in **`FormData`**?
+1. Which `name=` on the form collects the **selected radio** value in `FormData`?
 
    > 
 
-2. After a successful submit, why is **`form.reset()`** (or closing the dialog that resets) useful for the **next** add?
+2. After a successful submit, why is `form.reset()` (or closing the dialog that resets) useful for the **next** add?
 
    > 
 
@@ -142,9 +142,9 @@ _Answer **from memory first** (~5 minutes). Then peek at [`cfb-add-session-form.
 
 |    | Statement                                                                                              |
 |----|--------------------------------------------------------------------------------------------------------|
-| __ | `FormData` can read the selected **`session-format`** radio when each option shares the same **`name`**. |
-| __ | Session **`id`** should be a visible required field so power users can control collisions.             |
-| __ | **`reportValidity()`** is mainly for showing the browser’s native error UI when constraints fail.      |
+| __ | `FormData` can read the selected `session-format` radio when each option shares the same `name`. |
+| __ | Session `id` should be a visible required field so power users can control collisions.             |
+| __ | `reportValidity()` is mainly for showing the browser’s native error UI when constraints fail.      |
 
 > 
 
@@ -164,7 +164,7 @@ _Answer **from memory first** (~5 minutes). Then peek at [`cfb-add-session-form.
 
 _~5 minutes._
 
-1. Write **three** advantages of **native** constraint validation over a big hand-rolled **`if / else`** ruleset in submit handlers.
+1. Write **three** advantages of **native** constraint validation over a big hand-rolled `if / else` ruleset in submit handlers.
 
    > 
 
@@ -213,7 +213,7 @@ Write the **question** you asked (or will ask), then **their answer or your note
 
 _Solo, ~5 minutes. **Different** from the myth/fact item above - this one is open._
 
-Ask **one** question about **forms in web components**, **`FormData`**, **`dialog`**, or **keeping add vs edit flows separate**. Paste their reply (or your notes) below.
+Ask **one** question about **forms in web components**, `FormData`, `dialog`, or **keeping add vs edit flows separate**. Paste their reply (or your notes) below.
 
 **My question**
 

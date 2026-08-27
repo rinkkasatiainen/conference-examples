@@ -8,9 +8,9 @@ Work on a branch so feedback and history stay easy to follow.
 
 ## 2) Serve this folder over HTTP
 
-`step-6/index.js` loads ES modules from **`step-6/`** and imports **`../step-5/`**, **`../step-4/`**, and **`../step-1/`**. Browsers block modules on `file://`.
+`step-6/index.js` loads ES modules from `step-6/` and imports `../step-5/`, `../step-4/`, and `../step-1/`. Browsers block modules on `file://`.
 
-From **`frontend`**:
+From `frontend`:
 
 **Option A - one-off:**
 
@@ -31,7 +31,7 @@ http-server . -o
 
 Open the served Step 6 page. You should see the board with **+ Add Session** and working add/edit flows from Step 5 as your baseline.
 
-Open DevTools → **Console**. Fix **module** errors before continuing - imports from **`step-5`**, **`step-4`**, and **`step-1`** must resolve.
+Open DevTools → **Console**. Fix **module** errors before continuing - imports from `step-5`, `step-4`, and `step-1` must resolve.
 
 **IndexedDB** is still tied to **origin** (scheme + host + port). Use the same URL each time you test so earlier steps’ data and new writes land in the same database.
 

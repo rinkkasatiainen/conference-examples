@@ -1,10 +1,10 @@
 # Tips
 
-[← Back to README — 3) Concrete practice](./README.md#3-concrete-practice)
+[← Back to README - 3) Concrete practice](./README.md#3-concrete-practice)
 
 ## Real IndexedDB or a fake store?
 
-**Option A — real IndexedDB**
+**Option A: real IndexedDB**
 
 ```js
 function dropDb() {
@@ -21,9 +21,9 @@ afterEach(async () => {
 })
 ```
 
-Keep `dropDb` in **test code only** — not in production.
+Keep `dropDb` in **test code only**, not in production.
 
-**Option B — fake store via import map**
+**Option B: fake store via import map**
 
 ```js
 const testImportMappings = {
@@ -31,7 +31,7 @@ const testImportMappings = {
 }
 ```
 
-**Option C / D** — contract test on real IDB + fake-backed component tests (this repo uses Option D via two npm
+**Option C / D**: contract test on real IDB + fake-backed component tests (this repo uses Option D via two npm
 scripts).
 
 |            | Real IDB         | Fake store        | Contract + fake         |
@@ -53,42 +53,42 @@ npm run test:manual
 
 Open DevTools → **Application → IndexedDB** when tests bleed state between runs.
 
-## Waiting for async work — don't count event-loop turns
+## Waiting for async work: don't count event-loop turns
 
 This is the first step whose rendering is **not synchronous**. In steps 1–3 the DOM was updated inline
 (custom-element callbacks and synchronous DOM events), so tests asserted immediately. **IndexedDB changes
-the render mechanism** — work now finishes *later*, on a different turn of the event loop — and that changes
+the render mechanism.** Work now finishes *later*, on a different turn of the event loop, and that changes
 how you wait.
 
 ### A 30-second model of the event loop
 
 JavaScript runs one task at a time and drains two queues differently:
 
-- **Microtask queue** — filled by `Promise.then`, `await`, `queueMicrotask`. After each task the loop drains
+- **Microtask queue**: filled by `Promise.then`, `await`, `queueMicrotask`. After each task the loop drains
   this queue **completely** (including microtasks scheduled *during* the drain) before doing anything else.
-- **Macrotask queue** — filled by `setTimeout`, events, and I/O completions. The loop takes **one** task per turn.
+- **Macrotask queue**: filled by `setTimeout`, events, and I/O completions. The loop takes **one** task per turn.
 
 The rule that ties them together: **the whole microtask queue is flushed before the next macrotask runs.**
-That is exactly why the `tick` helper works — `setTimeout` schedules a macrotask, so by the time it fires,
+That is exactly why the `tick` helper works: `setTimeout` schedules a macrotask, so by the time it fires,
 every pending microtask has already resolved. `await tick()` is therefore stronger than `await Promise.resolve()`
-(which only flushes microtasks). But — see below — it is still **not** enough for real I/O.
+(which only flushes microtasks). But it is still **not** enough for real I/O, as the next section shows.
 
 ### Why `tick` isn't enough for IndexedDB
 
 An IndexedDB read/write does not resolve on a microtask. It completes when the browser dispatches the `IDBRequest`
-`success` **event** — a separate *task* that lands on a future loop turn, at a time you don't control. So:
+`success` **event**, a separate *task* that lands on a future loop turn, at a time you don't control. So:
 
 | Render mechanism                                                     | Reliable wait                                     |
 |----------------------------------------------------------------------|---------------------------------------------------|
 | Synchronous (`attributeChangedCallback` sets DOM directly)           | none                                              |
-| Async but microtask-only (`await Promise.resolve()`, `.then` chains) | `await tick()` — drains the whole microtask queue |
+| Async but microtask-only (`await Promise.resolve()`, `.then` chains) | `await tick()`, drains the whole microtask queue |
 | Real async I/O (IndexedDB, `fetch`, `setTimeout`)                    | **await the actual completion signal**            |
 
 `await tick()` yields exactly **one** macrotask turn, but the IDB `success` event is not guaranteed to fire within
-that turn. Sometimes it passes, sometimes it doesn't — a classic flaky test. Chained I/O (read → write → read) makes
+that turn. Sometimes it passes, sometimes it doesn't: a classic flaky test. Chained I/O (read → write → read) makes
 it worse, since each completion is its own task.
 
-The fix is to stop waiting a *duration* and wait for the *signal* that the work is done — an event the component fires,
+The fix is to stop waiting a *duration* and wait for the *signal* that the work is done: an event the component fires,
 a promise it exposes, or the I/O call itself:
 
 ```js
@@ -102,17 +102,17 @@ This is deterministic no matter how many microtask/macrotask hops the internals 
 
 ### The one place `tick` is still the right tool: a deliberate delay
 
-`tick(ms)` has a legitimate use that has nothing to do with queues or I/O — letting **real wall-clock
+`tick(ms)` has a legitimate use that has nothing to do with queues or I/O: letting **real wall-clock
 time pass**. The orchestrator test in this folder uses `await tick(10)` so that two `Date.now()`
 timestamps are measurably apart before asserting one is later than the other. That's a *sleep*, not a
-flush — the right mental model for `tick(10)` there, and different from the (wrong) idea of using
+flush, and that's the right mental model for `tick(10)` there, different from the (wrong) idea of using
 `tick` to wait for IndexedDB.
 
-### When there is no signal to await — `waitUntil`
+### When there is no signal to await: `waitUntil`
 
 Sometimes the work exposes neither an event nor a promise (e.g. you can only observe a
-side effect settling). Then a `waitUntil` helper — poll a predicate until it's true or a
-timeout elapses — is the pragmatic fallback:
+side effect settling). Then a `waitUntil` helper (poll a predicate until it's true or a
+timeout elapses) is the pragmatic fallback:
 
 ```js
 export async function waitUntil(predicateFn, { timeout = 1000, interval = 10 } = {}) {
@@ -125,7 +125,7 @@ export async function waitUntil(predicateFn, { timeout = 1000, interval = 10 } =
 }
 ```
 
-Prefer an explicit signal (`waitForEvent`) when one exists — `waitUntil` trades
+Prefer an explicit signal (`waitForEvent`) when one exists. `waitUntil` trades
 determinism for generality, so reach for it only when nothing better is available.
 
 ## `waitForEvent`
