@@ -1,6 +1,6 @@
 import { expect } from 'chai'
-import { CfbEditSessionForm } from '../../step-6/cfb-edit-session-form.solution.js'
-import { CfbSessionFormat } from '../../step-6/cfb-session-format.solution.js'
+import { CfbEditSessionForm } from '../../step-6/cfb-edit-session-form.js'
+import { CfbSessionFormat } from '../../step-6/cfb-session-format.js'
 import { fixture, cleanup } from './helpers/fixture.js'
 import { sessionDetails } from '../../step-3/lib/builds-session-details.js'
 

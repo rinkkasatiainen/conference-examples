@@ -1,7 +1,7 @@
 import { expect } from 'chai'
-import { CfbAddSessionForm } from '../../step-6/cfb-add-session-form.solution.js'
+import { CfbAddSessionForm } from '../../step-6/cfb-add-session-form.js'
 import { EventTypes } from '../../step-5/lib/events.js'
-import { CfbSessionFormat } from '../../step-6/cfb-session-format.solution.js'
+import { CfbSessionFormat } from '../../step-6/cfb-session-format.js'
 import { fixture, cleanup } from './helpers/fixture.js'
 
 customElements.define(CfbSessionFormat.elementName, CfbSessionFormat)

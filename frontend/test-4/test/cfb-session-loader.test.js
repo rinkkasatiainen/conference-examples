@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { DB_NAME } from '../../step-4/session-store.js'
-import { CfbSessionLoader } from '../../step-4/cfb-session-loader.solution.js'
+import { CfbSessionLoader } from '../../step-4/cfb-session-loader.js'
 import { cleanup, fixtureAndWaitFor } from './helpers/fixture.js'
 import { EventTypes } from '../../step-4/lib/events.js'
 

@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { CfbSessionLoader } from '../../step-7/cfb-session-loader.solution.js'
+import { CfbSessionLoader } from '../../step-7/cfb-session-loader.js'
 import { resetForTests } from './helpers/fake-session-store-core.js'
 import { cleanup, fixture, fixtureAndWaitFor } from './helpers/fixture.js'
 import { worker, http, HttpResponse, delay, API } from './helpers/msw.js'

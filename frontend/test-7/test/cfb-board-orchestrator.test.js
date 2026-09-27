@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { CfbBoardOrchestrator } from '../../step-7/cfb-board-orchestrator.solution.js'
+import { CfbBoardOrchestrator } from '../../step-7/cfb-board-orchestrator.js'
 import { cleanup, fixture } from './helpers/fixture.js'
 
 if (!customElements.get('cfb-board-orchestrator')) {

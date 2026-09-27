@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { CfbSessionFormat } from '../../step-6/cfb-session-format.solution.js'
+import { CfbSessionFormat } from '../../step-6/cfb-session-format.js'
 import { fixture, cleanup } from './helpers/fixture.js'
 
 if (!customElements.get(CfbSessionFormat.elementName)) {

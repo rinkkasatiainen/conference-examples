@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { CfbLiveSessionUpdates } from '../../step-8/cfb-live-session-updates.solution.js'
+import { CfbLiveSessionUpdates } from '../../step-8/cfb-live-session-updates.js'
 import { EventTypes } from '../../step-8/lib/events.js'
 import { FakeWebSocket } from './helpers/fake-websocket.js'
 import { cleanup, mountLiveUpdates } from './helpers/fixture.js'
